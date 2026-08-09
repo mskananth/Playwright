@@ -1,0 +1,12 @@
+{
+  "loginData": [
+    {
+      "email": "agile.ananth@gmail.com",
+      "password": "Test@123"
+    },
+    {
+      "email": "",
+      "password": ""
+    }
+  ]
+}

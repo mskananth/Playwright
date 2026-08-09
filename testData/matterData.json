@@ -1,0 +1,20 @@
+{
+  "defaultMatter": {
+    "title": "Default Matter Title",
+    "caseNumber": "CN-12345",
+    "caseType": "Civil",
+    "court": "High Court",
+    "judge": "Hon. John Doe",
+    "priority": "High",
+    "status": "Open",
+    "tags": ["MatterTag", "DuplicateTag"],
+    "opponentAdvocate": {
+      "name": "Advocate Name",
+      "email": "advocate@example.com",
+      "phone": "1234567890"
+    }
+  },
+  "duplicateTag": "DuplicateTag",
+  "invalidEmail": "invalid-email",
+  "formattedPhone": "+1 (234) 567-8901"
+}
