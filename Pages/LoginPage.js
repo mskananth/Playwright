@@ -58,10 +58,32 @@ class LoginModule {
     }
   }
 
+  async maximizePage() {
+    try {
+      await this.page.setViewportSize({ width: 1920, height: 1080 });
+    } catch (err) {
+      // ignore if viewport resize is unavailable in the current browser context
+    }
+
+    try {
+      await this.page.evaluate(() => {
+        if (typeof window !== "undefined" && window.screen) {
+          const width = window.screen.availWidth || 1920;
+          const height = window.screen.availHeight || 1080;
+          window.resizeTo(width, height);
+        }
+      });
+    } catch (err) {
+      // ignore if window resizing is not permitted
+    }
+  }
+
   async loginWithPassword(email, password) {
     await this.navigate();
     await this.clickUsePasswordInstead();
     await this.login(email, password);
+    await this.page.waitForLoadState("networkidle").catch(() => {});
+    await this.maximizePage();
   }
 
   async loginWithFallback(email, password) {

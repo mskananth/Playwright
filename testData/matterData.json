@@ -16,5 +16,41 @@
   },
   "duplicateTag": "DuplicateTag",
   "invalidEmail": "invalid-email",
-  "formattedPhone": "+1 (234) 567-8901"
+  "formattedPhone": "+1 (234) 567-8901",
+  "matterRecords": [
+    {
+      "title": "Matter Record A",
+      "caseNumber": "REC-A-001",
+      "caseType": "Civil",
+      "court": "Family Court",
+      "judge": "Hon. Priya Singh",
+      "priority": "High",
+      "status": "Active",
+      "dateOfFiling": "2026-08-01",
+      "description": "Matter A description for validation",
+      "tags": ["RecordA", "Validation"],
+      "opponentAdvocate": {
+        "name": "Advocate A",
+        "email": "advocate.a@example.com",
+        "phone": "9876543210"
+      }
+    },
+    {
+      "title": "Matter Record B",
+      "caseNumber": "REC-B-002",
+      "caseType": "Criminal",
+      "court": "High Court",
+      "judge": "Hon. Ravi Kumar",
+      "priority": "Medium",
+      "status": "Pending",
+      "dateOfFiling": "2026-08-05",
+      "description": "Matter B description for validation",
+      "tags": ["RecordB", "Test"],
+      "opponentAdvocate": {
+        "name": "Advocate B",
+        "email": "advocate.b@example.com",
+        "phone": "9123456780"
+      }
+    }
+  ]
 }

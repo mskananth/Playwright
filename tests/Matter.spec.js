@@ -235,23 +235,6 @@ test("20.Validate Case Type dropdown responsiveness", async () => {
   expect(options.length).toBeGreaterThan(0);
 });
 
-// test.describe.only("Data-driven Case Type matter creation", () => {
-//   for (const caseType of caseTypes) {
-//     test(`Create matter using Case Type: ${caseType}`, async () => {
-//       // if ((await matterPage.caseTypeSelect.count()) === 0)
-//       //   test.skip("Case Type dropdown not present");
-
-//       const title = `CaseType ${caseType} ${Date.now()}`;
-//       await matterPage.fillCaseTitle(title);
-//       await matterPage.fillCaseType(caseType);
-
-//       const saved = await matterPage.clickSaveAndNext();
-//       if (!saved) test.skip("Save & Next button not available");
-
-//       await matterPage.verifyMatterCreatedInView(title);
-//     });
-//   }
-// });
 test("Data-driven Case Type matter creation", () => {
   for (const caseType of caseTypes) {
     test(`Create matter using Case Type: ${caseType}`, async ({ page }) => {
@@ -270,28 +253,81 @@ test("Data-driven Case Type matter creation", () => {
   }
 });
 
-test.only("Validate Court field", async () => {
+test("Validate Court field", async () => {
   await matterPage.additionalDetails.click();
 
-  // if ((await matterPage.courtInput.count()) === 0) {
-  //   test.skip("Court field not present");
-  // }
-
   await expect(matterPage.courtInput).toBeVisible();
-  await matterPage.fillCourt(defaultMatter.court);
-  // await matterPage.courtInput.blur();
-  // await expect(matterPage.courtInput).not.toHaveClass(/ng-invalid/);
+
+  await matterPage.courtInput(defaultMatter.court);
+
+  await expect(matterPage.courtInput).toHaveValue(defaultMatter.court);
 });
 
 test("Validate Judge field", async () => {
-  if ((await matterPage.judgeInput.count()) === 0) test.skip();
-  await matterPage.fillJudge(defaultMatter.judge);
-  await matterPage.judgeInput.blur();
-  await expect(matterPage.judgeInput).not.toHaveClass(/ng-invalid/);
+  await matterPage.additionalDetails.click();
+  await expect(matterPage.judgesInput).toBeVisible();
+  await matterPage.judgesInput.fill(defaultMatter.judge);
+  await expect(matterPage.judgesInput).toHaveValue(defaultMatter.judge);
+});
+
+test("Validate Priority Heading", async () => {
+  await matterPage.additionalDetails.click();
+  await expect(matterPage.priorityText).toBeVisible();
+});
+
+test.only("Validate priority buttons visibility, appearance, and responsive behavior", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  if ((await matterPage.priorityButtons.count()) === 0) {
+    test.skip("Priority buttons not present");
+  }
+
+  const expectedLabels = ["High", "Medium", "Low"];
+
+  for (const label of expectedLabels) {
+    const tab = matterPage.page
+      .getByRole("tab", { name: new RegExp(`^${label}$`, "i") })
+      .first();
+    const fallback = matterPage.page
+      .getByRole("button", { name: new RegExp(`^${label}$`, "i") })
+      .first();
+    const element = (await tab.count()) > 0 ? tab : fallback;
+
+    await element.scrollIntoViewIfNeeded();
+    await expect(element).toBeVisible();
+    await expect(element).toBeEnabled();
+    await expect(element).toHaveText(label);
+  }
+
+  const selectedControl = matterPage.page.locator(
+    '[role="tab"][aria-selected="true"], button[aria-pressed="true"], button.active, button[class*="active"], button[class*="selected"]',
+  );
+
+  if ((await selectedControl.count()) > 0) {
+    await expect(selectedControl.first()).toBeVisible();
+  }
+
+  await matterPage.page.setViewportSize({ width: 375, height: 812 });
+
+  for (const label of expectedLabels) {
+    const tab = matterPage.page
+      .getByRole("tab", { name: new RegExp(`^${label}$`, "i") })
+      .first();
+    const fallback = matterPage.page
+      .getByRole("button", { name: new RegExp(`^${label}$`, "i") })
+      .first();
+    const element = (await tab.count()) > 0 ? tab : fallback;
+
+    await element.scrollIntoViewIfNeeded();
+    await expect(element).toBeVisible();
+    await expect(element).toBeEnabled();
+  }
+
+  await matterPage.page.setViewportSize({ width: 1280, height: 900 });
 });
 
 test("Validate Priority default", async () => {
-  if ((await matterPage.prioritySelect.count()) === 0) test.skip();
+  // if ((await matterPage.prioritySelect.count()) === 0) test.skip();
   const selected = await matterPage.prioritySelect.inputValue();
   expect(selected).not.toBe("");
 });

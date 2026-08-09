@@ -37,12 +37,18 @@ class MatterPage {
     this.caseTypeSelect = page.locator(
       'select[formcontrolname="case_type"], select[name="case_type"], select[placeholder*="Case Type"], select[aria-label*="Case Type"]',
     );
-    this.courtInput = page.locator(
-      'input[formcontrolname="court"], input[name="court"], input[placeholder*="Court"], input[aria-label*="Court"]',
+    this.courtInput = page.locator('input[formcontrolname="court_name"]');
+
+    this.judgesInput = page.locator('input[formcontrolname="judges"]');
+
+    this.priorityText = page.getByText("Priority", { exact: true });
+    this.priorityButtons = page.locator(
+      '[role="tab"]:has-text("High"), [role="tab"]:has-text("Medium"), [role="tab"]:has-text("Low"), button:has-text("High"), button:has-text("Medium"), button:has-text("Low")',
     );
-    this.judgeInput = page.locator(
-      'input[formcontrolname="judge"], input[name="judge"], input[placeholder*="Judge"], input[aria-label*="Judge"]',
+    this.statusButtons = page.locator(
+      '[role="tab"]:has-text("Active"), [role="tab"]:has-text("Pending"), [role="tab"]:has-text("Closed"), button:has-text("Active"), button:has-text("Pending"), button:has-text("Closed")',
     );
+
     this.prioritySelect = page.locator(
       'select[formcontrolname="priority"], select[name="priority"], select[placeholder*="Priority"], select[aria-label*="Priority"]',
     );
