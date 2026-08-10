@@ -155,19 +155,11 @@ test("16.Validate Created Date default and modify Created Date", async () => {
     (await matterPage.createdDateInput.inputValue()).length,
   ).toBeGreaterThan(0);
 });
+test("17. Validate Date of Filing optional and > Created Date", async () => {
+  await matterPage.clickAdditionalDetails();
 
-// test.only("17.Validate Date of Filing optional and > Created Date", async () => {
-//   if ((await matterPage.dateOfFilingInput.count()) === 0) test.skip();
-//   await matterPage.fillCreatedDate("2025-01-01");
-//   await matterPage.fillDateOfFiling("2026-01-01");
-//   const created = await matterPage.createdDateInput.inputValue();
-//   const filed = await matterPage.dateOfFilingInput.inputValue();
-//   expect(new Date(filed) > new Date(created)).toBeTruthy();
-// });
-test.skip("17. Validate Date of Filing optional and > Created Date", async () => {
-  await matterPage.additionalDetails.click();
-
-  // await expect(matterPage.dateOfFilingInput).toBeVisible();
+  await expect(matterPage.dateOfFilingInput).toBeVisible();
+  await expect(matterPage.createdDateInput).toBeVisible();
 
   await matterPage.fillCreatedDate("2025-01-01");
   await matterPage.fillDateOfFiling("2026-01-01");
@@ -175,51 +167,19 @@ test.skip("17. Validate Date of Filing optional and > Created Date", async () =>
   const created = await matterPage.createdDateInput.inputValue();
   const filed = await matterPage.dateOfFilingInput.inputValue();
 
-  expect(new Date(filed)).toBeGreaterThanOrEqual(new Date(created));
-});
-test("18.Validate Description character counter (if present)", async () => {
-  if ((await matterPage.descriptionInput.count()) === 0) test.skip();
-  await matterPage.fillDescription("Test description");
-  const counterText = await matterPage.getDescriptionCounterText();
-  if (counterText) {
-    await expect(matterPage.descriptionCounter)
-      .toContainText("12")
-      .catch(() => {});
-  } else {
-    test.skip("No character counter present");
-  }
+  expect(new Date(filed).getTime()).toBeGreaterThan(
+    new Date(created).getTime(),
+  );
 });
 
-test("19.Validate Additional Details fields and validation", async () => {
-  if ((await matterPage.additionalDetails.count()) === 0)
-    test.skip("Additional Details section not present");
-
+test("18. Validate Description field is visible and responsive", async () => {
   await matterPage.clickAdditionalDetails();
 
-  const hasDateOfFiling = (await matterPage.dateOfFilingInput.count()) > 0;
-  const hasDescription = (await matterPage.descriptionInput.count()) > 0;
-  if (!hasDateOfFiling && !hasDescription)
-    test.skip("No Additional Details fields found");
+  await expect(matterPage.descriptionInput).toBeVisible();
 
-  if (hasDateOfFiling) {
-    await matterPage.fillCreatedDate("2025-01-01");
-    await matterPage.fillDateOfFiling("2026-01-01");
-    await matterPage.dateOfFilingInput.blur();
-    await expect(matterPage.dateOfFilingInput).not.toHaveClass(/ng-invalid/);
-    expect(await matterPage.dateOfFilingInput.inputValue()).toBe("2026-01-01");
-  }
+  await matterPage.fillDescription("Test description");
 
-  if (hasDescription) {
-    const description = "A".repeat(100);
-    await matterPage.fillDescription(description);
-    await matterPage.descriptionInput.blur();
-    expect(await matterPage.getDescriptionValue()).toBe(description);
-
-    const counterText = await matterPage.getDescriptionCounterText();
-    if (counterText) {
-      await expect(matterPage.descriptionCounter).toContainText("100");
-    }
-  }
+  await expect(matterPage.descriptionInput).toHaveValue("Test description");
 });
 
 test("20.Validate Case Type dropdown responsiveness", async () => {
@@ -233,6 +193,15 @@ test("20.Validate Case Type dropdown responsiveness", async () => {
     matterPage.caseTypeSelect,
   );
   expect(options.length).toBeGreaterThan(0);
+});
+test("19. Validate Description field is visible and responsive", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await expect(matterPage.descriptionInput).toBeVisible();
+
+  await matterPage.fillDescription("Test description");
+
+  await expect(matterPage.descriptionInput).toHaveValue("Test description");
 });
 
 test("Data-driven Case Type matter creation", () => {
@@ -275,7 +244,7 @@ test("Validate Priority Heading", async () => {
   await expect(matterPage.priorityText).toBeVisible();
 });
 
-test.only("Validate priority buttons visibility, appearance, and responsive behavior", async () => {
+test("Validate priority buttons visibility, appearance, and responsive behavior", async () => {
   await matterPage.clickAdditionalDetails();
 
   if ((await matterPage.priorityButtons.count()) === 0) {
@@ -477,7 +446,7 @@ test("Leave non-mandatory fields empty", async () => {
 });
 
 test("Double click Save for Later", async () => {
-  if ((await matterPage.saveForLaterButton.count()) === 0) test.skip();
+  // if ((await matterPage.saveForLaterButton.count()) === 0) test.skip();
   await matterPage.saveForLaterButton.first().dblclick();
   await matterPage.page.waitForLoadState("networkidle").catch(() => {});
   expect(await matterPage.saveForLaterButton.count()).toBeGreaterThanOrEqual(0);

@@ -12,7 +12,7 @@ test.describe("Login flow", () => {
     const otpPage = new OTPPage(page);
 
     await loginPage.navigate();
-    await loginPage.enterEmail(process.env.EMAIL);
+    await loginPage.enterEmail();
     await loginPage.clickContinue();
 
     const emailContent = await getOTP();

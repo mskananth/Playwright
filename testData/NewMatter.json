@@ -1,0 +1,44 @@
+{
+  "firstFourFieldsCase": {
+    "id": "NM_COMBO_001",
+    "description": "Fill the first four fields, save for later, and verify matter view page title.",
+    "caseTitle": "First Four Fields Legal Matter",
+    "caseNumber": "FFM-2026-0001",
+    "createdDate": "2026-08-10"
+  },
+  "createCases": [
+    {
+      "id": "NM_POS_001",
+      "description": "Save draft with mandatory Case Title only.",
+      "caseTitle": "Mandatory Only Legal Matter",
+      "caseNumber": "",
+      "createdDate": ""
+    },
+    {
+      "id": "NM_POS_002",
+      "description": "Save draft with Case Title plus Case Number and Created Date.",
+      "caseTitle": "Mandatory plus Optional Fields Matter",
+      "caseNumber": "OPT-2026-001",
+      "createdDate": "2026-08-15"
+    }
+  ],
+  "additionalDetailsCases": [
+    {
+      "id": "NM_POS_003",
+      "description": "Save draft after filling Additional Details and verify details persist in view page.",
+      "caseTitle": "Additional Details Legal Matter",
+      "caseNumber": "ADD-2026-1001",
+      "createdDate": "2026-08-16",
+      "additionalDetails": {
+        "dateOfFiling": "2026-09-01",
+        "description": "Verify Additional Details fields save and display in view page.",
+        "caseType": "Family Law",
+        "court": "Family Court",
+        "judge": "Hon. Priya Singh",
+        "priority": "High",
+        "status": "Active",
+        "tags": ["SaveLater", "AdditionalDetails"]
+      }
+    }
+  ]
+}

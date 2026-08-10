@@ -25,8 +25,9 @@ class MatterPage {
       exact: true,
     });
     this.dateOfFilingInput = page.locator(
-      'input[formcontrolname="date_of_filing"], input[placeholder*="Date of Filing"]',
+      'input[formcontrolname="date_of_filling"]',
     );
+
     this.descriptionInput = page.locator(
       'textarea[name="description"], textarea[formcontrolname="description"]',
     );
