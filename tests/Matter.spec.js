@@ -430,7 +430,7 @@ test("Verify save button disabled when invalid email address added", async () =>
 });
 
 test("Verify Phone number entry", async () => {
-  if ((await matterPage.addOpponentAdvocateButton.count()) === 0) test.skip();
+  // if ((await matterPage.addOpponentAdvocateButton.count()) === 0) test.skip();
   await matterPage.openOpponentAdvocate();
   if ((await matterPage.opponentPhoneInput.count()) === 0) test.skip();
   await matterPage.opponentPhoneInput.fill(
@@ -442,7 +442,7 @@ test("Verify Phone number entry", async () => {
 });
 
 test("Verify Phone number entry with formatting", async () => {
-  if ((await matterPage.addOpponentAdvocateButton.count()) === 0) test.skip();
+  // if ((await matterPage.addOpponentAdvocateButton.count()) === 0) test.skip();
   await matterPage.openOpponentAdvocate();
   if ((await matterPage.opponentPhoneInput.count()) === 0) test.skip();
   await matterPage.opponentPhoneInput.fill(matterData.formattedPhone);
