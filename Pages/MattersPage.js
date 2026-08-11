@@ -46,6 +46,19 @@ class MatterPage {
     this.priorityButtons = page.locator(
       '[role="tab"]:has-text("High"), [role="tab"]:has-text("Medium"), [role="tab"]:has-text("Low"), button:has-text("High"), button:has-text("Medium"), button:has-text("Low")',
     );
+    this.priorityButtonsHigh = page.getByRole("tab", {
+      name: "High",
+      exact: true,
+    });
+    this.priorityButtonsMedium = page.getByRole("tab", {
+      name: "Medium",
+      exact: true,
+    });
+    this.priorityButtonsLow = page.getByRole("tab", {
+      name: "Low",
+      exact: true,
+    });
+
     this.statusButtons = page.locator(
       '[role="tab"]:has-text("Active"), [role="tab"]:has-text("Pending"), [role="tab"]:has-text("Closed"), button:has-text("Active"), button:has-text("Pending"), button:has-text("Closed")',
     );
@@ -90,6 +103,12 @@ class MatterPage {
     this.listOfMattersTitle = page.locator("h2.page-title", {
       hasText: "List of Matters",
     });
+
+    this.statusText = page.getByText("Status", {
+      exact: true,
+    });
+
+    this.statusButtons = page.locator('button[name="status"][role="tab"]');
   }
 
   async openLegalMatters() {
@@ -307,6 +326,150 @@ class MatterPage {
 
   async verifyCreateMatterFormVisible() {
     await expect(this.caseTitleInput).toBeVisible();
+  }
+
+  getPriorityButton(priority) {
+    return this.page.getByRole("tab", {
+      name: priority,
+      exact: true,
+    });
+  }
+
+  async verifyPrioritySectionVisible() {
+    await expect(this.priorityText).toBeVisible();
+
+    await expect(this.getPriorityButton("High")).toBeVisible();
+    await expect(this.getPriorityButton("Medium")).toBeVisible();
+    await expect(this.getPriorityButton("Low")).toBeVisible();
+  }
+
+  async selectPriorityButton(priority) {
+    const button = this.getPriorityButton(priority);
+
+    await expect(button).toBeVisible();
+    await expect(button).toBeEnabled();
+
+    await button.click();
+  }
+
+  async isPrioritySelected(priority) {
+    const button = this.getPriorityButton(priority);
+
+    const ariaSelected = await button.getAttribute("aria-selected");
+
+    if (ariaSelected !== null) {
+      return ariaSelected === "true";
+    }
+
+    const ariaPressed = await button.getAttribute("aria-pressed");
+
+    if (ariaPressed !== null) {
+      return ariaPressed === "true";
+    }
+
+    return false;
+  }
+
+  async verifyPrioritySelected(priority) {
+    const button = this.getPriorityButton(priority);
+
+    await expect(button).toBeVisible();
+
+    const ariaSelected = await button.getAttribute("aria-selected");
+
+    if (ariaSelected !== null) {
+      await expect(button).toHaveAttribute("aria-selected", "true");
+      return;
+    }
+
+    const ariaPressed = await button.getAttribute("aria-pressed");
+
+    if (ariaPressed !== null) {
+      await expect(button).toHaveAttribute("aria-pressed", "true");
+      return;
+    }
+
+    throw new Error(
+      `Priority "${priority}" does not have aria-selected or aria-pressed attribute`,
+    );
+  }
+
+  async verifyPriorityNotSelected(priority) {
+    const button = this.getPriorityButton(priority);
+
+    const ariaSelected = await button.getAttribute("aria-selected");
+
+    if (ariaSelected !== null) {
+      await expect(button).toHaveAttribute("aria-selected", "false");
+      return;
+    }
+
+    const ariaPressed = await button.getAttribute("aria-pressed");
+
+    if (ariaPressed !== null) {
+      await expect(button).toHaveAttribute("aria-pressed", "false");
+      return;
+    }
+  }
+
+  async getPriorityOptions() {
+    return this.priorityButtons.allTextContents();
+  }
+
+  async verifyPriorityOptionsOrder() {
+    const priorities = this.page.locator('[role="tab"], button').filter({
+      hasText: /^(High|Medium|Low)$/,
+    });
+
+    await expect(priorities).toHaveText(["High", "Medium", "Low"]);
+  }
+  getStatusButton(status) {
+    return this.statusButtons.filter({
+      hasText: status,
+    });
+  }
+
+  async verifyStatusSectionVisible() {
+    await expect(this.statusText).toBeVisible();
+
+    await expect(this.getStatusButton("Active")).toBeVisible();
+    await expect(this.getStatusButton("Pending")).toBeVisible();
+  }
+
+  async verifyStatusButtonsEnabled() {
+    await expect(this.getStatusButton("Active")).toBeEnabled();
+    await expect(this.getStatusButton("Pending")).toBeEnabled();
+  }
+
+  async selectStatusButton(status) {
+    const button = this.getStatusButton(status);
+
+    await expect(button).toBeVisible();
+    await expect(button).toBeEnabled();
+
+    await button.click();
+  }
+
+  async verifyStatusSelected(status) {
+    const button = this.getStatusButton(status);
+
+    await expect(button).toHaveAttribute("aria-selected", "true");
+  }
+
+  async verifyStatusNotSelected(status) {
+    const button = this.getStatusButton(status);
+
+    await expect(button).toHaveAttribute("aria-selected", "false");
+  }
+
+  async verifyDefaultStatus() {
+    await this.verifyStatusSelected("Active");
+
+    await this.verifyStatusNotSelected("Pending");
+  }
+
+  async verifyStatusOrder() {
+    await expect(this.statusButtons).toHaveText(["Active", "Pending"]);
   }
 }
 

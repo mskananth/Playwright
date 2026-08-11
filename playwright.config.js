@@ -19,8 +19,20 @@ export default defineConfig({
     timeout: 40 * 1000,
   },
   reporter: "html",
+  // use: {
+  //   browserName: "chromium",
+  //   viewport: { width: 1920, height: 1080 },
+  //   deviceScaleFactor: 1,
+  //   /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
+  // },
   use: {
-    browserName: "chromium",
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
+    headless: false,
+
+    viewport: {
+      width: 1366,
+      height: 768,
+    },
+
+    deviceScaleFactor: 1,
   },
 });
