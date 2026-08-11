@@ -27,12 +27,10 @@ export default defineConfig({
   // },
   use: {
     headless: false,
-
-    viewport: {
-      width: 1366,
-      height: 768,
+    viewport: null,
+    // deviceScaleFactor: 1,
+    launchOptions: {
+      args: ["--window-position=0,0", "--window-size=1920,1080"],
     },
-
-    deviceScaleFactor: 1,
   },
 });

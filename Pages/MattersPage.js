@@ -73,9 +73,7 @@ class MatterPage {
       'input[formcontrolname="tags"], input[name="tags"], input[placeholder*="Tag"], input[aria-label*="Tag"]',
     );
     this.tagChips = page.locator(".tag-chip, .tag-pill, .tag-item, .mat-chip");
-    this.addOpponentAdvocateButton = page.locator(
-      'button:has-text("Opponent Advocate +"), button:has-text("Add Opponent Advocate"), button:has-text("Add Advocate"), button:has-text("+")',
-    );
+
     this.opponentNameInput = page.locator(
       'input[formcontrolname="opponent_advocate_name"], input[placeholder*="Advocate Name"], input[placeholder*="Name"], input[name*="advocate"][name*="name"]',
     );
@@ -104,11 +102,59 @@ class MatterPage {
       hasText: "List of Matters",
     });
 
-    this.statusText = page.getByText("Status", {
+    this.statusText = this.page.locator("p.prioritytxt.fontbold.pad", {
+      hasText: "Status",
+    });
+
+    this.statusButtons = this.page.locator(
+      '[role="tab"]:has-text("Active"), [role="tab"]:has-text("Pending"), [role="tab"]:has-text("Closed"), button:has-text("Active"), button:has-text("Pending"), button:has-text("Closed")',
+    );
+
+    this.tagsText = page.getByText("Tags", {
       exact: true,
     });
 
-    this.statusButtons = page.locator('button[name="status"][role="tab"]');
+    this.tagInput = page.getByPlaceholder("Type to add Matter Tag(s)");
+
+    this.addTagButton = page.getByRole("button", {
+      name: "ADD",
+      exact: true,
+    });
+    this.opponentAdvocateHeading = page.getByText("Opponent Advocate(s)", {
+      exact: true,
+    });
+
+    this.addButton = page.locator("i.fa.fa-plus-circle.plus");
+
+    this.opponentAdvocateText = page.getByText("Opponent Advocate(s)", {
+      exact: true,
+    });
+
+    this.addOpponentAdvocateButton = page.getByRole("button", {
+      name: "+",
+    });
+
+    this.opponentAdvocateNameInput = page.getByPlaceholder("Name", {
+      exact: true,
+    });
+
+    this.opponentAdvocateEmailInput = page.getByPlaceholder("Email Address", {
+      exact: true,
+    });
+
+    this.opponentAdvocatePhoneInput = page.getByPlaceholder("Phone Number", {
+      exact: true,
+    });
+
+    this.cancelButton = page.getByRole("button", {
+      name: "Cancel",
+      exact: true,
+    });
+
+    this.saveButton = page.getByRole("button", {
+      name: "Save",
+      exact: true,
+    });
   }
 
   async openLegalMatters() {
@@ -230,8 +276,8 @@ class MatterPage {
   }
 
   async openOpponentAdvocate() {
-    if ((await this.addOpponentAdvocateButton.count()) > 0) {
-      await this.addOpponentAdvocateButton.first().click();
+    if ((await this.addButton.count()) > 0) {
+      await this.addButton.first().click();
     }
   }
 
@@ -271,14 +317,6 @@ class MatterPage {
     }
   }
 
-  // async clickSaveAndNext() {
-  //   if ((await this.saveButton.count()) > 0) {
-  //     await Promise.all([
-  //       this.saveButton.first().click(),
-  //       this.page.waitForLoadState("networkidle"),
-  //     ]);
-  //   }
-  // }
   async clickSaveForLater() {
     const button = this.saveForLaterButton.first();
 
@@ -423,9 +461,10 @@ class MatterPage {
 
     await expect(priorities).toHaveText(["High", "Medium", "Low"]);
   }
+
   getStatusButton(status) {
-    return this.statusButtons.filter({
-      hasText: status,
+    return this.page.locator('[role="tab"], button').filter({
+      hasText: new RegExp(`^${status}$`),
     });
   }
 
@@ -470,6 +509,142 @@ class MatterPage {
 
   async verifyStatusOrder() {
     await expect(this.statusButtons).toHaveText(["Active", "Pending"]);
+  }
+  async verifyTagsSectionVisible() {
+    // await expect(this.tagsText).isVisible();
+    await expect(this.tagsText).toBeVisible();
+
+    await expect(this.tagInput).toBeVisible();
+
+    await expect(this.addTagButton).toBeVisible();
+  }
+
+  async verifyTagsInputEnabled() {
+    await expect(this.tagInput).toBeEnabled();
+    await expect(this.addTagButton).toBeEnabled();
+  }
+
+  async enterTag(tag) {
+    await expect(this.tagInput).toBeVisible();
+    await this.tagInput.fill(tag);
+  }
+
+  async clickAddTag() {
+    await expect(this.addTagButton).toBeVisible();
+    await expect(this.addTagButton).toBeEnabled();
+
+    await this.addTagButton.click();
+  }
+
+  async addTag(tag) {
+    await this.enterTag(tag);
+    await this.clickAddTag();
+  }
+
+  async verifyTagInputValue(value) {
+    await expect(this.tagInput).toHaveValue(value);
+  }
+
+  async verifyTagInputIsEmpty() {
+    await expect(this.tagInput).toHaveValue("");
+  }
+
+  async verifyTagDisplayed(tag) {
+    await expect(this.page.getByText(tag, { exact: true })).toBeVisible();
+  }
+
+  async verifyOpponentAdvocateHeadingVisible() {
+    await expect(this.opponentAdvocateHeading).toBeVisible();
+  }
+
+  async verifyAddOpponentAdvocateButtonVisible() {
+    await expect(this.addButton).toBeVisible();
+  }
+
+  async verifyAddOpponentAdvocateButtonEnabled() {
+    await expect(this.addButton).toBeEnabled();
+  }
+
+  async clickAddOpponentAdvocate() {
+    await expect(this.addButton).toBeVisible();
+
+    await expect(this.addButton).toBeEnabled();
+
+    await this.addButton.click();
+  }
+
+  async verifyOpponentAdvocateSectionVisible() {
+    await expect(this.opponentAdvocateText).toBeVisible();
+
+    await expect(this.addOpponentAdvocateButton).toBeVisible();
+
+    await expect(this.opponentAdvocateNameInput).toBeVisible();
+
+    await expect(this.opponentAdvocateEmailInput).toBeVisible();
+
+    await expect(this.opponentAdvocatePhoneInput).toBeVisible();
+
+    await expect(this.cancelButton).toBeVisible();
+
+    await expect(this.saveButton).toBeVisible();
+  }
+
+  async verifyOpponentAdvocateFieldsEnabled() {
+    await expect(this.opponentAdvocateNameInput).toBeEnabled();
+
+    await expect(this.opponentAdvocateEmailInput).toBeEnabled();
+
+    await expect(this.opponentAdvocatePhoneInput).toBeEnabled();
+  }
+
+  async verifyOpponentAdvocateButtonsEnabled() {
+    await expect(this.addOpponentAdvocateButton).toBeEnabled();
+
+    await expect(this.cancelButton).toBeEnabled();
+
+    await expect(this.saveButton).toBeEnabled();
+  }
+
+  async enterOpponentAdvocateName(name) {
+    await this.opponentAdvocateNameInput.fill(name);
+  }
+
+  async enterOpponentAdvocateEmail(email) {
+    await this.opponentAdvocateEmailInput.fill(email);
+  }
+
+  async enterOpponentAdvocatePhone(phone) {
+    await this.opponentAdvocatePhoneInput.fill(phone);
+  }
+
+  async enterOpponentAdvocateDetails(name, email, phone) {
+    await this.enterOpponentAdvocateName(name);
+
+    await this.enterOpponentAdvocateEmail(email);
+
+    await this.enterOpponentAdvocatePhone(phone);
+  }
+
+  async verifyOpponentAdvocateDetails(name, email, phone) {
+    await expect(this.opponentAdvocateNameInput).toHaveValue(name);
+
+    await expect(this.opponentAdvocateEmailInput).toHaveValue(email);
+
+    await expect(this.opponentAdvocatePhoneInput).toHaveValue(phone);
+  }
+
+  async clickAddOpponentAdvocate() {
+    await expect(this.addOpponentAdvocateButton).toBeVisible();
+
+    await this.addOpponentAdvocateButton.click();
+  }
+
+  async clickCancel() {
+    await this.cancelButton.click();
+  }
+
+  async clickSave() {
+    await this.saveButton.click();
   }
 }
 

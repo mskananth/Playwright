@@ -353,23 +353,6 @@ test("32 - Verify priority buttons are clickable", async () => {
     await matterPage.selectPriorityButton(priority);
   }
 });
-test.only("Check page dimensions", async ({ page }) => {
-  await page.goto("YOUR_URL");
-
-  const dimensions = await page.evaluate(() => ({
-    innerWidth: window.innerWidth,
-    innerHeight: window.innerHeight,
-    outerWidth: window.outerWidth,
-    outerHeight: window.outerHeight,
-    documentWidth: document.documentElement.scrollWidth,
-    documentHeight: document.documentElement.scrollHeight,
-    bodyWidth: document.body.scrollWidth,
-    devicePixelRatio: window.devicePixelRatio,
-    zoom: getComputedStyle(document.documentElement).zoom,
-  }));
-
-  console.log(dimensions);
-});
 
 test("33 - Verify Status section is displayed", async () => {
   await matterPage.clickAdditionalDetails();
@@ -377,25 +360,25 @@ test("33 - Verify Status section is displayed", async () => {
   await matterPage.verifyStatusSectionVisible();
 });
 
-test("TC14 - Verify Status options are displayed in correct order", async () => {
+test("34 - Verify Status options are displayed in correct order", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.verifyStatusOrder();
 });
 
-test("TC15 - Verify all Status options are enabled", async () => {
+test("35 - Verify all Status options are enabled", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.verifyStatusButtonsEnabled();
 });
 
-test("TC16 - Verify Active Status is selected by default", async () => {
+test("36 - Verify Active Status is selected by default", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.verifyDefaultStatus();
 });
 
-test("TC17 - Verify Pending Status can be selected", async () => {
+test("37 - Verify Pending Status can be selected", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.selectStatusButton("Pending");
@@ -403,7 +386,7 @@ test("TC17 - Verify Pending Status can be selected", async () => {
   await matterPage.verifyStatusSelected("Pending");
 });
 
-test("TC18 - Verify Active Status can be selected", async () => {
+test("38 - Verify Active Status can be selected", async () => {
   await matterPage.clickAdditionalDetails();
 
   // First select Pending
@@ -415,7 +398,7 @@ test("TC18 - Verify Active Status can be selected", async () => {
   await matterPage.verifyStatusSelected("Active");
 });
 
-test("TC19 - Verify only one Status can be selected at a time", async () => {
+test("39 - Verify only one Status can be selected at a time", async () => {
   await matterPage.clickAdditionalDetails();
 
   // Select Pending
@@ -431,20 +414,19 @@ test("TC19 - Verify only one Status can be selected at a time", async () => {
   await matterPage.verifyStatusNotSelected("Pending");
 });
 
-test("TC20 - Verify Status can be changed from Active to Pending", async () => {
+test("40 - Verify Status can be changed from Active to Pending", async () => {
   await matterPage.clickAdditionalDetails();
 
   // Verify initial state
   await matterPage.verifyStatusSelected("Active");
 
-  // Change to Pending
   await matterPage.selectStatusButton("Pending");
 
   await matterPage.verifyStatusSelected("Pending");
   await matterPage.verifyStatusNotSelected("Active");
 });
 
-test("TC21 - Verify Status can be changed from Pending to Active", async () => {
+test("41 - Verify Status can be changed from Pending to Active", async () => {
   await matterPage.clickAdditionalDetails();
 
   // Select Pending
@@ -452,14 +434,13 @@ test("TC21 - Verify Status can be changed from Pending to Active", async () => {
 
   await matterPage.verifyStatusSelected("Pending");
 
-  // Change back to Active
   await matterPage.selectStatusButton("Active");
 
   await matterPage.verifyStatusSelected("Active");
   await matterPage.verifyStatusNotSelected("Pending");
 });
 
-test("TC22 - Verify Status options are clickable", async () => {
+test("42 - Verify Status options are clickable", async () => {
   await matterPage.clickAdditionalDetails();
 
   const statuses = ["Active", "Pending"];
@@ -471,20 +452,338 @@ test("TC22 - Verify Status options are clickable", async () => {
   }
 });
 
-test.only("Add Matter Tag", async () => {
+test("43 - Verify Tags section is displayed", async () => {
   await matterPage.clickAdditionalDetails();
-  const before = await matterPage.getTagCount();
-  await matterPage.addMatterTag(defaultMatter.tags[0]);
-  expect(await matterPage.getTagCount()).toBeGreaterThan(before);
+  await matterPage.verifyTagsSectionVisible();
 });
 
-test("Add duplicate tag", async () => {
-  if ((await matterPage.tagInput.count()) === 0) test.skip();
-  await matterPage.addMatterTag(matterData.duplicateTag);
-  const countAfterFirst = await matterPage.getTagCount();
-  await matterPage.addMatterTag(matterData.duplicateTag);
-  const countAfterSecond = await matterPage.getTagCount();
-  expect(countAfterSecond).toBeLessThanOrEqual(countAfterFirst + 1);
+test("44 - Verify Tags input and ADD button are enabled", async () => {
+  await matterPage.clickAdditionalDetails();
+  await matterPage.verifyTagsInputEnabled();
+});
+
+test("45 - Verify Tags input has correct placeholder", async () => {
+  await matterPage.clickAdditionalDetails();
+  await expect(matterPage.tagInput).toHaveAttribute(
+    "placeholder",
+    "Type to add Matter Tag(s)",
+  );
+});
+
+test("46 - Verify ADD button is displayed with correct text", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await expect(matterPage.addTagButton).toHaveText("ADD");
+});
+
+test("47 - Verify user can enter a tag", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.enterTag("TestTag");
+
+  await matterPage.verifyTagInputValue("TestTag");
+});
+
+test("48 - Verify user can add a tag", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.addTag("TestTag");
+
+  await matterPage.verifyTagDisplayed("TestTag");
+});
+
+test("49 - Verify user can add a tag with spaces", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.addTag("Matter Tag");
+
+  await matterPage.verifyTagDisplayed("Matter Tag");
+});
+
+test("50 - Verify user can add another tag", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.addTag("Legal");
+
+  await matterPage.verifyTagDisplayed("Legal");
+});
+
+test("51 - Verify tag input is cleared after adding tag", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.enterTag("TestTag");
+
+  await matterPage.clickAddTag();
+
+  await matterPage.verifyTagInputIsEmpty();
+});
+
+test("52 - Verify multiple tags can be added", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.addTag("TagOne");
+
+  await matterPage.addTag("TagTwo");
+
+  await matterPage.verifyTagDisplayed("TagOne");
+  await matterPage.verifyTagDisplayed("TagTwo");
+});
+
+test("53 - Verify tag is added only after clicking ADD", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.enterTag("TestTag");
+
+  await matterPage.verifyTagInputValue("TestTag");
+
+  await matterPage.clickAddTag();
+
+  await matterPage.verifyTagDisplayed("TestTag");
+});
+
+test("54 - Verify empty tag cannot be added", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyTagInputIsEmpty();
+
+  await matterPage.clickAddTag();
+
+  await matterPage.verifyTagInputIsEmpty();
+});
+
+test("55 - Verify tag can be changed before clicking ADD", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.enterTag("FirstTag");
+
+  await matterPage.enterTag("SecondTag");
+
+  await matterPage.verifyTagInputValue("SecondTag");
+
+  await matterPage.clickAddTag();
+
+  await matterPage.verifyTagDisplayed("SecondTag");
+});
+
+test.only("TC56 - Verify Opponent Advocate(s) heading is visible", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyOpponentAdvocateHeadingVisible();
+});
+
+test.only("TC57 - Verify Add Opponent Advocate button is visible", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyAddOpponentAdvocateButtonVisible();
+});
+
+test.only("TC58 - Verify Add Opponent Advocate button is enabled", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyAddOpponentAdvocateButtonEnabled();
+});
+
+test.only("TC59 - Verify Add Opponent Advocate button is clickable", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.clickAddOpponentAdvocate();
+});
+
+test("TC59 - Verify Add button displays Opponent Advocate fields", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.clickAddOpponentAdvocate();
+
+  await expect(matterPage.opponentAdvocateNameInput).toBeVisible();
+
+  await expect(matterPage.opponentAdvocateEmailInput).toBeVisible();
+
+  await expect(matterPage.opponentAdvocatePhoneInput).toBeVisible();
+});
+
+test("TC60 - Verify Opponent Advocate section is displayed", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyOpponentAdvocateSectionVisible();
+});
+
+test("TC37 - Verify Opponent Advocate fields are enabled", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyOpponentAdvocateFieldsEnabled();
+});
+
+test("TC38 - Verify Opponent Advocate buttons are enabled", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyOpponentAdvocateButtonsEnabled();
+});
+
+test("TC39 - Verify Name field placeholder", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await expect(matterPage.opponentAdvocateNameInput).toHaveAttribute(
+    "placeholder",
+    "Name",
+  );
+});
+
+test("TC40 - Verify Email Address field placeholder", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await expect(matterPage.opponentAdvocateEmailInput).toHaveAttribute(
+    "placeholder",
+    "Email Address",
+  );
+});
+
+test("TC41 - Verify Phone Number field placeholder", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await expect(matterPage.opponentAdvocatePhoneInput).toHaveAttribute(
+    "placeholder",
+    "Phone Number",
+  );
+});
+
+test("TC42 - Verify Cancel button text", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await expect(matterPage.cancelButton).toHaveText("Cancel");
+});
+
+test("TC43 - Verify Save button text", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await expect(matterPage.saveButton).toHaveText("Save");
+});
+
+test("TC44 - Verify user can enter Opponent Advocate name", async () => {
+  await matterPage.enterOpponentAdvocateName("John Smith");
+
+  await expect(matterPage.opponentAdvocateNameInput).toHaveValue("John Smith");
+});
+
+test("TC45 - Verify user can enter Opponent Advocate email", async () => {
+  await matterPage.enterOpponentAdvocateEmail("john.smith@example.com");
+
+  await expect(matterPage.opponentAdvocateEmailInput).toHaveValue(
+    "john.smith@example.com",
+  );
+});
+
+test("TC46 - Verify user can enter Opponent Advocate phone number", async () => {
+  await matterPage.enterOpponentAdvocatePhone("9876543210");
+
+  await expect(matterPage.opponentAdvocatePhoneInput).toHaveValue("9876543210");
+});
+
+test("TC47 - Verify user can enter complete Opponent Advocate details", async () => {
+  await matterPage.enterOpponentAdvocateDetails(
+    "John Smith",
+    "john.smith@example.com",
+    "9876543210",
+  );
+
+  await matterPage.verifyOpponentAdvocateDetails(
+    "John Smith",
+    "john.smith@example.com",
+    "9876543210",
+  );
+});
+
+test("TC48 - Verify Add button is clickable", async () => {
+  await matterPage.clickAddOpponentAdvocate();
+});
+
+test("TC49 - Verify clicking Add creates another Opponent Advocate section", async () => {
+  const initialNameFields = matterPage.opponentAdvocateNameInput;
+
+  const initialCount = await initialNameFields.count();
+
+  await matterPage.clickAddOpponentAdvocate();
+
+  await expect(initialNameFields).toHaveCount(initialCount + 1);
+});
+
+test("TC50 - Verify entered Opponent Advocate details are retained", async () => {
+  await matterPage.enterOpponentAdvocateDetails(
+    "John Smith",
+    "john.smith@example.com",
+    "9876543210",
+  );
+
+  await matterPage.verifyOpponentAdvocateDetails(
+    "John Smith",
+    "john.smith@example.com",
+    "9876543210",
+  );
+});
+
+test("TC51 - Verify Cancel button closes Opponent Advocate section", async () => {
+  await matterPage.clickCancel();
+
+  await expect(matterPage.opponentAdvocateNameInput).not.toBeVisible();
+});
+
+test("TC51 - Verify Cancel clears Opponent Advocate details", async () => {
+  await matterPage.enterOpponentAdvocateDetails(
+    "John Smith",
+    "john.smith@example.com",
+    "9876543210",
+  );
+
+  await matterPage.clickCancel();
+
+  await expect(matterPage.opponentAdvocateNameInput).toHaveValue("");
+
+  await expect(matterPage.opponentAdvocateEmailInput).toHaveValue("");
+
+  await expect(matterPage.opponentAdvocatePhoneInput).toHaveValue("");
+});
+
+test("TC52 - Verify Opponent Advocate details can be saved", async () => {
+  await matterPage.enterOpponentAdvocateDetails(
+    "John Smith",
+    "john.smith@example.com",
+    "9876543210",
+  );
+
+  await matterPage.clickSave();
+});
+
+test("TC53 - Verify Save closes Opponent Advocate form", async () => {
+  await matterPage.enterOpponentAdvocateDetails(
+    "John Smith",
+    "john.smith@example.com",
+    "9876543210",
+  );
+
+  await matterPage.clickSave();
+
+  await expect(matterPage.opponentAdvocateNameInput).not.toBeVisible();
+});
+
+test("TC54 - Verify invalid email is not accepted", async () => {
+  await matterPage.enterOpponentAdvocateDetails(
+    "John Smith",
+    "invalid-email",
+    "9876543210",
+  );
+
+  await matterPage.clickSave();
+
+  await expect(matterPage.opponentAdvocateEmailInput).toBeVisible();
+});
+
+test("TC55 - Verify required fields are validated", async () => {
+  await matterPage.clickSave();
+
+  await expect(matterPage.opponentAdvocateNameInput).toBeVisible();
+
+  await expect(matterPage.opponentAdvocateEmailInput).toBeVisible();
+
+  await expect(matterPage.opponentAdvocatePhoneInput).toBeVisible();
 });
 
 test("Click Opponent Advocate +", async () => {
