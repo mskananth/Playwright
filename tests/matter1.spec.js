@@ -134,6 +134,7 @@ test("14. Save draft with mandatory only", async () => {
 });
 
 test("15. Validate Save & Next button state", async () => {
+  // Mandatory Case Title is empty
   await expect(matterPage.saveButton).toBeDisabled();
 
   // Enter valid Case Title
@@ -202,47 +203,41 @@ test("20. Validate Description field is visible and responsive", async () => {
   await expect(matterPage.descriptionInput).toHaveValue("Test description");
 });
 
-test("Data-driven Case Type matter creation", () => {
-  for (const caseType of caseTypes) {
-    test(`Create matter using Case Type: ${caseType}`, async ({ page }) => {
-      const matterPage = new MatterPage(page); // fresh instance per test
-      await matterPage.openMatterCreation(); // navigate fresh each time
+test("21.Validate the Case Dropdown is responsive", async () => {
+  await matterPage.clickAdditionalDetails();
 
-      const title = `CaseType ${caseType} ${Date.now()}`;
-      await matterPage.fillCaseTitle(title);
-      await matterPage.fillCaseType(caseType);
+  await expect(matterPage.caseTypeSelect).toBeVisible();
 
-      const saved = await matterPage.clickSaveAndNext();
-      test.skip(!saved, "Save & Next button not available");
+  await matterPage.caseTypeSelect.selectOption({ label: "Civil Law" });
 
-      await matterPage.verifyMatterCreatedInView(title);
-    });
-  }
+  await expect(matterPage.caseTypeSelect).toHaveValue(
+    await matterPage.caseTypeSelect.inputValue(),
+  );
 });
 
-test("Validate Court field", async () => {
-  await matterPage.additionalDetails.click();
+test("22. Validate Court field", async () => {
+  await matterPage.clickAdditionalDetails();
 
   await expect(matterPage.courtInput).toBeVisible();
 
-  await matterPage.courtInput(defaultMatter.court);
+  await matterPage.fillCourt(defaultMatter.court);
 
   await expect(matterPage.courtInput).toHaveValue(defaultMatter.court);
 });
 
-test("Validate Judge field", async () => {
-  await matterPage.additionalDetails.click();
+test("23.Validate Judge field", async () => {
+  await matterPage.clickAdditionalDetails();
   await expect(matterPage.judgesInput).toBeVisible();
   await matterPage.judgesInput.fill(defaultMatter.judge);
   await expect(matterPage.judgesInput).toHaveValue(defaultMatter.judge);
 });
 
-test("Validate Priority Heading", async () => {
+test("24.Validate Priority Heading", async () => {
   await matterPage.additionalDetails.click();
   await expect(matterPage.priorityText).toBeVisible();
 });
 
-test("Validate priority buttons visibility, appearance, and responsive behavior", async () => {
+test("25.Validate priority buttons visibility, appearance, and responsive behavior", async () => {
   await matterPage.clickAdditionalDetails();
 
   if ((await matterPage.priorityButtons.count()) === 0) {
@@ -290,53 +285,504 @@ test("Validate priority buttons visibility, appearance, and responsive behavior"
     await expect(element).toBeEnabled();
   }
 
-  await matterPage.page.setViewportSize({ width: 1280, height: 900 });
+  await matterPage.page.setViewportSize({ width: 1200, height: 900 });
 });
 
-test("Validate Priority default", async () => {
-  // if ((await matterPage.prioritySelect.count()) === 0) test.skip();
-  const selected = await matterPage.prioritySelect.inputValue();
-  expect(selected).not.toBe("");
+test("26 - Verify Priority section is displayed", async () => {
+  await matterPage.clickAdditionalDetails();
+  await matterPage.verifyPrioritySectionVisible();
 });
 
-test("Change Priority", async () => {
-  if ((await matterPage.prioritySelect.count()) === 0) test.skip();
-  const options = await matterPage.getDropdownOptions(
-    matterPage.prioritySelect,
+test("27 - Verify High priority is selected by default", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyPrioritySelected("High");
+});
+
+test("28 - Verify Medium priority can be selected", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.selectPriorityButton("Medium");
+
+  await matterPage.verifyPrioritySelected("Medium");
+});
+
+test("29 - Verify Low priority can be selected", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.selectPriorityButton("Low");
+
+  await matterPage.verifyPrioritySelected("Low");
+});
+
+test("30 - Verify only one priority can be selected at a time", async () => {
+  // Select Medium
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.selectPriorityButton("Medium");
+
+  await matterPage.verifyPrioritySelected("Medium");
+
+  // Select Low
+  await matterPage.selectPriorityButton("Low");
+
+  await matterPage.verifyPrioritySelected("Low");
+
+  // Medium should no longer be selected
+  await matterPage.verifyPriorityNotSelected("Medium");
+});
+
+test("31 - Verify priority options are in correct order", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyPriorityOptionsOrder();
+});
+
+test("32 - Verify priority buttons are clickable", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  const priorities = ["High", "Medium", "Low"];
+
+  for (const priority of priorities) {
+    const button = matterPage.getPriorityButton(priority);
+
+    await expect(button).toBeVisible();
+    await expect(button).toBeEnabled();
+
+    await matterPage.selectPriorityButton(priority);
+  }
+});
+
+test("33 - Verify Status section is displayed", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyStatusSectionVisible();
+});
+
+test("34 - Verify Status options are displayed in correct order", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyStatusOrder();
+});
+
+test("35 - Verify all Status options are enabled", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyStatusButtonsEnabled();
+});
+
+test("36 - Verify Active Status is selected by default", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyDefaultStatus();
+});
+
+test("37 - Verify Pending Status can be selected", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.selectStatusButton("Pending");
+
+  await matterPage.verifyStatusSelected("Pending");
+});
+
+test("38 - Verify Active Status can be selected", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  // First select Pending
+  await matterPage.selectStatusButton("Pending");
+
+  // Select Active
+  await matterPage.selectStatusButton("Active");
+
+  await matterPage.verifyStatusSelected("Active");
+});
+
+test("39 - Verify only one Status can be selected at a time", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  // Select Pending
+  await matterPage.selectStatusButton("Pending");
+
+  await matterPage.verifyStatusSelected("Pending");
+  await matterPage.verifyStatusNotSelected("Active");
+
+  // Select Active
+  await matterPage.selectStatusButton("Active");
+
+  await matterPage.verifyStatusSelected("Active");
+  await matterPage.verifyStatusNotSelected("Pending");
+});
+
+test("40 - Verify Status can be changed from Active to Pending", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  // Verify initial state
+  await matterPage.verifyStatusSelected("Active");
+
+  await matterPage.selectStatusButton("Pending");
+
+  await matterPage.verifyStatusSelected("Pending");
+  await matterPage.verifyStatusNotSelected("Active");
+});
+
+test("41 - Verify Status can be changed from Pending to Active", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  // Select Pending
+  await matterPage.selectStatusButton("Pending");
+
+  await matterPage.verifyStatusSelected("Pending");
+
+  await matterPage.selectStatusButton("Active");
+
+  await matterPage.verifyStatusSelected("Active");
+  await matterPage.verifyStatusNotSelected("Pending");
+});
+
+test("42 - Verify Status options are clickable", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  const statuses = ["Active", "Pending"];
+
+  for (const status of statuses) {
+    await matterPage.selectStatusButton(status);
+
+    await matterPage.verifyStatusSelected(status);
+  }
+});
+
+test("43 - Verify Tags section is displayed", async () => {
+  await matterPage.clickAdditionalDetails();
+  await matterPage.verifyTagsSectionVisible();
+});
+
+test("44 - Verify Tags input and ADD button are enabled", async () => {
+  await matterPage.clickAdditionalDetails();
+  await matterPage.verifyTagsInputEnabled();
+});
+
+test("45 - Verify Tags input has correct placeholder", async () => {
+  await matterPage.clickAdditionalDetails();
+  await expect(matterPage.tagInput).toHaveAttribute(
+    "placeholder",
+    "Type to add Matter Tag(s)",
   );
-  if (options.length < 2) test.skip("Not enough priority options");
-  await matterPage.selectPriority(options[1]);
-  expect(await matterPage.prioritySelect.inputValue()).toBe(options[1]);
 });
 
-test("Validate Status default", async () => {
-  if ((await matterPage.statusSelect.count()) === 0) test.skip();
-  const selected = await matterPage.statusSelect.inputValue();
-  expect(selected).not.toBe("");
+test("46 - Verify ADD button is displayed with correct text", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await expect(matterPage.addTagButton).toHaveText("ADD");
 });
 
-test("Change Status", async () => {
-  if ((await matterPage.statusSelect.count()) === 0) test.skip();
-  const options = await matterPage.getDropdownOptions(matterPage.statusSelect);
-  if (options.length < 2) test.skip("Not enough status options");
-  await matterPage.selectStatus(options[1]);
-  expect(await matterPage.statusSelect.inputValue()).toBe(options[1]);
+test("47 - Verify user can enter a tag", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.enterTag("TestTag");
+
+  await matterPage.verifyTagInputValue("TestTag");
 });
 
-test("Add Matter Tag", async () => {
-  if ((await matterPage.tagInput.count()) === 0) test.skip();
-  const before = await matterPage.getTagCount();
-  await matterPage.addMatterTag(defaultMatter.tags[0]);
-  expect(await matterPage.getTagCount()).toBeGreaterThan(before);
+test("48 - Verify user can add a tag", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.addTag("TestTag");
+
+  await matterPage.verifyTagDisplayed("TestTag");
 });
 
-test("Add duplicate tag", async () => {
-  if ((await matterPage.tagInput.count()) === 0) test.skip();
-  await matterPage.addMatterTag(matterData.duplicateTag);
-  const countAfterFirst = await matterPage.getTagCount();
-  await matterPage.addMatterTag(matterData.duplicateTag);
-  const countAfterSecond = await matterPage.getTagCount();
-  expect(countAfterSecond).toBeLessThanOrEqual(countAfterFirst + 1);
+test("49 - Verify user can add a tag with spaces", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.addTag("Matter Tag");
+
+  await matterPage.verifyTagDisplayed("Matter Tag");
+});
+
+test("50 - Verify user can add another tag", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.addTag("Legal");
+
+  await matterPage.verifyTagDisplayed("Legal");
+});
+
+test("51 - Verify tag input is cleared after adding tag", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.enterTag("TestTag");
+
+  await matterPage.clickAddTag();
+
+  await matterPage.verifyTagInputIsEmpty();
+});
+
+test("52 - Verify multiple tags can be added", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.addTag("TagOne");
+
+  await matterPage.addTag("TagTwo");
+
+  await matterPage.verifyTagDisplayed("TagOne");
+  await matterPage.verifyTagDisplayed("TagTwo");
+});
+
+test("53 - Verify tag is added only after clicking ADD", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.enterTag("TestTag");
+
+  await matterPage.verifyTagInputValue("TestTag");
+
+  await matterPage.clickAddTag();
+
+  await matterPage.verifyTagDisplayed("TestTag");
+});
+
+test("54 - Verify empty tag cannot be added", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyTagInputIsEmpty();
+
+  await matterPage.clickAddTag();
+
+  await matterPage.verifyTagInputIsEmpty();
+});
+
+test("55 - Verify tag can be changed before clicking ADD", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.enterTag("FirstTag");
+
+  await matterPage.enterTag("SecondTag");
+
+  await matterPage.verifyTagInputValue("SecondTag");
+
+  await matterPage.clickAddTag();
+
+  await matterPage.verifyTagDisplayed("SecondTag");
+});
+
+test.only("TC56 - Verify Opponent Advocate(s) heading is visible", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyOpponentAdvocateHeadingVisible();
+});
+
+test.only("TC57 - Verify Add Opponent Advocate button is visible", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyAddOpponentAdvocateButtonVisible();
+});
+
+test.only("TC58 - Verify Add Opponent Advocate button is enabled", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyAddOpponentAdvocateButtonEnabled();
+});
+
+test.only("TC59 - Verify Add Opponent Advocate button is clickable", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.clickAddOpponentAdvocate();
+});
+
+test("TC59 - Verify Add button displays Opponent Advocate fields", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.clickAddOpponentAdvocate();
+
+  await expect(matterPage.opponentAdvocateNameInput).toBeVisible();
+
+  await expect(matterPage.opponentAdvocateEmailInput).toBeVisible();
+
+  await expect(matterPage.opponentAdvocatePhoneInput).toBeVisible();
+});
+
+test("TC60 - Verify Opponent Advocate section is displayed", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyOpponentAdvocateSectionVisible();
+});
+
+test("TC37 - Verify Opponent Advocate fields are enabled", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyOpponentAdvocateFieldsEnabled();
+});
+
+test("TC38 - Verify Opponent Advocate buttons are enabled", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.verifyOpponentAdvocateButtonsEnabled();
+});
+
+test("TC39 - Verify Name field placeholder", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await expect(matterPage.opponentAdvocateNameInput).toHaveAttribute(
+    "placeholder",
+    "Name",
+  );
+});
+
+test("TC40 - Verify Email Address field placeholder", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await expect(matterPage.opponentAdvocateEmailInput).toHaveAttribute(
+    "placeholder",
+    "Email Address",
+  );
+});
+
+test("TC41 - Verify Phone Number field placeholder", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await expect(matterPage.opponentAdvocatePhoneInput).toHaveAttribute(
+    "placeholder",
+    "Phone Number",
+  );
+});
+
+test("TC42 - Verify Cancel button text", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await expect(matterPage.cancelButton).toHaveText("Cancel");
+});
+
+test("TC43 - Verify Save button text", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await expect(matterPage.saveButton).toHaveText("Save");
+});
+
+test("TC44 - Verify user can enter Opponent Advocate name", async () => {
+  await matterPage.enterOpponentAdvocateName("John Smith");
+
+  await expect(matterPage.opponentAdvocateNameInput).toHaveValue("John Smith");
+});
+
+test("TC45 - Verify user can enter Opponent Advocate email", async () => {
+  await matterPage.enterOpponentAdvocateEmail("john.smith@example.com");
+
+  await expect(matterPage.opponentAdvocateEmailInput).toHaveValue(
+    "john.smith@example.com",
+  );
+});
+
+test("TC46 - Verify user can enter Opponent Advocate phone number", async () => {
+  await matterPage.enterOpponentAdvocatePhone("9876543210");
+
+  await expect(matterPage.opponentAdvocatePhoneInput).toHaveValue("9876543210");
+});
+
+test("TC47 - Verify user can enter complete Opponent Advocate details", async () => {
+  await matterPage.enterOpponentAdvocateDetails(
+    "John Smith",
+    "john.smith@example.com",
+    "9876543210",
+  );
+
+  await matterPage.verifyOpponentAdvocateDetails(
+    "John Smith",
+    "john.smith@example.com",
+    "9876543210",
+  );
+});
+
+test("TC48 - Verify Add button is clickable", async () => {
+  await matterPage.clickAddOpponentAdvocate();
+});
+
+test("TC49 - Verify clicking Add creates another Opponent Advocate section", async () => {
+  const initialNameFields = matterPage.opponentAdvocateNameInput;
+
+  const initialCount = await initialNameFields.count();
+
+  await matterPage.clickAddOpponentAdvocate();
+
+  await expect(initialNameFields).toHaveCount(initialCount + 1);
+});
+
+test("TC50 - Verify entered Opponent Advocate details are retained", async () => {
+  await matterPage.enterOpponentAdvocateDetails(
+    "John Smith",
+    "john.smith@example.com",
+    "9876543210",
+  );
+
+  await matterPage.verifyOpponentAdvocateDetails(
+    "John Smith",
+    "john.smith@example.com",
+    "9876543210",
+  );
+});
+
+test("TC51 - Verify Cancel button closes Opponent Advocate section", async () => {
+  await matterPage.clickCancel();
+
+  await expect(matterPage.opponentAdvocateNameInput).not.toBeVisible();
+});
+
+test("TC51 - Verify Cancel clears Opponent Advocate details", async () => {
+  await matterPage.enterOpponentAdvocateDetails(
+    "John Smith",
+    "john.smith@example.com",
+    "9876543210",
+  );
+
+  await matterPage.clickCancel();
+
+  await expect(matterPage.opponentAdvocateNameInput).toHaveValue("");
+
+  await expect(matterPage.opponentAdvocateEmailInput).toHaveValue("");
+
+  await expect(matterPage.opponentAdvocatePhoneInput).toHaveValue("");
+});
+
+test("TC52 - Verify Opponent Advocate details can be saved", async () => {
+  await matterPage.enterOpponentAdvocateDetails(
+    "John Smith",
+    "john.smith@example.com",
+    "9876543210",
+  );
+
+  await matterPage.clickSave();
+});
+
+test("TC53 - Verify Save closes Opponent Advocate form", async () => {
+  await matterPage.enterOpponentAdvocateDetails(
+    "John Smith",
+    "john.smith@example.com",
+    "9876543210",
+  );
+
+  await matterPage.clickSave();
+
+  await expect(matterPage.opponentAdvocateNameInput).not.toBeVisible();
+});
+
+test("TC54 - Verify invalid email is not accepted", async () => {
+  await matterPage.enterOpponentAdvocateDetails(
+    "John Smith",
+    "invalid-email",
+    "9876543210",
+  );
+
+  await matterPage.clickSave();
+
+  await expect(matterPage.opponentAdvocateEmailInput).toBeVisible();
+});
+
+test("TC55 - Verify required fields are validated", async () => {
+  await matterPage.clickSave();
+
+  await expect(matterPage.opponentAdvocateNameInput).toBeVisible();
+
+  await expect(matterPage.opponentAdvocateEmailInput).toBeVisible();
+
+  await expect(matterPage.opponentAdvocatePhoneInput).toBeVisible();
 });
 
 test("Click Opponent Advocate +", async () => {

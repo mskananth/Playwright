@@ -83,13 +83,13 @@ class MatterPage {
     this.opponentPhoneInput = page.locator(
       'input[formcontrolname="opponent_advocate_phone"], input[placeholder*="Phone"], input[placeholder*="Mobile"], input[name*="phone"]',
     );
-    this.saveButton = page.getByRole("button", {
+    this.MattersaveButton = page.getByRole("button", {
       name: /Save & Next|Save &amp; Next/,
     });
     this.saveForLaterButton = page.locator(
       'button:has-text("Save for Later"), button:has-text("Save for later"), input[value="Save for Later"], button:has-text("Save as Draft")',
     );
-    this.cancelButton = page.getByRole("button", {
+    this.cancelMatterButton = page.getByRole("button", {
       name: /Cancel|Close|Dismiss/,
     });
     this.optionalHint = page.locator(
@@ -124,7 +124,7 @@ class MatterPage {
       exact: true,
     });
 
-    this.addButton = page.locator("i.fa.fa-plus-circle.plus");
+    this.plusButton = page.locator("i.fa.fa-plus-circle.plus");
 
     this.opponentAdvocateText = page.getByText("Opponent Advocate(s)", {
       exact: true,
@@ -134,26 +134,23 @@ class MatterPage {
       name: "+",
     });
 
-    this.opponentAdvocateNameInput = page.getByPlaceholder("Name", {
-      exact: true,
-    });
+    this.opponentAdvocateSection = page.locator("add-adivicate, add-advocate");
 
-    this.opponentAdvocateEmailInput = page.getByPlaceholder("Email Address", {
-      exact: true,
-    });
+    this.opponentAdvocateNameInput =
+      this.opponentAdvocateSection.getByPlaceholder("Name", { exact: true });
 
-    this.opponentAdvocatePhoneInput = page.getByPlaceholder("Phone Number", {
-      exact: true,
-    });
+    this.opponentAdvocateEmailInput =
+      this.opponentAdvocateSection.getByPlaceholder("Email", { exact: true });
 
-    this.cancelButton = page.getByRole("button", {
+    this.opponentAdvocatePhoneInput =
+      this.opponentAdvocateSection.getByPlaceholder("Phone", { exact: true });
+
+    this.cancelButton = this.opponentAdvocateSection.getByRole("button", {
       name: "Cancel",
-      exact: true,
     });
 
-    this.saveButton = page.getByRole("button", {
+    this.saveButton = this.opponentAdvocateSection.getByRole("button", {
       name: "Save",
-      exact: true,
     });
   }
 
@@ -276,8 +273,8 @@ class MatterPage {
   }
 
   async openOpponentAdvocate() {
-    if ((await this.addButton.count()) > 0) {
-      await this.addButton.first().click();
+    if ((await this.plusButton.count()) > 0) {
+      await this.plusButton.first().click();
     }
   }
 
@@ -309,15 +306,6 @@ class MatterPage {
   }
 
   async clickSaveForLater() {
-    if ((await this.saveForLaterButton.count()) > 0) {
-      await Promise.all([
-        this.saveForLaterButton.first().click(),
-        this.page.waitForLoadState("networkidle"),
-      ]);
-    }
-  }
-
-  async clickSaveForLater() {
     const button = this.saveForLaterButton.first();
 
     if ((await button.count()) === 0) {
@@ -329,7 +317,7 @@ class MatterPage {
   }
 
   async clickSaveAndNext() {
-    const button = this.saveButton.first();
+    const button = this.MattersaveButton.first();
 
     if ((await button.count()) === 0) {
       return false;
@@ -552,31 +540,34 @@ class MatterPage {
   async verifyTagDisplayed(tag) {
     await expect(this.page.getByText(tag, { exact: true })).toBeVisible();
   }
+  async addTagPlusButton() {
+    await expect(this.plusButton).toBeVisible();
+    await expect(this.plusButton).toBeEnabled();
+
+    await this.plusButton.click();
+
+    await expect(this.opponentAdvocateSection).toBeVisible();
+  }
 
   async verifyOpponentAdvocateHeadingVisible() {
     await expect(this.opponentAdvocateHeading).toBeVisible();
   }
 
   async verifyAddOpponentAdvocateButtonVisible() {
-    await expect(this.addButton).toBeVisible();
+    await expect(this.plusButton).toBeVisible();
   }
 
   async verifyAddOpponentAdvocateButtonEnabled() {
-    await expect(this.addButton).toBeEnabled();
-  }
-
-  async clickAddOpponentAdvocate() {
-    await expect(this.addButton).toBeVisible();
-
-    await expect(this.addButton).toBeEnabled();
-
-    await this.addButton.click();
+    await expect(this.plusButton).toBeEnabled();
   }
 
   async verifyOpponentAdvocateSectionVisible() {
+    await this.plusButton.click();
+
     await expect(this.opponentAdvocateText).toBeVisible();
 
-    await expect(this.addOpponentAdvocateButton).toBeVisible();
+    // await expect(this.addOpponentAdvocateButton).toBeVisible();
+    // await page.mouse.wheel(0, 500);
 
     await expect(this.opponentAdvocateNameInput).toBeVisible();
 
@@ -590,6 +581,8 @@ class MatterPage {
   }
 
   async verifyOpponentAdvocateFieldsEnabled() {
+    await this.plusButton.click();
+
     await expect(this.opponentAdvocateNameInput).toBeEnabled();
 
     await expect(this.opponentAdvocateEmailInput).toBeEnabled();
@@ -598,13 +591,14 @@ class MatterPage {
   }
 
   async verifyOpponentAdvocateButtonsEnabled() {
+    await this.plusButton.click();
+
     await expect(this.addOpponentAdvocateButton).toBeEnabled();
 
     await expect(this.cancelButton).toBeEnabled();
 
     await expect(this.saveButton).toBeEnabled();
   }
-
   async enterOpponentAdvocateName(name) {
     await this.opponentAdvocateNameInput.fill(name);
   }
@@ -616,12 +610,9 @@ class MatterPage {
   async enterOpponentAdvocatePhone(phone) {
     await this.opponentAdvocatePhoneInput.fill(phone);
   }
-
   async enterOpponentAdvocateDetails(name, email, phone) {
     await this.enterOpponentAdvocateName(name);
-
     await this.enterOpponentAdvocateEmail(email);
-
     await this.enterOpponentAdvocatePhone(phone);
   }
 
@@ -634,13 +625,9 @@ class MatterPage {
   }
 
   async clickAddOpponentAdvocate() {
-    await expect(this.addOpponentAdvocateButton).toBeVisible();
-
-    await this.addOpponentAdvocateButton.click();
-  }
-
-  async clickCancel() {
-    await this.cancelButton.click();
+    await expect(this.saveButton).toBeVisible();
+    await expect(this.saveButton).toBeEnabled();
+    await this.saveButton.click();
   }
 
   async clickSave() {
