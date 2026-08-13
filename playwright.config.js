@@ -27,10 +27,20 @@ export default defineConfig({
   // },
   use: {
     headless: false,
-    viewport: null,
-    // deviceScaleFactor: 1,
+    // Use a fixed viewport and device scale factor so tests run with
+    // consistent layout and do not get affected by OS DPI / zoom settings.
+    viewport: { width: 1920, height: 1080 },
+    deviceScaleFactor: 1,
     launchOptions: {
-      args: ["--window-position=0,0", "--window-size=1920,1080"],
+      // Force chromium to use a 1:1 device scale factor and enable
+      // high-dpi support so Windows display scaling doesn't zoom the page.
+      args: [
+        "--window-position=0,0",
+        "--window-size=1920,1080",
+        "--force-device-scale-factor=1",
+        "--high-dpi-support=1",
+        "--disable-features=UseZoomForDSF",
+      ],
     },
   },
 });

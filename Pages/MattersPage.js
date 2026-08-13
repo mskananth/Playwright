@@ -120,38 +120,80 @@ class MatterPage {
       name: "ADD",
       exact: true,
     });
+
     this.opponentAdvocateHeading = page.getByText("Opponent Advocate(s)", {
       exact: true,
     });
 
-    this.plusButton = page.locator("i.fa.fa-plus-circle.plus");
+    this.plusOpponentLawyer = page.locator(
+      '//i[@class="fa fa-plus-circle plus"]',
+    );
+    this.addOpponentAdvocateForm = this.page.locator("add-adivicate");
 
     this.opponentAdvocateText = page.getByText("Opponent Advocate(s)", {
       exact: true,
     });
 
-    this.addOpponentAdvocateButton = page.getByRole("button", {
-      name: "+",
+    // FIX: defined for real (was commented out) — scoped to the container that
+    // wraps the Name/Email/Phone fields, using the heading as an anchor.
+    this.opponentAdvocateSection = page
+      .getByText("Opponent Advocate(s)", { exact: true })
+      .locator("xpath=ancestor::*[self::div or self::section][1]");
+
+    this.opponentAdvocateNameInput = page.getByPlaceholder("Name", {
+      exact: true,
     });
 
-    this.opponentAdvocateSection = page.locator("add-adivicate, add-advocate");
+    // this.opponentAdvocateEmailInput = page.getByPlaceholder("Email Address", {
+    //   exact: true,
+    // });
+    this.opponentAdvocateEmailInput = this.addOpponentAdvocateForm.locator(
+      'input[formcontrolname="email"]',
+    );
 
-    this.opponentAdvocateNameInput =
-      this.opponentAdvocateSection.getByPlaceholder("Name", { exact: true });
+    this.opponentAdvocatePhoneInput = page.getByPlaceholder("Phone Number", {
+      exact: true,
+    });
 
-    this.opponentAdvocateEmailInput =
-      this.opponentAdvocateSection.getByPlaceholder("Email", { exact: true });
+    // Opponent Advocate form/component
+    this.addOpponentAdvocateForm = this.page.locator("add-adivicate");
 
-    this.opponentAdvocatePhoneInput =
-      this.opponentAdvocateSection.getByPlaceholder("Phone", { exact: true });
+    // // Input fields
+    // this.opponentAdvocateNameInput =
+    //   this.addOpponentAdvocateForm.getByPlaceholder("Name", { exact: true });
 
-    this.cancelButton = this.opponentAdvocateSection.getByRole("button", {
+    // this.opponentAdvocateEmailInput =
+    //   this.addOpponentAdvocateForm.getByPlaceholder("Email Address", {
+    //     exact: true,
+    //   });
+
+    // this.opponentAdvocatePhoneInput =
+    //   this.addOpponentAdvocateForm.getByPlaceholder("Phone Number", {
+    //     exact: true,
+    //   });
+
+    // Buttons
+    this.oplcancelButton1 = this.addOpponentAdvocateForm.getByRole("button", {
       name: "Cancel",
+      exact: true,
     });
 
-    this.saveButton = this.opponentAdvocateSection.getByRole("button", {
+    this.oplsaveButton1 = this.addOpponentAdvocateForm.getByRole("button", {
       name: "Save",
+      exact: true,
     });
+    this.oplsaveButton = page.getByRole("button", {
+      name: "Save",
+      exact: true,
+    });
+    this.oplcancelButton = page.getByRole("button", {
+      name: "Cancel",
+      exact: true,
+    });
+
+    this.opponentAdvocateEditBtn = page.locator("i.fa.fa-edit");
+
+    this.clickOpponentAdvocateEdit = page.locator("i.fa.fa-edit");
   }
 
   async openLegalMatters() {
@@ -190,6 +232,7 @@ class MatterPage {
     }
   }
   async clickAdditionalDetails() {
+    // await this.resetPageZoom();
     await this.additionalDetails.click();
   }
 
@@ -273,8 +316,8 @@ class MatterPage {
   }
 
   async openOpponentAdvocate() {
-    if ((await this.plusButton.count()) > 0) {
-      await this.plusButton.first().click();
+    if ((await this.plusOpponentLawyer.count()) > 0) {
+      await this.plusOpponentLawyer.first().click();
     }
   }
 
@@ -291,8 +334,8 @@ class MatterPage {
   }
 
   async isSaveEnabled() {
-    if ((await this.saveButton.count()) === 0) return false;
-    return this.saveButton.isEnabled();
+    if ((await this.MattersaveButton.count()) === 0) return false;
+    return this.MattersaveButton.isEnabled();
   }
 
   async isSaveDisabled() {
@@ -300,9 +343,11 @@ class MatterPage {
   }
 
   async clickCancel() {
-    if ((await this.cancelButton.count()) > 0) {
-      await this.cancelButton.first().click();
-    }
+    // await expect(this.oplcancelButton).toBeVisible();
+    await this.oplcancelButton1.click();
+
+    // Verify the Add Opponent Advocate form is closed
+    // await expect(this.addOpponentAdvocateForm).toBeHidden();
   }
 
   async clickSaveForLater() {
@@ -540,13 +585,29 @@ class MatterPage {
   async verifyTagDisplayed(tag) {
     await expect(this.page.getByText(tag, { exact: true })).toBeVisible();
   }
-  async addTagPlusButton() {
-    await expect(this.plusButton).toBeVisible();
-    await expect(this.plusButton).toBeEnabled();
 
-    await this.plusButton.click();
+  async addOpponentAdvocateButton() {
+    await expect(this.plusOpponentLawyer).toBeVisible();
+    await expect(this.plusOpponentLawyer).toBeEnabled();
+    await this.plusOpponentLawyer.click();
+    await expect(this.opponentAdvocateSection).toBeVisible();
+  }
+
+  async clickAddOpponentAdvocate() {
+    await expect(this.plusOpponentLawyer).toBeVisible();
+    await expect(this.plusOpponentLawyer).toBeEnabled();
+    await this.plusOpponentLawyer.click();
 
     await expect(this.opponentAdvocateSection).toBeVisible();
+  }
+
+  async verifyCancelButton() {
+    await expect(this.oplcancelButton).toBeVisible();
+    await expect(this.oplcancelButton).toHaveText("Cancel");
+  }
+  async verifySaveButton() {
+    await expect(this.oplsaveButton).toBeVisible();
+    await expect(this.oplsaveButton).toHaveText("Save");
   }
 
   async verifyOpponentAdvocateHeadingVisible() {
@@ -554,34 +615,15 @@ class MatterPage {
   }
 
   async verifyAddOpponentAdvocateButtonVisible() {
-    await expect(this.plusButton).toBeVisible();
+    await expect(this.plusOpponentLawyer).toBeVisible();
   }
 
   async verifyAddOpponentAdvocateButtonEnabled() {
-    await expect(this.plusButton).toBeEnabled();
-  }
-
-  async verifyOpponentAdvocateSectionVisible() {
-    await this.plusButton.click();
-
-    await expect(this.opponentAdvocateText).toBeVisible();
-
-    // await expect(this.addOpponentAdvocateButton).toBeVisible();
-    // await page.mouse.wheel(0, 500);
-
-    await expect(this.opponentAdvocateNameInput).toBeVisible();
-
-    await expect(this.opponentAdvocateEmailInput).toBeVisible();
-
-    await expect(this.opponentAdvocatePhoneInput).toBeVisible();
-
-    await expect(this.cancelButton).toBeVisible();
-
-    await expect(this.saveButton).toBeVisible();
+    await expect(this.plusOpponentLawyer).toBeEnabled();
   }
 
   async verifyOpponentAdvocateFieldsEnabled() {
-    await this.plusButton.click();
+    await this.plusOpponentLawyer.click();
 
     await expect(this.opponentAdvocateNameInput).toBeEnabled();
 
@@ -591,14 +633,14 @@ class MatterPage {
   }
 
   async verifyOpponentAdvocateButtonsEnabled() {
-    await this.plusButton.click();
+    await this.plusOpponentLawyer.click();
 
-    await expect(this.addOpponentAdvocateButton).toBeEnabled();
+    await expect(this.plusOpponentLawyer).toBeEnabled();
 
-    await expect(this.cancelButton).toBeEnabled();
-
-    await expect(this.saveButton).toBeEnabled();
+    await expect(this.oplcancelButton).toBeEnabled();
+    await expect(this.oplsaveButton).toBeEnabled();
   }
+
   async enterOpponentAdvocateName(name) {
     await this.opponentAdvocateNameInput.fill(name);
   }
@@ -616,22 +658,27 @@ class MatterPage {
     await this.enterOpponentAdvocatePhone(phone);
   }
 
-  async verifyOpponentAdvocateDetails(name, email, phone) {
-    await expect(this.opponentAdvocateNameInput).toHaveValue(name);
-
-    await expect(this.opponentAdvocateEmailInput).toHaveValue(email);
-
-    await expect(this.opponentAdvocatePhoneInput).toHaveValue(phone);
+  async verifySavedOpponentAdvocateDetails(name) {
+    await expect(this.page.getByText(name, { exact: true })).toBeVisible();
   }
 
-  async clickAddOpponentAdvocate() {
-    await expect(this.saveButton).toBeVisible();
-    await expect(this.saveButton).toBeEnabled();
-    await this.saveButton.click();
+  async verifyOpponentAdvocateSectionVisible() {
+    await this.clickAddOpponentAdvocate();
+    await this.verifyOpponentAdvocateFieldsEnabled();
   }
 
   async clickSave() {
-    await this.saveButton.click();
+    await this.oplsaveButton.click();
+  }
+  async opponentAdvocateEditButton() {
+    await this.opponentAdvocateEditBtn.click();
+  }
+  async clearOpponentAdvocateDetails() {
+    await this.opponentAdvocateNameInput.clear();
+
+    await this.opponentAdvocateEmailInput.clear();
+
+    await this.opponentAdvocatePhoneInput.clear();
   }
 }
 

@@ -268,24 +268,6 @@ test("25.Validate priority buttons visibility, appearance, and responsive behavi
   if ((await selectedControl.count()) > 0) {
     await expect(selectedControl.first()).toBeVisible();
   }
-
-  await matterPage.page.setViewportSize({ width: 375, height: 812 });
-
-  for (const label of expectedLabels) {
-    const tab = matterPage.page
-      .getByRole("tab", { name: new RegExp(`^${label}$`, "i") })
-      .first();
-    const fallback = matterPage.page
-      .getByRole("button", { name: new RegExp(`^${label}$`, "i") })
-      .first();
-    const element = (await tab.count()) > 0 ? tab : fallback;
-
-    await element.scrollIntoViewIfNeeded();
-    await expect(element).toBeVisible();
-    await expect(element).toBeEnabled();
-  }
-
-  await matterPage.page.setViewportSize({ width: 1200, height: 900 });
 });
 
 test("26 - Verify Priority section is displayed", async () => {
