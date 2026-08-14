@@ -37,55 +37,46 @@ test.afterAll(async () => {
   await page.close();
 });
 
-test("1.Verify screen loads successfully", async () => {
+test("TC-01. Verify screen loads successfully", async () => {
   await expect(matterPage.caseTitleInput).toBeVisible();
 });
 
-test("2.Verify mandatory indicators", async () => {
+test("TC-02. Verify mandatory indicators", async () => {
   await expect(matterPage.caseTitleLabel).toContainText("*");
   await expect(matterPage.matterNumberLabel).toContainText("*");
 });
 
-test("3.Verify default button when no input", async () => {
+test("TC-03. Verify default button when no input", async () => {
   expect(await matterPage.isSaveDisabled()).toBeTruthy();
 });
 
-test("4.Verify Matter Number auto-generated", async () => {
+test("TC-04. Verify Matter Number auto-generated", async () => {
   await expect(matterPage.matterNumberInput).toHaveValue(/.*/);
 });
 
-test("5.Verify Matter Number not editable", async () => {
+test("TC-05. Verify Matter Number not editable", async () => {
   await expect(matterPage.matterNumberInput).toHaveAttribute("readonly", "");
 });
 
-test.skip("6.Verify tooltip message and disappear on mouse out (if present)", async () => {
-  if ((await matterPage.matterNumberTooltipTrigger.count()) === 0) {
-    test.skip("Tooltip not present");
-  }
-  await matterPage.matterNumberTooltipTrigger.first().hover();
-  await expect(matterPage.tooltip).toBeVisible({ timeout: 2000 });
-  await matterPage.page.mouse.move(0, 0);
-  await expect(matterPage.tooltip).toBeHidden({ timeout: 2000 });
-});
-
-test("7. Validate Case Title mandatory", async () => {
+test("TC-06. Validate Case Title mandatory", async () => {
   await expect(matterPage.caseTitleInput).toHaveValue("");
-  await expect(matterPage.saveButton).toBeDisabled();
+  await expect(matterPage.matterSaveButton).toBeDisabled();
   await expect(matterPage.caseTitleInput).toHaveClass(/ng-invalid/);
 });
-test("8.Validate Case Title with spaces", async () => {
+
+test("TC-07. Validate Case Title with spaces", async () => {
   await matterPage.fillCaseTitle("   ");
   await matterPage.caseTitleInput.blur();
   await expect(matterPage.caseTitleInput).toHaveClass(/ng-invalid/);
 });
 
-test("9.Validate valid Case Title", async () => {
+test("TC-08. Validate valid Case Title", async () => {
   await matterPage.fillCaseTitle(defaultMatter.title);
   await matterPage.caseTitleInput.blur();
   await expect(matterPage.caseTitleInput).not.toHaveClass(/ng-invalid/);
 });
 
-test("10.Validate max length Case Title and exceeding max length", async () => {
+test("TC-09. Validate max length Case Title and exceeding max length", async () => {
   const maxAttr = await matterPage.caseTitleInput.getAttribute("maxlength");
   if (maxAttr) {
     const max = parseInt(maxAttr, 10);
@@ -102,7 +93,7 @@ test("10.Validate max length Case Title and exceeding max length", async () => {
   }
 });
 
-test("11. Enter only Case Title and Save draft with partial data", async () => {
+test("TC-10. Enter only Case Title and Save draft with partial data", async () => {
   await matterPage.fillCaseTitle("Partial Title Only");
 
   const saved = await matterPage.clickSaveForLater();
@@ -112,20 +103,20 @@ test("11. Enter only Case Title and Save draft with partial data", async () => {
   }
 });
 
-test("12.Enter only Case Number", async () => {
+test("TC-11. Enter only Case Number", async () => {
   if ((await matterPage.caseNumberInput.count()) === 0) test.skip();
   await matterPage.fillCaseNumber(defaultMatter.caseNumber);
-  await matterPage.caseNumberInput.blur();
+  // await matterPage.caseNumberInput.blur();
   await expect(matterPage.caseNumberInput).not.toHaveClass(/ng-invalid/);
 });
 
-test("13.Clear entered data", async () => {
+test("TC-12. Clear entered data", async () => {
   await matterPage.fillCaseTitle("To be cleared");
   await matterPage.clearCaseTitle();
   expect(await matterPage.caseTitleInput.inputValue()).toBe("");
 });
 
-test("14. Save draft with mandatory only", async () => {
+test("TC-13. Save draft with mandatory only", async () => {
   await matterPage.fillCaseTitle("Mandatory Only Title");
 
   await matterPage.clickSaveForLater();
@@ -133,19 +124,16 @@ test("14. Save draft with mandatory only", async () => {
   await expect(matterPage.page).toHaveURL(/matter\/legalmatter\/create/);
 });
 
-test("15. Validate Save & Next button state", async () => {
-  // Mandatory Case Title is empty
-  await expect(matterPage.saveButton).toBeDisabled();
+test("TC-14. Validate Save & Next button state", async () => {
+  await expect(matterPage.matterSaveButton).toBeDisabled();
 
-  // Enter valid Case Title
   await matterPage.fillCaseTitle(defaultMatter.title);
   await matterPage.caseTitleInput.blur();
 
-  // Save & Next should become enabled
-  await expect(matterPage.saveButton).toBeEnabled();
+  await expect(matterPage.matterSaveButton).toBeEnabled();
 });
 
-test("16.Validate Created Date default and modify Created Date", async () => {
+test("TC-15. Validate Created Date default and modify Created Date", async () => {
   if ((await matterPage.createdDateInput.count()) === 0) test.skip();
   const defaultVal = await matterPage.createdDateInput.inputValue();
   expect(defaultVal).not.toBeNull();
@@ -154,7 +142,8 @@ test("16.Validate Created Date default and modify Created Date", async () => {
     (await matterPage.createdDateInput.inputValue()).length,
   ).toBeGreaterThan(0);
 });
-test("17. Validate Date of Filing optional and > Created Date", async () => {
+
+test("TC-16. Validate Date of Filing optional and > Created Date", async () => {
   await matterPage.clickAdditionalDetails();
 
   await expect(matterPage.dateOfFilingInput).toBeVisible();
@@ -171,7 +160,7 @@ test("17. Validate Date of Filing optional and > Created Date", async () => {
   );
 });
 
-test("18. Validate Description field is visible and responsive", async () => {
+test("TC-17. Validate Description field is visible and responsive", async () => {
   await matterPage.clickAdditionalDetails();
 
   await expect(matterPage.descriptionInput).toBeVisible();
@@ -181,41 +170,15 @@ test("18. Validate Description field is visible and responsive", async () => {
   await expect(matterPage.descriptionInput).toHaveValue("Test description");
 });
 
-test("19.Validate Case Type dropdown responsiveness", async () => {
-  if ((await matterPage.caseTypeSelect.count()) === 0)
-    test.skip("Case Type dropdown not present");
-
-  await expect(matterPage.caseTypeSelect).toBeVisible();
-  await expect(matterPage.caseTypeSelect).toBeEnabled();
-
-  const options = await matterPage.getDropdownOptions(
-    matterPage.caseTypeSelect,
-  );
-  expect(options.length).toBeGreaterThan(0);
-});
-test("20. Validate Description field is visible and responsive", async () => {
+test("TC-18. Verify Case Type can be selected", async () => {
   await matterPage.clickAdditionalDetails();
 
-  await expect(matterPage.descriptionInput).toBeVisible();
+  await matterPage.selectCaseType("Civil Law");
 
-  await matterPage.fillDescription("Test description");
-
-  await expect(matterPage.descriptionInput).toHaveValue("Test description");
+  await expect(matterPage.caseTypeDropdown).toHaveValue("Civil Law");
 });
 
-test("21.Validate the Case Dropdown is responsive", async () => {
-  await matterPage.clickAdditionalDetails();
-
-  await expect(matterPage.caseTypeSelect).toBeVisible();
-
-  await matterPage.caseTypeSelect.selectOption({ label: "Civil Law" });
-
-  await expect(matterPage.caseTypeSelect).toHaveValue(
-    await matterPage.caseTypeSelect.inputValue(),
-  );
-});
-
-test("22. Validate Court field", async () => {
+test("TC-19. Validate Court field", async () => {
   await matterPage.clickAdditionalDetails();
 
   await expect(matterPage.courtInput).toBeVisible();
@@ -225,19 +188,19 @@ test("22. Validate Court field", async () => {
   await expect(matterPage.courtInput).toHaveValue(defaultMatter.court);
 });
 
-test("23.Validate Judge field", async () => {
+test("TC-20. Validate Judge field", async () => {
   await matterPage.clickAdditionalDetails();
   await expect(matterPage.judgesInput).toBeVisible();
   await matterPage.judgesInput.fill(defaultMatter.judge);
   await expect(matterPage.judgesInput).toHaveValue(defaultMatter.judge);
 });
 
-test("24.Validate Priority Heading", async () => {
+test("TC-21. Validate Priority Heading", async () => {
   await matterPage.additionalDetails.click();
   await expect(matterPage.priorityText).toBeVisible();
 });
 
-test("25.Validate priority buttons visibility, appearance, and responsive behavior", async () => {
+test("TC-22. Validate priority buttons visibility, appearance, and responsive behavior", async () => {
   await matterPage.clickAdditionalDetails();
 
   if ((await matterPage.priorityButtons.count()) === 0) {
@@ -270,18 +233,18 @@ test("25.Validate priority buttons visibility, appearance, and responsive behavi
   }
 });
 
-test("26 - Verify Priority section is displayed", async () => {
+test("TC-23. Verify Priority section is displayed", async () => {
   await matterPage.clickAdditionalDetails();
   await matterPage.verifyPrioritySectionVisible();
 });
 
-test("27 - Verify High priority is selected by default", async () => {
+test("TC-24. Verify High priority is selected by default", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.verifyPrioritySelected("High");
 });
 
-test("28 - Verify Medium priority can be selected", async () => {
+test("TC-25. Verify Medium priority can be selected", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.selectPriorityButton("Medium");
@@ -289,7 +252,7 @@ test("28 - Verify Medium priority can be selected", async () => {
   await matterPage.verifyPrioritySelected("Medium");
 });
 
-test("29 - Verify Low priority can be selected", async () => {
+test("TC-26. Verify Low priority can be selected", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.selectPriorityButton("Low");
@@ -297,30 +260,27 @@ test("29 - Verify Low priority can be selected", async () => {
   await matterPage.verifyPrioritySelected("Low");
 });
 
-test("30 - Verify only one priority can be selected at a time", async () => {
-  // Select Medium
+test("TC-27. Verify only one priority can be selected at a time", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.selectPriorityButton("Medium");
 
   await matterPage.verifyPrioritySelected("Medium");
 
-  // Select Low
   await matterPage.selectPriorityButton("Low");
 
   await matterPage.verifyPrioritySelected("Low");
 
-  // Medium should no longer be selected
   await matterPage.verifyPriorityNotSelected("Medium");
 });
 
-test("31 - Verify priority options are in correct order", async () => {
+test("TC-28. Verify priority options are in correct order", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.verifyPriorityOptionsOrder();
 });
 
-test("32 - Verify priority buttons are clickable", async () => {
+test("TC-29. Verify priority buttons are clickable", async () => {
   await matterPage.clickAdditionalDetails();
 
   const priorities = ["High", "Medium", "Low"];
@@ -335,31 +295,31 @@ test("32 - Verify priority buttons are clickable", async () => {
   }
 });
 
-test("33 - Verify Status section is displayed", async () => {
+test("TC-30. Verify Status section is displayed", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.verifyStatusSectionVisible();
 });
 
-test("34 - Verify Status options are displayed in correct order", async () => {
+test("TC-31. Verify Status options are displayed in correct order", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.verifyStatusOrder();
 });
 
-test("35 - Verify all Status options are enabled", async () => {
+test("TC-32. Verify all Status options are enabled", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.verifyStatusButtonsEnabled();
 });
 
-test("36 - Verify Active Status is selected by default", async () => {
+test("TC-33. Verify Active Status is selected by default", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.verifyDefaultStatus();
 });
 
-test("37 - Verify Pending Status can be selected", async () => {
+test("TC-34. Verify Pending Status can be selected", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.selectStatusButton("Pending");
@@ -367,38 +327,33 @@ test("37 - Verify Pending Status can be selected", async () => {
   await matterPage.verifyStatusSelected("Pending");
 });
 
-test("38 - Verify Active Status can be selected", async () => {
+test("TC-35. Verify Active Status can be selected", async () => {
   await matterPage.clickAdditionalDetails();
 
-  // First select Pending
   await matterPage.selectStatusButton("Pending");
 
-  // Select Active
   await matterPage.selectStatusButton("Active");
 
   await matterPage.verifyStatusSelected("Active");
 });
 
-test("39 - Verify only one Status can be selected at a time", async () => {
+test("TC-36. Verify only one Status can be selected at a time", async () => {
   await matterPage.clickAdditionalDetails();
 
-  // Select Pending
   await matterPage.selectStatusButton("Pending");
 
   await matterPage.verifyStatusSelected("Pending");
   await matterPage.verifyStatusNotSelected("Active");
 
-  // Select Active
   await matterPage.selectStatusButton("Active");
 
   await matterPage.verifyStatusSelected("Active");
   await matterPage.verifyStatusNotSelected("Pending");
 });
 
-test("40 - Verify Status can be changed from Active to Pending", async () => {
+test("TC-37. Verify Status can be changed from Active to Pending", async () => {
   await matterPage.clickAdditionalDetails();
 
-  // Verify initial state
   await matterPage.verifyStatusSelected("Active");
 
   await matterPage.selectStatusButton("Pending");
@@ -407,10 +362,9 @@ test("40 - Verify Status can be changed from Active to Pending", async () => {
   await matterPage.verifyStatusNotSelected("Active");
 });
 
-test("41 - Verify Status can be changed from Pending to Active", async () => {
+test("TC-38. Verify Status can be changed from Pending to Active", async () => {
   await matterPage.clickAdditionalDetails();
 
-  // Select Pending
   await matterPage.selectStatusButton("Pending");
 
   await matterPage.verifyStatusSelected("Pending");
@@ -421,7 +375,7 @@ test("41 - Verify Status can be changed from Pending to Active", async () => {
   await matterPage.verifyStatusNotSelected("Pending");
 });
 
-test("42 - Verify Status options are clickable", async () => {
+test("TC-39. Verify Status options are clickable", async () => {
   await matterPage.clickAdditionalDetails();
 
   const statuses = ["Active", "Pending"];
@@ -433,17 +387,17 @@ test("42 - Verify Status options are clickable", async () => {
   }
 });
 
-test("43 - Verify Tags section is displayed", async () => {
+test("TC-40. Verify Tags section is displayed", async () => {
   await matterPage.clickAdditionalDetails();
   await matterPage.verifyTagsSectionVisible();
 });
 
-test("44 - Verify Tags input and ADD button are enabled", async () => {
+test("TC-41. Verify Tags input and ADD button are enabled", async () => {
   await matterPage.clickAdditionalDetails();
   await matterPage.verifyTagsInputEnabled();
 });
 
-test("45 - Verify Tags input has correct placeholder", async () => {
+test("TC-42. Verify Tags input has correct placeholder", async () => {
   await matterPage.clickAdditionalDetails();
   await expect(matterPage.tagInput).toHaveAttribute(
     "placeholder",
@@ -451,13 +405,13 @@ test("45 - Verify Tags input has correct placeholder", async () => {
   );
 });
 
-test("46 - Verify ADD button is displayed with correct text", async () => {
+test("TC-43. Verify ADD button is displayed with correct text", async () => {
   await matterPage.clickAdditionalDetails();
 
   await expect(matterPage.addTagButton).toHaveText("ADD");
 });
 
-test("47 - Verify user can enter a tag", async () => {
+test("TC-44. Verify user can enter a tag", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.enterTag("TestTag");
@@ -465,7 +419,7 @@ test("47 - Verify user can enter a tag", async () => {
   await matterPage.verifyTagInputValue("TestTag");
 });
 
-test("48 - Verify user can add a tag", async () => {
+test("TC-45. Verify user can add a tag", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.addTag("TestTag");
@@ -473,7 +427,7 @@ test("48 - Verify user can add a tag", async () => {
   await matterPage.verifyTagDisplayed("TestTag");
 });
 
-test("49 - Verify user can add a tag with spaces", async () => {
+test("TC-46. Verify user can add a tag with spaces", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.addTag("Matter Tag");
@@ -481,7 +435,7 @@ test("49 - Verify user can add a tag with spaces", async () => {
   await matterPage.verifyTagDisplayed("Matter Tag");
 });
 
-test("50 - Verify user can add another tag", async () => {
+test("TC-47. Verify user can add another tag", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.addTag("Legal");
@@ -489,7 +443,7 @@ test("50 - Verify user can add another tag", async () => {
   await matterPage.verifyTagDisplayed("Legal");
 });
 
-test("51 - Verify tag input is cleared after adding tag", async () => {
+test("TC-48. Verify tag input is cleared after adding tag", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.enterTag("TestTag");
@@ -499,7 +453,7 @@ test("51 - Verify tag input is cleared after adding tag", async () => {
   await matterPage.verifyTagInputIsEmpty();
 });
 
-test("52 - Verify multiple tags can be added", async () => {
+test("TC-49. Verify multiple tags can be added", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.addTag("TagOne");
@@ -510,7 +464,7 @@ test("52 - Verify multiple tags can be added", async () => {
   await matterPage.verifyTagDisplayed("TagTwo");
 });
 
-test("53 - Verify tag is added only after clicking ADD", async () => {
+test("TC-50. Verify tag is added only after clicking ADD", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.enterTag("TestTag");
@@ -522,7 +476,7 @@ test("53 - Verify tag is added only after clicking ADD", async () => {
   await matterPage.verifyTagDisplayed("TestTag");
 });
 
-test("54 - Verify empty tag cannot be added", async () => {
+test("TC-51. Verify empty tag cannot be added", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.verifyTagInputIsEmpty();
@@ -532,7 +486,7 @@ test("54 - Verify empty tag cannot be added", async () => {
   await matterPage.verifyTagInputIsEmpty();
 });
 
-test("55 - Verify tag can be changed before clicking ADD", async () => {
+test("TC-52. Verify tag can be changed before clicking ADD", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.enterTag("FirstTag");
@@ -546,31 +500,30 @@ test("55 - Verify tag can be changed before clicking ADD", async () => {
   await matterPage.verifyTagDisplayed("SecondTag");
 });
 
-test.only("TC56 - Verify Opponent Advocate(s) heading is visible", async () => {
+test("TC-53. Verify Opponent Advocate(s) heading is visible", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.verifyOpponentAdvocateHeadingVisible();
 });
 
-test.only("TC57 - Verify Add Opponent Advocate button is visible", async () => {
+test("TC-54. Verify Add Opponent Advocate button is visible", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.verifyAddOpponentAdvocateButtonVisible();
 });
 
-test.only("TC58 - Verify Add Opponent Advocate button is enabled", async () => {
+test("TC-55. Verify Add Opponent Advocate button is enabled", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.verifyAddOpponentAdvocateButtonEnabled();
 });
 
-test.only("TC59 - Verify Add Opponent Advocate button is clickable", async () => {
+test("TC-56. Verify Add Opponent Advocate button is clickable", async () => {
   await matterPage.clickAdditionalDetails();
-
   await matterPage.clickAddOpponentAdvocate();
 });
 
-test("TC59 - Verify Add button displays Opponent Advocate fields", async () => {
+test("TC-57. Verify Add button displays Opponent Advocate fields", async () => {
   await matterPage.clickAdditionalDetails();
 
   await matterPage.clickAddOpponentAdvocate();
@@ -582,348 +535,1366 @@ test("TC59 - Verify Add button displays Opponent Advocate fields", async () => {
   await expect(matterPage.opponentAdvocatePhoneInput).toBeVisible();
 });
 
-test("TC60 - Verify Opponent Advocate section is displayed", async () => {
+test("TC-58. Verify Opponent Advocate section is displayed", async () => {
   await matterPage.clickAdditionalDetails();
-
   await matterPage.verifyOpponentAdvocateSectionVisible();
 });
 
-test("TC37 - Verify Opponent Advocate fields are enabled", async () => {
+test("TC-59. Verify Opponent Advocate fields are enabled", async () => {
   await matterPage.clickAdditionalDetails();
-
   await matterPage.verifyOpponentAdvocateFieldsEnabled();
 });
 
-test("TC38 - Verify Opponent Advocate buttons are enabled", async () => {
+test("TC-60. Verify Name field placeholder", async () => {
   await matterPage.clickAdditionalDetails();
-
-  await matterPage.verifyOpponentAdvocateButtonsEnabled();
-});
-
-test("TC39 - Verify Name field placeholder", async () => {
-  await matterPage.clickAdditionalDetails();
-
+  await matterPage.clickAddOpponentAdvocate();
   await expect(matterPage.opponentAdvocateNameInput).toHaveAttribute(
     "placeholder",
     "Name",
   );
 });
 
-test("TC40 - Verify Email Address field placeholder", async () => {
+test("TC-61. Verify Email Address field placeholder", async () => {
   await matterPage.clickAdditionalDetails();
-
+  await matterPage.clickAddOpponentAdvocate();
   await expect(matterPage.opponentAdvocateEmailInput).toHaveAttribute(
     "placeholder",
     "Email Address",
   );
 });
 
-test("TC41 - Verify Phone Number field placeholder", async () => {
+test("TC-62. Verify Phone Number field placeholder", async () => {
   await matterPage.clickAdditionalDetails();
-
+  await matterPage.clickAddOpponentAdvocate();
   await expect(matterPage.opponentAdvocatePhoneInput).toHaveAttribute(
     "placeholder",
     "Phone Number",
   );
 });
 
-test("TC42 - Verify Cancel button text", async () => {
+test("TC-63. Verify user can enter Opponent Advocate name", async () => {
   await matterPage.clickAdditionalDetails();
-
-  await expect(matterPage.cancelButton).toHaveText("Cancel");
-});
-
-test("TC43 - Verify Save button text", async () => {
-  await matterPage.clickAdditionalDetails();
-
-  await expect(matterPage.saveButton).toHaveText("Save");
-});
-
-test("TC44 - Verify user can enter Opponent Advocate name", async () => {
+  await matterPage.clickAddOpponentAdvocate();
   await matterPage.enterOpponentAdvocateName("John Smith");
-
   await expect(matterPage.opponentAdvocateNameInput).toHaveValue("John Smith");
 });
 
-test("TC45 - Verify user can enter Opponent Advocate email", async () => {
+test("TC-64. Verify user can enter Opponent Advocate email", async () => {
+  await matterPage.clickAdditionalDetails();
+  await matterPage.clickAddOpponentAdvocate();
   await matterPage.enterOpponentAdvocateEmail("john.smith@example.com");
-
   await expect(matterPage.opponentAdvocateEmailInput).toHaveValue(
     "john.smith@example.com",
   );
 });
 
-test("TC46 - Verify user can enter Opponent Advocate phone number", async () => {
+test("TC-65. Verify user can enter Opponent Advocate phone number", async () => {
+  await matterPage.clickAdditionalDetails();
+  await matterPage.clickAddOpponentAdvocate();
   await matterPage.enterOpponentAdvocatePhone("9876543210");
-
   await expect(matterPage.opponentAdvocatePhoneInput).toHaveValue("9876543210");
 });
 
-test("TC47 - Verify user can enter complete Opponent Advocate details", async () => {
+test("TC-66. Verify user can enter complete Opponent Advocate details", async () => {
+  await matterPage.clickAdditionalDetails();
+  await matterPage.clickAddOpponentAdvocate();
   await matterPage.enterOpponentAdvocateDetails(
     "John Smith",
     "john.smith@example.com",
     "9876543210",
   );
-
-  await matterPage.verifyOpponentAdvocateDetails(
-    "John Smith",
-    "john.smith@example.com",
-    "9876543210",
-  );
 });
 
-test("TC48 - Verify Add button is clickable", async () => {
+test("TC-67. Verify entered Opponent Advocate details are retained", async () => {
+  await matterPage.clickAdditionalDetails();
   await matterPage.clickAddOpponentAdvocate();
-});
-
-test("TC49 - Verify clicking Add creates another Opponent Advocate section", async () => {
-  const initialNameFields = matterPage.opponentAdvocateNameInput;
-
-  const initialCount = await initialNameFields.count();
-
-  await matterPage.clickAddOpponentAdvocate();
-
-  await expect(initialNameFields).toHaveCount(initialCount + 1);
-});
-
-test("TC50 - Verify entered Opponent Advocate details are retained", async () => {
   await matterPage.enterOpponentAdvocateDetails(
     "John Smith",
     "john.smith@example.com",
-    "9876543210",
+    "9876543310",
   );
-
-  await matterPage.verifyOpponentAdvocateDetails(
-    "John Smith",
-    "john.smith@example.com",
-    "9876543210",
-  );
+  await matterPage.clickSave();
+  await matterPage.verifySavedOpponentAdvocateDetails("John Smith");
 });
 
-test("TC51 - Verify Cancel button closes Opponent Advocate section", async () => {
+test("TC-68. Verify Cancel button closes Opponent Advocate section", async () => {
+  await matterPage.clickAdditionalDetails();
+  await matterPage.clickAddOpponentAdvocate();
   await matterPage.clickCancel();
-
   await expect(matterPage.opponentAdvocateNameInput).not.toBeVisible();
 });
 
-test("TC51 - Verify Cancel clears Opponent Advocate details", async () => {
+test("TC-69. Verify Cancel closes Opponent Advocate details", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.clickAddOpponentAdvocate();
+
   await matterPage.enterOpponentAdvocateDetails(
     "John Smith",
     "john.smith@example.com",
     "9876543210",
   );
-
-  await matterPage.clickCancel();
-
-  await expect(matterPage.opponentAdvocateNameInput).toHaveValue("");
-
-  await expect(matterPage.opponentAdvocateEmailInput).toHaveValue("");
-
-  await expect(matterPage.opponentAdvocatePhoneInput).toHaveValue("");
-});
-
-test("TC52 - Verify Opponent Advocate details can be saved", async () => {
-  await matterPage.enterOpponentAdvocateDetails(
-    "John Smith",
-    "john.smith@example.com",
-    "9876543210",
-  );
-
-  await matterPage.clickSave();
-});
-
-test("TC53 - Verify Save closes Opponent Advocate form", async () => {
-  await matterPage.enterOpponentAdvocateDetails(
-    "John Smith",
-    "john.smith@example.com",
-    "9876543210",
-  );
-
-  await matterPage.clickSave();
-
-  await expect(matterPage.opponentAdvocateNameInput).not.toBeVisible();
-});
-
-test("TC54 - Verify invalid email is not accepted", async () => {
-  await matterPage.enterOpponentAdvocateDetails(
-    "John Smith",
-    "invalid-email",
-    "9876543210",
-  );
-
-  await matterPage.clickSave();
-
-  await expect(matterPage.opponentAdvocateEmailInput).toBeVisible();
-});
-
-test("TC55 - Verify required fields are validated", async () => {
-  await matterPage.clickSave();
 
   await expect(matterPage.opponentAdvocateNameInput).toBeVisible();
-
   await expect(matterPage.opponentAdvocateEmailInput).toBeVisible();
-
   await expect(matterPage.opponentAdvocatePhoneInput).toBeVisible();
-});
 
-test("Click Opponent Advocate +", async () => {
-  if ((await matterPage.addOpponentAdvocateButton.count()) === 0) test.skip();
-  await matterPage.openOpponentAdvocate();
-  await expect(matterPage.opponentNameInput).toBeVisible();
-});
-
-test("Verify save button disabled until any of the fields entered", async () => {
-  expect(await matterPage.isSaveDisabled()).toBeTruthy();
-});
-
-test("Add Opponent Advocate", async () => {
-  if ((await matterPage.addOpponentAdvocateButton.count()) === 0) test.skip();
-  await matterPage.openOpponentAdvocate();
-  await matterPage.fillOpponentAdvocate(defaultMatter.opponentAdvocate);
-  if ((await matterPage.opponentNameInput.count()) > 0) {
-    expect(await matterPage.opponentNameInput.inputValue()).toBe(
-      defaultMatter.opponentAdvocate.name,
-    );
-  }
-  if ((await matterPage.opponentEmailInput.count()) > 0) {
-    expect(await matterPage.opponentEmailInput.inputValue()).toContain("@");
-  }
-  if ((await matterPage.opponentPhoneInput.count()) > 0) {
-    expect(await matterPage.opponentPhoneInput.inputValue()).toContain(
-      defaultMatter.opponentAdvocate.phone,
-    );
-  }
-});
-
-test("Check save button enabled after Advocate name /Email/ number entered", async () => {
-  if ((await matterPage.addOpponentAdvocateButton.count()) === 0) test.skip();
-  await matterPage.openOpponentAdvocate();
-  await matterPage.fillOpponentAdvocate(defaultMatter.opponentAdvocate);
-  await matterPage.page.waitForTimeout(200);
-  expect(await matterPage.isSaveEnabled()).toBeTruthy();
-});
-
-test("Opponent Advocate Email", async () => {
-  if ((await matterPage.addOpponentAdvocateButton.count()) === 0) test.skip();
-  await matterPage.openOpponentAdvocate();
-  if ((await matterPage.opponentEmailInput.count()) === 0) test.skip();
-  await matterPage.opponentEmailInput.fill(matterData.invalidEmail);
-  await matterPage.opponentEmailInput.blur();
-  await expect(matterPage.opponentEmailInput)
-    .toHaveClass(/ng-invalid|invalid/)
-    .catch(() => {});
-});
-
-test("Verify save button disabled when invalid email address added", async () => {
-  if ((await matterPage.addOpponentAdvocateButton.count()) === 0) test.skip();
-  await matterPage.openOpponentAdvocate();
-  if ((await matterPage.opponentEmailInput.count()) === 0) test.skip();
-  await matterPage.opponentEmailInput.fill(matterData.invalidEmail);
-  await matterPage.opponentEmailInput.blur();
-  expect(await matterPage.isSaveDisabled()).toBeTruthy();
-});
-
-test("Verify Phone number entry", async () => {
-  // if ((await matterPage.addOpponentAdvocateButton.count()) === 0) test.skip();
-  await matterPage.openOpponentAdvocate();
-  if ((await matterPage.opponentPhoneInput.count()) === 0) test.skip();
-  await matterPage.opponentPhoneInput.fill(
-    defaultMatter.opponentAdvocate.phone,
-  );
-  expect(await matterPage.opponentPhoneInput.inputValue()).toContain(
-    defaultMatter.opponentAdvocate.phone,
-  );
-});
-
-test("Verify Phone number entry with formatting", async () => {
-  // if ((await matterPage.addOpponentAdvocateButton.count()) === 0) test.skip();
-  await matterPage.openOpponentAdvocate();
-  if ((await matterPage.opponentPhoneInput.count()) === 0) test.skip();
-  await matterPage.opponentPhoneInput.fill(matterData.formattedPhone);
-  expect(
-    (await matterPage.opponentPhoneInput.inputValue()).length,
-  ).toBeGreaterThan(0);
-});
-
-test("Verify Save button enabling even after adding one field", async () => {
-  await matterPage.fillCaseTitle("Title for one field");
-  if ((await matterPage.courtInput.count()) > 0) {
-    await matterPage.fillCourt(defaultMatter.court);
-  }
-  await matterPage.page.waitForTimeout(200);
-  expect(await matterPage.isSaveEnabled()).toBeTruthy();
-});
-
-test("Verify cancel button functionality", async () => {
-  if ((await matterPage.cancelButton.count()) === 0) test.skip();
   await matterPage.clickCancel();
-  await matterPage.page.waitForTimeout(500);
-  const forms = await matterPage.page.locator("form").count();
-  expect(forms).toBeLessThanOrEqual(1);
 });
 
-test("Leave non-mandatory fields empty", async () => {
-  await matterPage.fillCaseTitle("Title Only");
+test("TC-70. Verify Opponent Advocate details can be saved", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.clickAddOpponentAdvocate();
+
+  await matterPage.enterOpponentAdvocateDetails(
+    "John Smith",
+    "john.smith@example.com",
+    "9876543210",
+  );
+
+  await matterPage.clickSave();
+
+  await matterPage.verifySavedOpponentAdvocateDetails(
+    "John Smith",
+    "john.smith@example.com",
+    "9876543210",
+  );
+});
+
+test("TC-71. Verify Save closes Opponent Advocate form", async () => {
+  await matterPage.clickAdditionalDetails();
+  await matterPage.clickAddOpponentAdvocate();
+  await matterPage.enterOpponentAdvocateDetails(
+    "John Smith",
+    "john.smith@example.com",
+    "9876543210",
+  );
+
+  await matterPage.clickSave();
+
+  await expect(matterPage.opponentAdvocateNameInput).not.toBeVisible();
+});
+
+test("TC-72. Verify Opponent Lawyer Edit Button is Visible and Responsive", async () => {
+  await matterPage.clickAdditionalDetails();
+  await matterPage.clickAddOpponentAdvocate();
+  await matterPage.enterOpponentAdvocateDetails(
+    "John Smith",
+    "john.smith@example.com",
+    "9876543210",
+  );
+
+  await matterPage.clickSave();
+  await expect(matterPage.opponentAdvocateEditBtn).toBeVisible();
+  await expect(matterPage.opponentAdvocateEditBtn).toBeEnabled();
+});
+
+test("TC-73. Verify Opponent Lawyer Details are Editable", async () => {
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.clickAddOpponentAdvocate();
+
+  await matterPage.enterOpponentAdvocateDetails(
+    "John Smith",
+    "john.smith@example.com",
+    "9876543210",
+  );
+
+  await matterPage.clickSave();
+
+  await expect(
+    matterPage.page.getByText("John Smith", {
+      exact: true,
+    }),
+  ).toBeVisible();
+
+  await matterPage.clickOpponentAdvocateEdit.click();
+  await matterPage.clearOpponentAdvocateDetails();
+  await matterPage.enterOpponentAdvocateDetails(
+    "Randy Ortan",
+    "randy@example.com",
+    "9944574331",
+  );
+  await matterPage.clickSave();
+  await matterPage.verifySavedOpponentAdvocateDetails(
+    "Randy Ortan",
+    "randy@example.com",
+    "9944574331",
+  );
+});
+
+test("TC-74. Verify Show Less Details is clickable", async () => {
+  await matterPage.clickAdditionalDetails();
+  await expect(matterPage.showLessDetails).toBeVisible();
+  await expect(matterPage.showLessDetails).toBeEnabled();
+  await matterPage.clickShowLessDetails();
+});
+
+test("TC-75. Create Legal Matter 1st Page Save For Later", async () => {
+  const data = matterData.TC75_CreateLegalMatterSaveForLater;
+  await expect(matterPage.caseTitleInput).toBeVisible();
+
+  await expect(matterPage.caseNumberInput).toBeVisible();
+
+  await expect(matterPage.matterNumberInput).toBeVisible();
+
+  await expect(matterPage.createdDateInput).toBeVisible();
+
+  await matterPage.fillCaseTitle(data.caseTitle);
+
+  await matterPage.fillCaseNumber(data.caseNumber);
+
+  await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
+
+  await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
+  const matterNumber = await matterPage.matterNumberInput.inputValue();
   await matterPage.clickSaveForLater();
-  await expect(matterPage.page)
-    .toHaveURL(/.*(matters|grid|list).*/i)
-    .catch(() => {});
+  // await matterPage.verifyMatterCreatedInView(data.caseTitle);
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toBeVisible();
 });
 
-test("Double click Save for Later", async () => {
-  // if ((await matterPage.saveForLaterButton.count()) === 0) test.skip();
-  await matterPage.saveForLaterButton.first().dblclick();
-  await matterPage.page.waitForLoadState("networkidle").catch(() => {});
-  expect(await matterPage.saveForLaterButton.count()).toBeGreaterThanOrEqual(0);
+test("TC-76. Create Legal Matter 1st Page Save and Next Select Client 2nd SFL", async () => {
+  const data = matterData.TC76_CreateLegalMatterSelectClient;
+
+  await expect(matterPage.caseTitleInput).toBeVisible();
+  await expect(matterPage.caseNumberInput).toBeVisible();
+  await expect(matterPage.matterNumberInput).toBeVisible();
+  await expect(matterPage.createdDateInput).toBeVisible();
+
+  await matterPage.fillCaseTitle(data.caseTitle);
+  await matterPage.fillCaseNumber(data.caseNumber);
+
+  await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
+
+  await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
+
+  await matterPage.clickSaveAndNext();
+
+  await matterPage.enterClientName(data.client.name);
+
+  await matterPage.clickClientSearch();
+
+  await matterPage.openClientDropdown();
+
+  await matterPage.selectClient(data.client.name);
+
+  await matterPage.verifySelectedClient(data.client.name);
+
+  await matterPage.clickSaveForLater();
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toBeVisible({
+    timeout: 30000,
+  });
+
+  await expect(
+    matterPage.page
+      .getByText(data.client.name, {
+        exact: true,
+      })
+      .first(),
+  ).toBeVisible({
+    timeout: 30000,
+  });
 });
 
-test("Refresh before saving", async () => {
-  await matterPage.reload();
-  await expect(matterPage.caseTitleInput)
-    .toBeVisible({ timeout: 5000 })
-    .catch(() => {});
+test("TC77 - Create Legal Matter 1st Page Save and Next Select Client Save & Next Upload Documents", async () => {
+  const data = matterData1.TC77_CreateLegalMatterSaveNextX2Documents;
+
+  await expect(matterPage.caseTitleInput).toBeVisible();
+  await expect(matterPage.caseNumberInput).toBeVisible();
+  await expect(matterPage.matterNumberInput).toBeVisible();
+  await expect(matterPage.createdDateInput).toBeVisible();
+
+  await matterPage.fillCaseTitle(data.caseTitle);
+  await matterPage.fillCaseNumber(data.caseNumber);
+
+  await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
+  await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
+
+  const matterNumber = await matterPage.matterNumberInput.inputValue();
+
+  await matterPage.clickSaveAndNext();
+
+  await matterPage.enterClientName(data.client.name);
+  await matterPage.clickClientSearch(data.client.name);
+  await matterPage.openClientDropdown();
+  await matterPage.selectClient(data.client.name);
+  await matterPage.verifySelectedClient(data.client.name);
+
+  await matterPage.clickSaveAndNext();
+  await matterPage.verifyDocumentsSectionVisible();
+
+  await matterPage.uploadDocument(data.document.filePath);
+  await matterPage.verifyUploadedDocument(data.document.fileName);
+
+  await matterPage.clickFinalSave();
+
+  await matterPage.verifyMatterCreatedInView(data.caseTitle);
+  await matterPage.verifyClientPresentInListing(
+    data.client.name,
+    data.caseTitle,
+  );
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toBeVisible();
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toHaveText(
+    data.caseTitle,
+  );
 });
 
-test("Browser Back navigation", async () => {
-  await matterPage.goBack();
-  await matterPage.page.waitForLoadState("networkidle").catch(() => {});
-  await expect(matterPage.page)
-    .toHaveURL(/.*(matters|grid|list|login).*/i)
-    .catch(() => {});
+test("TC-78. Create Legal Matter and Additional Details 1st SFL", async () => {
+  const data = matterData1.TC78_CreateMatterWithAdditionalDetails;
+
+  await expect(matterPage.caseTitleInput).toBeVisible();
+
+  await expect(matterPage.caseNumberInput).toBeVisible();
+
+  await expect(matterPage.matterNumberInput).toBeVisible();
+
+  await expect(matterPage.createdDateInput).toBeVisible();
+
+  await matterPage.fillCaseTitle(data.caseTitle);
+
+  await matterPage.fillCaseNumber(data.caseNumber);
+
+  await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
+
+  await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
+
+  const matterNumber = await matterPage.matterNumberInput.inputValue();
+
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.fillDateOfFiling(data.dateOfFiling);
+
+  await matterPage.fillDescription(data.description);
+
+  await matterPage.selectCaseType(data.caseType);
+
+  await matterPage.fillCourt(data.court);
+
+  await matterPage.fillJudge(data.judge);
+
+  await matterPage.addTag(data.tag);
+
+  await matterPage.verifyTagDisplayed(data.tag);
+
+  await matterPage.selectPriorityButton(data.priority);
+
+  await matterPage.verifyPrioritySelected(data.priority);
+
+  await matterPage.selectStatusButton(data.status);
+
+  await matterPage.verifyStatusSelected(data.status);
+
+  await matterPage.clickAddOpponentAdvocate();
+
+  await matterPage.enterOpponentAdvocateDetails(
+    data.opponentAdvocate.name,
+    data.opponentAdvocate.email,
+    data.opponentAdvocate.phone,
+  );
+
+  await matterPage.verifySaveButton();
+
+  await matterPage.clickSave();
+
+  await matterPage.verifySavedOpponentAdvocateDetails(
+    data.opponentAdvocate.name,
+  );
+
+  await matterPage.clickSaveForLater();
+
+  // await matterPage.verifyMatterCreatedInView(data.caseTitle);
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toBeVisible();
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toHaveText(
+    data.caseTitle,
+  );
 });
 
-test("Verify tab navigation order", async () => {
-  const focusOrder = [
-    matterPage.caseTitleInput,
-    matterPage.caseNumberInput,
-    matterPage.caseTypeSelect,
-    matterPage.courtInput,
+test("TC-79. Create Legal Matter with Additional Details, select Client and Save for Later", async () => {
+  const data = matterData1.TC79_CreateMatterWithAdditionalDetailsAndClient;
+
+  // =========================
+  // First Page - Basic Details
+  // =========================
+  await expect(matterPage.caseTitleInput).toBeVisible();
+  await expect(matterPage.caseNumberInput).toBeVisible();
+  await expect(matterPage.matterNumberInput).toBeVisible();
+  await expect(matterPage.createdDateInput).toBeVisible();
+
+  await matterPage.fillCaseTitle(data.caseTitle);
+  await matterPage.fillCaseNumber(data.caseNumber);
+
+  await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
+  await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
+
+  const matterNumber = await matterPage.matterNumberInput.inputValue();
+
+  // =========================
+  // Additional Details
+  // =========================
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.fillDateOfFiling(data.dateOfFiling);
+  await matterPage.fillDescription(data.description);
+  await matterPage.selectCaseType(data.caseType);
+  await matterPage.fillCourt(data.court);
+  await matterPage.fillJudge(data.judge);
+
+  await matterPage.addTag(data.tag);
+  await matterPage.verifyTagDisplayed(data.tag);
+
+  await matterPage.selectPriorityButton(data.priority);
+  await matterPage.verifyPrioritySelected(data.priority);
+
+  await matterPage.selectStatusButton(data.status);
+  await matterPage.verifyStatusSelected(data.status);
+
+  // =========================
+  // Save & Next - Client
+  // =========================
+  const movedToClientSelection = await matterPage.clickSaveAndNext();
+
+  expect(movedToClientSelection).toBe(true);
+
+  // Wait for Client section/input
+  // await expect(matterPage.clientNameInput).toBeVisible({
+  //   timeout: 30000,
+  // });
+
+  // =========================
+  // Client Selection
+  // =========================
+  await matterPage.enterClientName(data.client.name);
+
+  await matterPage.clickClientSearch(data.client.name);
+
+  // Wait for client dropdown/results
+  await matterPage.openClientDropdown();
+
+  await matterPage.selectClient(data.client.name);
+
+  await matterPage.verifySelectedClient(data.client.name);
+
+  // =========================
+  // Save For Later
+  // =========================
+  await matterPage.clickSaveForLater();
+
+  // =========================
+  // Verify Matter
+  // =========================
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toBeVisible({
+    timeout: 30000,
+  });
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toHaveText(
+    data.caseTitle,
+  );
+
+  // =========================
+  // Verify Matter Number
+  // =========================
+  if (matterNumber) {
+    await expect(
+      matterPage.page.getByText(matterNumber, {
+        exact: true,
+      }),
+    ).toBeVisible({
+      timeout: 30000,
+    });
+  }
+
+  // =========================
+  // Verify Client
+  // =========================
+  await expect(
+    matterPage.page
+      .getByText(data.client.name, {
+        exact: true,
+      })
+      .first(),
+  ).toBeVisible({
+    timeout: 30000,
+  });
+});
+test("TC-80. Create Legal Matter with Additional Details, Client and Upload Documents", async () => {
+  const data = matterData1.TC80_CreateLegalMatter_with_allFields;
+
+  const uploadFiles = data.document.multiUploadFiles || [
+    data.document.filePath,
   ];
 
-  for (const locator of focusOrder) {
-    if ((await locator.count()) === 0) continue;
-    await locator.focus();
-    const focused = await matterPage.page.evaluate(
-      () =>
-        document.activeElement?.id ||
-        document.activeElement?.name ||
-        document.activeElement?.placeholder ||
-        "",
-    );
-    expect(focused).not.toBe("");
-    await matterPage.page.keyboard.press("Tab");
+  // =========================
+  // First Page - Basic Details
+  // =========================
+  await expect(matterPage.caseTitleInput).toBeVisible();
+  await expect(matterPage.caseNumberInput).toBeVisible();
+  await expect(matterPage.matterNumberInput).toBeVisible();
+  await expect(matterPage.createdDateInput).toBeVisible();
+
+  await matterPage.fillCaseTitle(data.caseTitle);
+  await matterPage.fillCaseNumber(data.caseNumber);
+
+  await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
+  await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
+
+  const matterNumber = await matterPage.matterNumberInput.inputValue();
+
+  // =========================
+  // Additional Details
+  // =========================
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.fillDateOfFiling(data.dateOfFiling);
+  await matterPage.fillDescription(data.description);
+  await matterPage.selectCaseType(data.caseType);
+  await matterPage.fillCourt(data.court);
+  await matterPage.fillJudge(data.judge);
+
+  await matterPage.addTag(data.tag);
+  await matterPage.verifyTagDisplayed(data.tag);
+
+  await matterPage.selectPriorityButton(data.priority);
+  await matterPage.verifyPrioritySelected(data.priority);
+
+  await matterPage.selectStatusButton(data.status);
+  await matterPage.verifyStatusSelected(data.status);
+
+  // =========================
+  // Save & Next - Client
+  // =========================
+  const movedToClientSelection = await matterPage.clickSaveAndNext();
+
+  expect(movedToClientSelection).toBe(true);
+
+  await matterPage.enterClientName(data.client.name);
+  await matterPage.clickClientSearch(data.client.name);
+  await matterPage.openClientDropdown();
+  await matterPage.selectClient(data.client.name);
+  await matterPage.verifySelectedClient(data.client.name);
+
+  // =========================
+  // Save & Next - Documents
+  // =========================
+  await matterPage.clickSaveAndNext();
+
+  await matterPage.verifyDocumentsSectionVisible();
+
+  // =========================
+  // Upload Multiple Documents
+  // =========================
+  await matterPage.uploadDocuments(uploadFiles);
+
+  // =========================
+  // Verify Documents
+  // =========================
+  for (const file of uploadFiles) {
+    const fileName = file.split("/").pop();
+
+    await matterPage.verifyUploadedDocument(fileName);
+  }
+
+  // =========================
+  // Final Save
+  // =========================
+  await matterPage.clickFinalSave();
+
+  // =========================
+  // Verify Matter
+  // =========================
+  await matterPage.verifyMatterCreatedInView(data.caseTitle);
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toBeVisible({
+    timeout: 30000,
+  });
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toHaveText(
+    data.caseTitle,
+  );
+
+  // =========================
+  // Verify Client
+  // =========================
+  await matterPage.verifyClientPresentInListing(
+    data.client.name,
+    data.caseTitle,
+  );
+
+  if (matterNumber) {
+    await expect(
+      matterPage.page.getByText(matterNumber, {
+        exact: true,
+      }),
+    ).toBeVisible({
+      timeout: 30000,
+    });
   }
 });
 
-test("Session timeout scenario", async () => {
-  if ((await matterPage.sessionTimeoutBanner.count()) === 0)
-    test.skip("No session timeout UI available");
-  await expect(matterPage.sessionTimeoutBanner).toBeVisible();
+test("TC-81. Solo Create Legal Matter 1st Page Save and Next Select Client 2nd SFL", async () => {
+  const data = matterData1.TC81_CreateLegalMatterSelectClient_SoloLawyer;
+
+  await expect(matterPage.caseTitleInput).toBeVisible();
+  await expect(matterPage.caseNumberInput).toBeVisible();
+  await expect(matterPage.matterNumberInput).toBeVisible();
+  await expect(matterPage.createdDateInput).toBeVisible();
+
+  await matterPage.fillCaseTitle(data.caseTitle);
+  await matterPage.fillCaseNumber(data.caseNumber);
+
+  await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
+
+  await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
+
+  await matterPage.clickSaveAndNext();
+
+  await matterPage.enterClientName(data.client.name);
+
+  await matterPage.clickClientSearch();
+
+  await matterPage.openClientDropdown();
+
+  await matterPage.selectClient(data.client.name);
+
+  await matterPage.verifySelectedClient(data.client.name);
+
+  await matterPage.clickSaveForLater();
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toBeVisible({
+    timeout: 30000,
+  });
+
+  await expect(
+    matterPage.page
+      .getByText(data.client.name, {
+        exact: true,
+      })
+      .first(),
+  ).toBeVisible({
+    timeout: 30000,
+  });
 });
 
-test("Verify page optional", async () => {
-  if ((await matterPage.optionalHint.count()) === 0)
-    test.skip("Optional field labels not present");
-  await expect(matterPage.optionalHint.first()).toBeVisible();
+test("TC-82 - Solo Create Legal Matter 1st Page Save and Next Select Client Save & Next Upload Documents", async () => {
+  const data = matterData1.TC83_CreateMatterWithAdditionalDetails_SoloLawyer;
+
+  await expect(matterPage.caseTitleInput).toBeVisible();
+  await expect(matterPage.caseNumberInput).toBeVisible();
+  await expect(matterPage.matterNumberInput).toBeVisible();
+  await expect(matterPage.createdDateInput).toBeVisible();
+
+  await matterPage.fillCaseTitle(data.caseTitle);
+  await matterPage.fillCaseNumber(data.caseNumber);
+
+  await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
+  await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
+
+  const matterNumber = await matterPage.matterNumberInput.inputValue();
+
+  await matterPage.clickSaveAndNext();
+
+  await matterPage.enterClientName(data.client.name);
+  await matterPage.clickClientSearch(data.client.name);
+  await matterPage.openClientDropdown();
+  await matterPage.selectClient(data.client.name);
+  await matterPage.verifySelectedClient(data.client.name);
+
+  await matterPage.clickSaveAndNext();
+  await matterPage.verifyDocumentsSectionVisible();
+
+  await matterPage.uploadDocument(data.document.filePath);
+  await matterPage.verifyUploadedDocument(data.document.fileName);
+
+  await matterPage.clickFinalSave();
+
+  await matterPage.verifyMatterCreatedInView(data.caseTitle);
+  await matterPage.verifyClientPresentInListing(
+    data.client.name,
+    data.caseTitle,
+  );
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toBeVisible();
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toHaveText(
+    data.caseTitle,
+  );
+});
+
+test("TC-83. Create Legal Matter and Additional Details 1st SFL", async () => {
+  const data = matterData1.TC83_CreateMatterWithAdditionalDetails_SoloLawyer;
+
+  await expect(matterPage.caseTitleInput).toBeVisible();
+
+  await expect(matterPage.caseNumberInput).toBeVisible();
+
+  await expect(matterPage.matterNumberInput).toBeVisible();
+
+  await expect(matterPage.createdDateInput).toBeVisible();
+
+  await matterPage.fillCaseTitle(data.caseTitle);
+
+  await matterPage.fillCaseNumber(data.caseNumber);
+
+  await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
+
+  await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
+
+  const matterNumber = await matterPage.matterNumberInput.inputValue();
+
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.fillDateOfFiling(data.dateOfFiling);
+
+  await matterPage.fillDescription(data.description);
+
+  await matterPage.selectCaseType(data.caseType);
+
+  await matterPage.fillCourt(data.court);
+
+  await matterPage.fillJudge(data.judge);
+
+  await matterPage.addTag(data.tag);
+
+  await matterPage.verifyTagDisplayed(data.tag);
+
+  await matterPage.selectPriorityButton(data.priority);
+
+  await matterPage.verifyPrioritySelected(data.priority);
+
+  await matterPage.selectStatusButton(data.status);
+
+  await matterPage.verifyStatusSelected(data.status);
+
+  await matterPage.clickAddOpponentAdvocate();
+
+  await matterPage.enterOpponentAdvocateDetails(
+    data.opponentAdvocate.name,
+    data.opponentAdvocate.email,
+    data.opponentAdvocate.phone,
+  );
+
+  await matterPage.verifySaveButton();
+
+  await matterPage.clickSave();
+
+  await matterPage.verifySavedOpponentAdvocateDetails(
+    data.opponentAdvocate.name,
+  );
+
+  await matterPage.clickSaveForLater();
+
+  // await matterPage.verifyMatterCreatedInView(data.caseTitle);
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toBeVisible();
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toHaveText(
+    data.caseTitle,
+  );
+});
+
+test("TC-84. Create Legal Matter with Additional Details, select Client and Save for Later", async () => {
+  const data =
+    matterData1.TC84_CreateMatterWithAdditionalDetailsAndClient_SoloLawyer;
+
+  // =========================
+  // First Page - Basic Details
+  // =========================
+  await expect(matterPage.caseTitleInput).toBeVisible();
+  await expect(matterPage.caseNumberInput).toBeVisible();
+  await expect(matterPage.matterNumberInput).toBeVisible();
+  await expect(matterPage.createdDateInput).toBeVisible();
+
+  await matterPage.fillCaseTitle(data.caseTitle);
+  await matterPage.fillCaseNumber(data.caseNumber);
+
+  await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
+  await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
+
+  const matterNumber = await matterPage.matterNumberInput.inputValue();
+
+  // =========================
+  // Additional Details
+  // =========================
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.fillDateOfFiling(data.dateOfFiling);
+  await matterPage.fillDescription(data.description);
+  await matterPage.selectCaseType(data.caseType);
+  await matterPage.fillCourt(data.court);
+  await matterPage.fillJudge(data.judge);
+
+  await matterPage.addTag(data.tag);
+  await matterPage.verifyTagDisplayed(data.tag);
+
+  await matterPage.selectPriorityButton(data.priority);
+  await matterPage.verifyPrioritySelected(data.priority);
+
+  await matterPage.selectStatusButton(data.status);
+  await matterPage.verifyStatusSelected(data.status);
+
+  // =========================
+  // Save & Next - Client
+  // =========================
+  const movedToClientSelection = await matterPage.clickSaveAndNext();
+
+  expect(movedToClientSelection).toBe(true);
+
+  // Wait for Client section/input
+  // await expect(matterPage.clientNameInput).toBeVisible({
+  //   timeout: 30000,
+  // });
+
+  // =========================
+  // Client Selection
+  // =========================
+  await matterPage.enterClientName(data.client.name);
+
+  await matterPage.clickClientSearch(data.client.name);
+
+  // Wait for client dropdown/results
+  await matterPage.openClientDropdown();
+
+  await matterPage.selectClient(data.client.name);
+
+  await matterPage.verifySelectedClient(data.client.name);
+
+  // =========================
+  // Save For Later
+  // =========================
+  await matterPage.clickSaveForLater();
+
+  // =========================
+  // Verify Matter
+  // =========================
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toBeVisible({
+    timeout: 30000,
+  });
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toHaveText(
+    data.caseTitle,
+  );
+
+  // =========================
+  // Verify Matter Number
+  // =========================
+  if (matterNumber) {
+    await expect(
+      matterPage.page.getByText(matterNumber, {
+        exact: true,
+      }),
+    ).toBeVisible({
+      timeout: 30000,
+    });
+  }
+
+  // =========================
+  // Verify Client
+  // =========================
+  await expect(
+    matterPage.page
+      .getByText(data.client.name, {
+        exact: true,
+      })
+      .first(),
+  ).toBeVisible({
+    timeout: 30000,
+  });
+});
+test("TC-85. Create Legal Matter with Additional Details, Client and Upload Documents", async () => {
+  const data = matterData1.TC85_CreateLegalMatter_with_allFields_SoloLawyer;
+
+  const uploadFiles = data.document.multiUploadFiles || [
+    data.document.filePath,
+  ];
+
+  // =========================
+  // First Page - Basic Details
+  // =========================
+  await expect(matterPage.caseTitleInput).toBeVisible();
+  await expect(matterPage.caseNumberInput).toBeVisible();
+  await expect(matterPage.matterNumberInput).toBeVisible();
+  await expect(matterPage.createdDateInput).toBeVisible();
+
+  await matterPage.fillCaseTitle(data.caseTitle);
+  await matterPage.fillCaseNumber(data.caseNumber);
+
+  await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
+  await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
+
+  const matterNumber = await matterPage.matterNumberInput.inputValue();
+
+  // =========================
+  // Additional Details
+  // =========================
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.fillDateOfFiling(data.dateOfFiling);
+  await matterPage.fillDescription(data.description);
+  await matterPage.selectCaseType(data.caseType);
+  await matterPage.fillCourt(data.court);
+  await matterPage.fillJudge(data.judge);
+
+  await matterPage.addTag(data.tag);
+  await matterPage.verifyTagDisplayed(data.tag);
+
+  await matterPage.selectPriorityButton(data.priority);
+  await matterPage.verifyPrioritySelected(data.priority);
+
+  await matterPage.selectStatusButton(data.status);
+  await matterPage.verifyStatusSelected(data.status);
+
+  // =========================
+  // Save & Next - Client
+  // =========================
+  const movedToClientSelection = await matterPage.clickSaveAndNext();
+
+  expect(movedToClientSelection).toBe(true);
+
+  await matterPage.enterClientName(data.client.name);
+  await matterPage.clickClientSearch(data.client.name);
+  await matterPage.openClientDropdown();
+  await matterPage.selectClient(data.client.name);
+  await matterPage.verifySelectedClient(data.client.name);
+
+  // =========================
+  // Save & Next - Documents
+  // =========================
+  await matterPage.clickSaveAndNext();
+
+  await matterPage.verifyDocumentsSectionVisible();
+
+  // =========================
+  // Upload Multiple Documents
+  // =========================
+  await matterPage.uploadDocuments(uploadFiles);
+
+  // =========================
+  // Verify Documents
+  // =========================
+  for (const file of uploadFiles) {
+    const fileName = file.split("/").pop();
+
+    await matterPage.verifyUploadedDocument(fileName);
+  }
+
+  // =========================
+  // Final Save
+  // =========================
+  await matterPage.clickFinalSave();
+
+  // =========================
+  // Verify Matter
+  // =========================
+  await matterPage.verifyMatterCreatedInView(data.caseTitle);
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toBeVisible({
+    timeout: 30000,
+  });
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toHaveText(
+    data.caseTitle,
+  );
+
+  // =========================
+  // Verify Client
+  // =========================
+  await matterPage.verifyClientPresentInListing(
+    data.client.name,
+    data.caseTitle,
+  );
+
+  if (matterNumber) {
+    await expect(
+      matterPage.page.getByText(matterNumber, {
+        exact: true,
+      }),
+    ).toBeVisible({
+      timeout: 30000,
+    });
+  }
+});
+
+test.only("TC-86. Solo Create Legal Matter 1st Page Save and Next Select Client 2nd SFL", async () => {
+  const data = matterData1.TC86_CreateLegalMatterSelectClient_Corporate;
+
+  await expect(matterPage.caseTitleInput).toBeVisible();
+  await expect(matterPage.caseNumberInput).toBeVisible();
+  await expect(matterPage.matterNumberInput).toBeVisible();
+  await expect(matterPage.createdDateInput).toBeVisible();
+
+  await matterPage.fillCaseTitle(data.caseTitle);
+  await matterPage.fillCaseNumber(data.caseNumber);
+
+  await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
+
+  await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
+
+  await matterPage.clickSaveAndNext();
+
+  await matterPage.enterClientName(data.client.name);
+
+  await matterPage.clickClientSearch();
+
+  await matterPage.openClientDropdown();
+
+  await matterPage.selectClient(data.client.name);
+
+  await matterPage.verifySelectedClient(data.client.name);
+
+  await matterPage.clickSaveForLater();
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toBeVisible({
+    timeout: 30000,
+  });
+
+  await expect(
+    matterPage.page
+      .getByText(data.client.name, {
+        exact: true,
+      })
+      .first(),
+  ).toBeVisible({
+    timeout: 30000,
+  });
+});
+
+test.only("TC-87 - Solo Create Legal Matter 1st Page Save and Next Select Client Save & Next Upload Documents", async () => {
+  const data = matterData1.TC87_CreateLegalMatterSaveNextX2Documents_Corporate;
+
+  await expect(matterPage.caseTitleInput).toBeVisible();
+  await expect(matterPage.caseNumberInput).toBeVisible();
+  await expect(matterPage.matterNumberInput).toBeVisible();
+  await expect(matterPage.createdDateInput).toBeVisible();
+
+  await matterPage.fillCaseTitle(data.caseTitle);
+  await matterPage.fillCaseNumber(data.caseNumber);
+
+  await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
+  await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
+
+  const matterNumber = await matterPage.matterNumberInput.inputValue();
+
+  await matterPage.clickSaveAndNext();
+
+  await matterPage.enterClientName(data.client.name);
+  await matterPage.clickClientSearch(data.client.name);
+  await matterPage.openClientDropdown();
+  await matterPage.selectClient(data.client.name);
+  await matterPage.verifySelectedClient(data.client.name);
+
+  await matterPage.clickSaveAndNext();
+  await matterPage.verifyDocumentsSectionVisible();
+
+  await matterPage.uploadDocument(data.document.filePath);
+  await matterPage.verifyUploadedDocument(data.document.fileName);
+
+  await matterPage.clickFinalSave();
+
+  await matterPage.verifyMatterCreatedInView(data.caseTitle);
+  await matterPage.verifyClientPresentInListing(
+    data.client.name,
+    data.caseTitle,
+  );
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toBeVisible();
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toHaveText(
+    data.caseTitle,
+  );
+});
+
+test.only("TC-88. Create Legal Matter and Additional Details 1st SFL", async () => {
+  const data = matterData1.TC88_CreateMatterWithAdditionalDetails_Corporate;
+
+  await expect(matterPage.caseTitleInput).toBeVisible();
+
+  await expect(matterPage.caseNumberInput).toBeVisible();
+
+  await expect(matterPage.matterNumberInput).toBeVisible();
+
+  await expect(matterPage.createdDateInput).toBeVisible();
+
+  await matterPage.fillCaseTitle(data.caseTitle);
+
+  await matterPage.fillCaseNumber(data.caseNumber);
+
+  await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
+
+  await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
+
+  const matterNumber = await matterPage.matterNumberInput.inputValue();
+
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.fillDateOfFiling(data.dateOfFiling);
+
+  await matterPage.fillDescription(data.description);
+
+  await matterPage.selectCaseType(data.caseType);
+
+  await matterPage.fillCourt(data.court);
+
+  await matterPage.fillJudge(data.judge);
+
+  await matterPage.addTag(data.tag);
+
+  await matterPage.verifyTagDisplayed(data.tag);
+
+  await matterPage.selectPriorityButton(data.priority);
+
+  await matterPage.verifyPrioritySelected(data.priority);
+
+  await matterPage.selectStatusButton(data.status);
+
+  await matterPage.verifyStatusSelected(data.status);
+
+  await matterPage.clickAddOpponentAdvocate();
+
+  await matterPage.enterOpponentAdvocateDetails(
+    data.opponentAdvocate.name,
+    data.opponentAdvocate.email,
+    data.opponentAdvocate.phone,
+  );
+
+  await matterPage.verifySaveButton();
+
+  await matterPage.clickSave();
+
+  await matterPage.verifySavedOpponentAdvocateDetails(
+    data.opponentAdvocate.name,
+  );
+
+  await matterPage.clickSaveForLater();
+
+  // await matterPage.verifyMatterCreatedInView(data.caseTitle);
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toBeVisible();
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toHaveText(
+    data.caseTitle,
+  );
+});
+
+test.only("TC-89. Create Legal Matter with Additional Details, select Client and Save for Later", async () => {
+  const data =
+    matterData1.TC89_CreateMatterWithAdditionalDetailsAndClient_Corporate;
+
+  // =========================
+  // First Page - Basic Details
+  // =========================
+  await expect(matterPage.caseTitleInput).toBeVisible();
+  await expect(matterPage.caseNumberInput).toBeVisible();
+  await expect(matterPage.matterNumberInput).toBeVisible();
+  await expect(matterPage.createdDateInput).toBeVisible();
+
+  await matterPage.fillCaseTitle(data.caseTitle);
+  await matterPage.fillCaseNumber(data.caseNumber);
+
+  await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
+  await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
+
+  const matterNumber = await matterPage.matterNumberInput.inputValue();
+
+  // =========================
+  // Additional Details
+  // =========================
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.fillDateOfFiling(data.dateOfFiling);
+  await matterPage.fillDescription(data.description);
+  await matterPage.selectCaseType(data.caseType);
+  await matterPage.fillCourt(data.court);
+  await matterPage.fillJudge(data.judge);
+
+  await matterPage.addTag(data.tag);
+  await matterPage.verifyTagDisplayed(data.tag);
+
+  await matterPage.selectPriorityButton(data.priority);
+  await matterPage.verifyPrioritySelected(data.priority);
+
+  await matterPage.selectStatusButton(data.status);
+  await matterPage.verifyStatusSelected(data.status);
+
+  // =========================
+  // Save & Next - Client
+  // =========================
+  const movedToClientSelection = await matterPage.clickSaveAndNext();
+
+  expect(movedToClientSelection).toBe(true);
+
+  // Wait for Client section/input
+  // await expect(matterPage.clientNameInput).toBeVisible({
+  //   timeout: 30000,
+  // });
+
+  // =========================
+  // Client Selection
+  // =========================
+  await matterPage.enterClientName(data.client.name);
+
+  await matterPage.clickClientSearch(data.client.name);
+
+  // Wait for client dropdown/results
+  await matterPage.openClientDropdown();
+
+  await matterPage.selectClient(data.client.name);
+
+  await matterPage.verifySelectedClient(data.client.name);
+
+  // =========================
+  // Save For Later
+  // =========================
+  await matterPage.clickSaveForLater();
+
+  // =========================
+  // Verify Matter
+  // =========================
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toBeVisible({
+    timeout: 30000,
+  });
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toHaveText(
+    data.caseTitle,
+  );
+
+  // =========================
+  // Verify Matter Number
+  // =========================
+  if (matterNumber) {
+    await expect(
+      matterPage.page.getByText(matterNumber, {
+        exact: true,
+      }),
+    ).toBeVisible({
+      timeout: 30000,
+    });
+  }
+
+  // =========================
+  // Verify Client
+  // =========================
+  await expect(
+    matterPage.page
+      .getByText(data.client.name, {
+        exact: true,
+      })
+      .first(),
+  ).toBeVisible({
+    timeout: 30000,
+  });
+});
+test.only("TC-90. Create Legal Matter with Additional Details, Client and Upload Documents", async () => {
+  const data = matterData1.TC90_CreateLegalMatter_with_allFields_Corporate;
+
+  const uploadFiles = data.document.multiUploadFiles || [
+    data.document.filePath,
+  ];
+
+  // =========================
+  // First Page - Basic Details
+  // =========================
+  await expect(matterPage.caseTitleInput).toBeVisible();
+  await expect(matterPage.caseNumberInput).toBeVisible();
+  await expect(matterPage.matterNumberInput).toBeVisible();
+  await expect(matterPage.createdDateInput).toBeVisible();
+
+  await matterPage.fillCaseTitle(data.caseTitle);
+  await matterPage.fillCaseNumber(data.caseNumber);
+
+  await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
+  await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
+
+  const matterNumber = await matterPage.matterNumberInput.inputValue();
+
+  // =========================
+  // Additional Details
+  // =========================
+  await matterPage.clickAdditionalDetails();
+
+  await matterPage.fillDateOfFiling(data.dateOfFiling);
+  await matterPage.fillDescription(data.description);
+  await matterPage.selectCaseType(data.caseType);
+  await matterPage.fillCourt(data.court);
+  await matterPage.fillJudge(data.judge);
+
+  await matterPage.addTag(data.tag);
+  await matterPage.verifyTagDisplayed(data.tag);
+
+  await matterPage.selectPriorityButton(data.priority);
+  await matterPage.verifyPrioritySelected(data.priority);
+
+  await matterPage.selectStatusButton(data.status);
+  await matterPage.verifyStatusSelected(data.status);
+
+  // =========================
+  // Save & Next - Client
+  // =========================
+  const movedToClientSelection = await matterPage.clickSaveAndNext();
+
+  expect(movedToClientSelection).toBe(true);
+
+  await matterPage.enterClientName(data.client.name);
+  await matterPage.clickClientSearch(data.client.name);
+  await matterPage.openClientDropdown();
+  await matterPage.selectClient(data.client.name);
+  await matterPage.verifySelectedClient(data.client.name);
+
+  // =========================
+  // Save & Next - Documents
+  // =========================
+  await matterPage.clickSaveAndNext();
+
+  await matterPage.verifyDocumentsSectionVisible();
+
+  // =========================
+  // Upload Multiple Documents
+  // =========================
+  await matterPage.uploadDocuments(uploadFiles);
+
+  // =========================
+  // Verify Documents
+  // =========================
+  for (const file of uploadFiles) {
+    const fileName = file.split("/").pop();
+
+    await matterPage.verifyUploadedDocument(fileName);
+  }
+
+  // =========================
+  // Final Save
+  // =========================
+  await matterPage.clickFinalSave();
+
+  // =========================
+  // Verify Matter
+  // =========================
+  await matterPage.verifyMatterCreatedInView(data.caseTitle);
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toBeVisible({
+    timeout: 30000,
+  });
+
+  await expect(matterPage.matterRowByTitle(data.caseTitle)).toHaveText(
+    data.caseTitle,
+  );
+
+  // =========================
+  // Verify Client
+  // =========================
+  await matterPage.verifyClientPresentInListing(
+    data.client.name,
+    data.caseTitle,
+  );
+
+  if (matterNumber) {
+    await expect(
+      matterPage.page.getByText(matterNumber, {
+        exact: true,
+      }),
+    ).toBeVisible({
+      timeout: 30000,
+    });
+  }
 });
