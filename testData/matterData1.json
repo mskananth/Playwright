@@ -1,0 +1,250 @@
+{
+  "TC75_CreateLegalMatterSaveForLater": {
+    "caseTitle": "SFL with Four Fields Legal36",
+    "caseNumber": "KA/007/1565"
+  },
+  "TC76_CreateLegalMatterSelectClient": {
+    "caseTitle": "SFL with Client Legal76",
+    "caseNumber": "KA/007/1576",
+    "client": {
+      "name": "Brett Lee"
+    }
+  },
+  "TC77_CreateLegalMatterSaveNextX2Documents": {
+    "caseTitle": "SFL With Client And Document777",
+    "caseNumber": "KA/007/1677",
+    "client": {
+      "name": "Brett Lee"
+    },
+    "document": {
+      "filePath": "testData/documents/JPG_Format.jpg",
+      "fileName": "JPG_Format.jpg",
+      "documentName": "Legal Matter Document",
+      "description": "Document uploaded for legal matter automation testing.",
+      "multiUploadFiles": [
+        "testData/documents/TXT_Format.txt",
+        "testData/documents/JPG_Format.jpg"
+      ]
+    }
+  },
+  "TC78_CreateMatterWithAdditionalDetails": {
+    "caseTitle": "SFL With Add Details781",
+    "caseNumber": "KA/007/1278",
+    "dateOfFiling": "13/08/2026",
+    "description": "Legal matter created with additional details",
+    "caseType": "Civil",
+    "court": "High Court",
+    "judge": "Justice Kumar",
+    "tag": "Important",
+    "priority": "Medium",
+    "status": "Open",
+    "opponentAdvocate": {
+      "name": "John Advocate",
+      "email": "john.advocate@example.com",
+      "phone": "9876543210"
+    }
+  },
+  "TC79_CreateMatterWithAdditionalDetailsAndClient": {
+    "caseTitle": "SFL With Add Details Client0957",
+    "caseNumber": "KA/007/1279",
+    "dateOfFiling": "13/08/2026",
+    "description": "Legal matter with additional details and client",
+    "caseType": "Civil",
+    "court": "High Court",
+    "judge": "Justice Kumar",
+    "tag": "Important",
+    "priority": "Medium",
+    "status": "Open",
+    "client": {
+      "name": "Brett Lee"
+    }
+  },
+  "TC80_CreateLegalMatter_with_allFields": {
+    "caseTitle": "SNXT With All Fields Legal2323",
+    "caseNumber": "KA/007/1680",
+    "dateOfFiling": "13/08/2026",
+    "description": "Legal matter created with additional details, client and multiple documents",
+    "caseType": "Civil",
+    "court": "High Court",
+    "judge": "Justice Kumar",
+    "tag": "Important",
+    "priority": "Medium",
+    "status": "Open",
+    "client": {
+      "name": "Brett Lee"
+    },
+    "document": {
+      "filePath": "testData/documents/JPG_Format.jpg",
+      "fileName": "JPG_Format.jpg",
+      "documentName": "Legal Matter Document",
+      "description": "Documents uploaded for legal matter automation testing.",
+      "multiUploadFiles": [
+        "testData/documents/TXT_Format.txt",
+        "testData/documents/JPG_Format.jpg"
+      ]
+    }
+  },
+  
+  "TC81_CreateLegalMatterSelectClient_SoloLawyer": {
+    "caseTitle": "SFL with Client Legal Solo1",
+    "caseNumber": "KA/007/1576",
+    "client": {
+      "name": "Pranav Associates"
+    }
+  },
+  "TC82_CreateLegalMatterSaveNextX2Documents_SoloLawyer": {
+    "caseTitle": "SFL With Client And Document solo2",
+    "caseNumber": "KA/007/1677",
+    "client": {
+      "name": "Pranav Associates"
+    },
+    "document": {
+      "filePath": "testData/documents/JPG_Format.jpg",
+      "fileName": "JPG_Format.jpg",
+      "documentName": "Legal Matter Document",
+      "description": "Document uploaded for legal matter automation testing.",
+      "multiUploadFiles": [
+        "testData/documents/TXT_Format.txt",
+        "testData/documents/JPG_Format.jpg"
+      ]
+    }
+  },
+  "TC83_CreateMatterWithAdditionalDetails_SoloLawyer": {
+    "caseTitle": "SFL With Add Detailss3",
+    "caseNumber": "KA/007/1278",
+    "dateOfFiling": "13/08/2026",
+    "description": "Legal matter created with additional details",
+    "caseType": "Civil",
+    "court": "High Court",
+    "judge": "Justice Kumar",
+    "tag": "Important",
+    "priority": "Medium",
+    "status": "Open",
+    "opponentAdvocate": {
+      "name": "John Advocate",
+      "email": "john.advocate@example.com",
+      "phone": "9876543210"
+    }
+  },
+  "TC84_CreateMatterWithAdditionalDetailsAndClient_SoloLawyer": {
+    "caseTitle": "SFL With Add Details Client99",
+    "caseNumber": "KA/007/1279",
+    "dateOfFiling": "13/08/2026",
+    "description": "Legal matter with additional details and client",
+    "caseType": "Civil",
+    "court": "High Court",
+    "judge": "Justice Kumar",
+    "tag": "Important",
+    "priority": "Medium",
+    "status": "Open",
+    "client": {
+      "name": "Pranav Associates"
+    }
+  },
+  "TC85_CreateLegalMatter_with_allFields_SoloLawyer": {
+    "caseTitle": "SNXT With All Fields Legal851",
+    "caseNumber": "KA/007/1680",
+    "dateOfFiling": "13/08/2026",
+    "description": "Legal matter created with additional details, client and multiple documents",
+    "caseType": "Civil",
+    "court": "High Court",
+    "judge": "Justice Kumar",
+    "tag": "Important",
+    "priority": "Medium",
+    "status": "Open",
+    "client": {
+      "name": "Pranav Associates"
+    },
+    "document": {
+      "filePath": "testData/documents/JPG_Format.jpg",
+      "fileName": "JPG_Format.jpg",
+      "documentName": "Legal Matter Document",
+      "description": "Documents uploaded for legal matter automation testing.",
+      "multiUploadFiles": [
+        "testData/documents/TXT_Format.txt",
+        "testData/documents/JPG_Format.jpg"
+      ]
+    }
+  },
+   "TC86_CreateLegalMatterSelectClient_Corporate": {
+    "caseTitle": "SFL with Client Legal Corp12",
+    "caseNumber": "KA/007/1576",
+    "client": {
+      "name": "Perficient Technologent"
+    }
+  },
+  "TC87_CreateLegalMatterSaveNextX2Documents_Corporate": {
+    "caseTitle": "SFL With Client And Document Corp1",
+    "caseNumber": "KA/007/1677",
+    "client": {
+      "name": "Perficient Technologent"
+    },
+    "document": {
+      "filePath": "testData/documents/JPG_Format.jpg",
+      "fileName": "JPG_Format.jpg",
+      "documentName": "Legal Matter Document",
+      "description": "Document uploaded for legal matter automation testing.",
+      "multiUploadFiles": [
+        "testData/documents/TXT_Format.txt",
+        "testData/documents/JPG_Format.jpg"
+      ]
+    }
+  },
+  "TC88_CreateMatterWithAdditionalDetails_Corporate": {
+    "caseTitle": "SFL With Add Detailss3 Corp3",
+    "caseNumber": "KA/007/1278",
+    "dateOfFiling": "13/08/2026",
+    "description": "Legal matter created with additional details",
+    "caseType": "Civil",
+    "court": "High Court",
+    "judge": "Justice Kumar",
+    "tag": "Important",
+    "priority": "Medium",
+    "status": "Open",
+    "opponentAdvocate": {
+      "name": "John Advocate",
+      "email": "john.advocate@example.com",
+      "phone": "9876543210"
+    }
+  },
+  "TC89_CreateMatterWithAdditionalDetailsAndClient_Corporate": {
+    "caseTitle": "SFL With Add Details Corp4",
+    "caseNumber": "KA/007/1279",
+    "dateOfFiling": "13/08/2026",
+    "description": "Legal matter with additional details and client",
+    "caseType": "Civil",
+    "court": "High Court",
+    "judge": "Justice Kumar",
+    "tag": "Important",
+    "priority": "Medium",
+    "status": "Open",
+    "client": {
+      "name": "Perficient Technologent"
+    }
+  },
+  "TC90_CreateLegalMatter_with_allFields_Corporate": {
+    "caseTitle": "SNXT With All Fields Legal Corp5",
+    "caseNumber": "KA/007/1680",
+    "dateOfFiling": "13/08/2026",
+    "description": "Legal matter created with additional details, client and multiple documents",
+    "caseType": "Civil",
+    "court": "High Court",
+    "judge": "Justice Kumar",
+    "tag": "Important",
+    "priority": "Medium",
+    "status": "Open",
+    "client": {
+      "name": "Perficient Technologent"
+    },
+    "document": {
+      "filePath": "testData/documents/JPG_Format.jpg",
+      "fileName": "JPG_Format.jpg",
+      "documentName": "Legal Matter Document",
+      "description": "Documents uploaded for legal matter automation testing.",
+      "multiUploadFiles": [
+        "testData/documents/TXT_Format.txt",
+        "testData/documents/JPG_Format.jpg"
+      ]
+    }
+  }
+}
