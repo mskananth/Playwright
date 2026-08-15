@@ -1063,6 +1063,7 @@ test("TC-76. Create Legal Matter 1st Page Save and Next Select Client 2nd SFL", 
     timeout: 30000,
   });
 });
+
 test("TC-77 - Create Legal Matter 1st Page Save and Next Select Client Save & Next Upload Documents", async () => {
   const data = matterData1.TC77_CreateLegalMatterSaveNextX2Documents;
 
@@ -1556,7 +1557,6 @@ test("TC-84. Create Legal Matter with Additional Details, select Client and Save
   expect(movedToClientSelection).toBe(true);
 
   // Step 8: Search and select client
-  // Step 8: Search and select client
   await matterPage.enterClientName(data.client.name);
   await matterPage.selectClient(data.client.name);
   await matterPage.verifySelectedClient(data.client.name);
@@ -1976,7 +1976,6 @@ test("TC-90. Create Legal Matter with Additional Details, Client and Upload Docu
   expect(movedToClientSelection).toBe(true);
 
   // Step 8: Search and select client
-  // Step 8: Search and select client
   await matterPage.enterClientName(data.client.name);
   await matterPage.selectClient(data.client.name);
   await matterPage.verifySelectedClient(data.client.name);
@@ -2025,113 +2024,13 @@ test("TC-90. Create Legal Matter with Additional Details, Client and Upload Docu
   }
 });
 
-// test("TC-91. Create Legal Matter with Additional Details, Client and Upload Documents", async () => {
-//   const data = matterData1.TC90_CreateLegalMatter_with_allFields_Corporate;
-
-//   const uploadFiles = data.document.multiUploadFiles || [
-//     data.document.filePath,
-//   ];
-
-//   // Step 1: Verify first page basic details fields visibility
-//   await expect(matterPage.caseTitleInput).toBeVisible();
-//   await expect(matterPage.caseNumberInput).toBeVisible();
-//   await expect(matterPage.matterNumberInput).toBeVisible();
-//   await expect(matterPage.createdDateInput).toBeVisible();
-
-//   // Step 2: Fill basic details
-//   await matterPage.fillCaseTitle(data.caseTitle);
-//   await matterPage.fillCaseNumber(data.caseNumber);
-
-//   // Step 3: Assert field values entered
-//   await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
-//   await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
-
-//   // Step 4: Store generated matter number
-//   const matterNumber = await matterPage.matterNumberInput.inputValue();
-
-//   // Step 5: Fill additional details fields
-//   await matterPage.clickAdditionalDetails();
-//   await matterPage.fillDateOfFiling(data.dateOfFiling);
-//   await matterPage.fillDescription(data.description);
-//   await matterPage.selectCaseType(data.caseType);
-//   await matterPage.fillCourt(data.court);
-//   await matterPage.fillJudge(data.judge);
-
-//   // Step 6: Configure tag, priority, and status
-//   await matterPage.addTag(data.tag);
-//   await matterPage.verifyTagDisplayed(data.tag);
-
-//   await matterPage.selectPriorityButton(data.priority);
-//   await matterPage.verifyPrioritySelected(data.priority);
-
-//   await matterPage.selectStatusButton(data.status);
-//   await matterPage.verifyStatusSelected(data.status);
-
-//   // Step 7: Click 'Save & Next' to move to Client step
-//   const movedToClientSelection = await matterPage.clickSaveAndNext();
-//   expect(movedToClientSelection).toBe(true);
-
-//   // Step 8: Search and select client
-//   await matterPage.enterClientName(data.client.name);
-//   await matterPage.clickClientSearch(data.client.name);
-//   await matterPage.openClientDropdown();
-//   await matterPage.selectClient(data.client.name);
-//   await matterPage.verifySelectedClient(data.client.name);
-
-//   // Step 9: Click 'Save & Next' to navigate to Documents section
-//   await matterPage.clickSaveAndNext();
-//   await matterPage.verifyDocumentsSectionVisible();
-
-//   // Step 10: Upload multiple document files
-//   await matterPage.uploadDocuments(uploadFiles);
-
-//   // Step 11: Verify uploaded document files listed
-//   for (const file of uploadFiles) {
-//     const fileName = file.split("/").pop();
-//     await matterPage.verifyUploadedDocument(fileName);
-//   }
-
-//   // Step 12: Click Final Save button
-//   await matterPage.clickFinalSave();
-
-//   // Step 13: Verify created matter row title displays
-//   await matterPage.verifyMatterCreatedInView(data.caseTitle);
-
-//   await expect(matterPage.matterRowByTitle(data.caseTitle)).toBeVisible({
-//     timeout: 30000,
-//   });
-
-//   await expect(matterPage.matterRowByTitle(data.caseTitle)).toHaveText(
-//     data.caseTitle,
-//   );
-
-//   // Step 14: Verify client presence and matter number in listing table
-//   await matterPage.verifyClientPresentInListing(
-//     data.client.name,
-//     data.caseTitle,
-//   );
-
-//   if (matterNumber) {
-//     await expect(
-//       matterPage.page.getByText(matterNumber, {
-//         exact: true,
-//       }),
-//     ).toBeVisible({
-//       timeout: 30000,
-//     });
-//   }
-// });
-
-test("TC-91. Create Legal Matter with Additional Details, Client and Upload Documents", async ({}) => {
+test("TC-91. Create Legal Matter with Additional Details, Multiple Clients and Upload Documents", async () => {
   const data =
-    matterData1.TC91_CreateLegalMatter_with_allFields_MultipleClients;
+    matterData1.TC91_CreateLegalMatter_with_allFields_Multiple_Client;
 
-  const uploadFiles = data.document?.multiUploadFiles || [
-    data.document?.filePath,
+  const uploadFiles = data.document.multiUploadFiles || [
+    data.document.filePath,
   ];
-
-  // Extract clients array from json
-  const clientList = data.clients || (data.client ? [data.client] : []);
 
   // Step 1: Verify first page basic details fields visibility
   await expect(matterPage.caseTitleInput).toBeVisible();
@@ -2172,32 +2071,34 @@ test("TC-91. Create Legal Matter with Additional Details, Client and Upload Docu
   const movedToClientSelection = await matterPage.clickSaveAndNext();
   expect(movedToClientSelection).toBe(true);
 
-  // Step 8: Search and select multiple clients sequentially from JSON
-  for (const clientObj of clientList) {
-    await matterPage.enterClientName(clientObj.name);
-    await matterPage.clickClientSearch(clientObj.name);
-    await matterPage.openClientDropdown();
-    await matterPage.selectClient(clientObj.name);
-    await matterPage.verifySelectedClient(clientObj.name);
+  // Step 8: Search and select multiple clients
+  for (const client of data.clients) {
+    await matterPage.enterClientName(client.name);
+    await matterPage.selectClient(client.name);
+    await matterPage.verifySelectedClient(client.name);
   }
 
-  // Step 9: Click 'Save & Next' to navigate to Documents section
-  await matterPage.clickSaveAndNext();
-  // await matterPage.verifyDocumentsSectionVisible();
+  // Step 9: Verify all selected clients are displayed
+  for (const client of data.clients) {
+    await matterPage.verifyClientAddedToList(client.name);
+  }
 
-  // Step 10: Upload multiple document files
+  // Step 10: Proceed to Documents section
+  await matterPage.clickSaveAndNext();
+
+  // Step 11: Upload multiple document files
   await matterPage.uploadDocuments(uploadFiles);
 
-  // Step 11: Verify uploaded document files listed
+  // Step 12: Verify uploaded document files listed
   for (const file of uploadFiles) {
     const fileName = file.split("/").pop();
     await matterPage.verifyUploadedDocument(fileName);
   }
 
-  // Step 12: Click Final Save button
+  // Step 13: Click Final Save button
   await matterPage.clickFinalSave();
 
-  // Step 13: Verify created matter row title displays
+  // Step 14: Verify created matter row title displays
   await matterPage.verifyMatterCreatedInView(data.caseTitle);
 
   await expect(matterPage.matterRowByTitle(data.caseTitle)).toBeVisible({
@@ -2208,12 +2109,9 @@ test("TC-91. Create Legal Matter with Additional Details, Client and Upload Docu
     data.caseTitle,
   );
 
-  // Step 14: Verify client presence and matter number in listing table for all clients
-  for (const clientObj of clientList) {
-    await matterPage.verifyClientPresentInListing(
-      clientObj.name,
-      data.caseTitle,
-    );
+  // Step 15: Verify all clients presence and matter number in listing table
+  for (const client of data.clients) {
+    await matterPage.verifyClientPresentInListing(client.name, data.caseTitle);
   }
 
   if (matterNumber) {
@@ -2225,4 +2123,142 @@ test("TC-91. Create Legal Matter with Additional Details, Client and Upload Docu
       timeout: 30000,
     });
   }
+});
+
+test.only("TC-92 - Create Legal Matter 1st Page Save and Next Select Client Save & Next Upload Documents Edit Document", async () => {
+  const data = matterData1.TC92_CreateLegalMatterSaveNextX2Documents;
+
+  // STEP 1 - Verify basic Matter fields
+
+  await expect(matterPage.caseTitleInput).toBeVisible();
+  await expect(matterPage.caseNumberInput).toBeVisible();
+  await expect(matterPage.matterNumberInput).toBeVisible();
+  await expect(matterPage.createdDateInput).toBeVisible();
+
+  // STEP 2 - Enter Matter details
+
+  await matterPage.fillCaseTitle(data.caseTitle);
+  await matterPage.fillCaseNumber(data.caseNumber);
+
+  // STEP 3 - Verify Matter details
+
+  await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
+  await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
+
+  // STEP 4 - Store generated Matter Number
+
+  const matterNumber = await matterPage.matterNumberInput.inputValue();
+
+  // STEP 5 - Save & Next -> Client
+
+  await matterPage.clickSaveAndNext();
+
+  // STEP 6 - Search and select Client
+
+  await matterPage.enterClientName(data.client.name);
+  await matterPage.selectClient(data.client.name);
+  await matterPage.verifySelectedClient(data.client.name);
+
+  // STEP 7 - Save & Next -> Documents
+
+  await matterPage.clickSaveAndNext();
+
+  // STEP 8 - Upload Document
+
+  await matterPage.uploadDocument(data.document.filePath);
+  await matterPage.verifyUploadedDocument(data.document.fileName);
+
+  // STEP 9 - Click Edit Metadata
+
+  await matterPage.clickDocumentEdit(data.document.fileName);
+
+  // STEP 10 - Edit Document Name
+
+  await matterPage.fillDocumentName(data.document.updatedDocumentName);
+  await expect(matterPage.documentNameInput).toHaveValue(
+    data.document.updatedDocumentName,
+  );
+
+  // STEP 11 - Edit Description
+
+  await matterPage.editDocumentDescription(data.document.updatedDescription);
+  await expect(matterPage.documentDescriptionInput).toHaveValue(
+    data.document.updatedDescription,
+  );
+
+  // STEP 12 - Expiration Date
+
+  // Clear existing date first
+  await matterPage.documentExpirationDateInput.clear();
+  await matterPage.editDocumentExpirationDate(data.document.expirationDate);
+
+  // Verify the date was set correctly - handle the format that the application actually displays
+  await matterPage.verifyDocumentExpirationDate(data.document.expirationDate);
+
+  // STEP 13 - Enable / Disable Encryption
+
+  if (data.document.encryption === true) {
+    await matterPage.enableDocumentEncryption();
+    await expect(matterPage.documentEncryptionToggle).toHaveClass(
+      /toggle-switch active/,
+    );
+  } else {
+    await matterPage.disableDocumentEncryption();
+    await expect(matterPage.documentEncryptionToggle).not.toHaveClass(/active/);
+  }
+
+  // STEP 14 - Enable / Disable Download
+
+  if (data.document.download === true) {
+    await matterPage.enableDocumentDownload();
+    await expect(matterPage.documentDownloadToggle).toHaveClass(
+      /toggle-switch active/,
+    );
+  } else {
+    await matterPage.disableDocumentDownload();
+    await expect(matterPage.documentDownloadToggle).not.toHaveClass(/active/);
+  }
+
+  // STEP 15 - Add Tags
+
+  for (let i = 0; i < data.document.tags.length; i++) {
+    await matterPage.addDocumentTag(data.document.tags[i], i);
+  }
+
+  // STEP 16 - Save Document Changes
+
+  await matterPage.saveDocumentChanges();
+
+  // STEP 17 - Verify Updated Document
+
+  await expect(
+    matterPage.page.getByText(data.document.updatedDocumentName, {
+      exact: true,
+    }),
+  ).toBeVisible({
+    timeout: 30000,
+  });
+
+  // STEP 18 - Final Save Matter
+
+  await matterPage.clickFinalSave();
+
+  // STEP 19 - Verify Matter Created
+
+  await matterPage.verifyMatterCreatedInView(data.caseTitle);
+
+  // STEP 20 - Verify Client in Listing
+
+  await matterPage.verifyClientPresentInListing(
+    data.client.name,
+    data.caseTitle,
+  );
+
+  // STEP 21 - Verify Matter Row
+
+  const matterRow = matterPage.matterRowByTitle(data.caseTitle);
+  await expect(matterRow).toBeVisible({
+    timeout: 30000,
+  });
+  await expect(matterRow).toContainText(data.caseTitle);
 });

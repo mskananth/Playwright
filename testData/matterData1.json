@@ -246,11 +246,11 @@
       ]
     }
   },
-  "TC91_CreateLegalMatter_with_allFields_MultipleClients": {
-    "caseTitle": "SNXT With All Fields Multiple Clients 91",
-    "caseNumber": "KA/007/1691",
+  "TC91_CreateLegalMatter_with_allFields_Multiple_Client": {
+    "caseTitle": "SNXT With All Fields Legal Corp_91A",
+    "caseNumber": "KA/007/1680",
     "dateOfFiling": "13/08/2026",
-    "description": "Legal matter created with additional details, multiple clients and documents",
+    "description": "Legal matter created with additional details, multiple clients and multiple documents",
     "caseType": "Civil",
     "court": "High Court",
     "judge": "Justice Kumar",
@@ -262,9 +262,9 @@
         "name": "Brett Lee"
       },
       {
-        "name": "Pranav Associates"
+        "name": "Ananth Subramanian"
       }
-    
+     
     ],
     "document": {
       "filePath": "testData/documents/JPG_Format.jpg",
@@ -276,5 +276,26 @@
         "testData/documents/JPG_Format.jpg"
       ]
     }
+  },
+  
+  "TC92_CreateLegalMatterSaveNextX2Documents": {
+  "caseTitle": "Test Legal Matter Doc FinaL30",
+  "caseNumber": "CASE-1001",
+  "client": {
+    "name": "Ananth Subramanian"
+  },
+  "document": {
+    "filePath": "TestData/Documents/TXT_Format.txt",
+    "fileName": "TXT_Format.txt",
+    "updatedDocumentName": "Updated_Legal_Document.txt",
+    "updatedDescription": "Updated legal document description",
+    "expirationDate": "20/08/2026",  
+    "encryption": true,
+    "download": false,
+    "tags": [
+      "Legal",
+      "Important"
+    ]
   }
+}
 }

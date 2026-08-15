@@ -14,8 +14,7 @@ class MatterPage {
       name: "Legal Matters",
       exact: true,
     });
-    // this.mattersMenu = page.locator('a[aria-label="Matters"]');
-    // this.legalMattersLink = page.locator('a:has-text("Legal Matters")');
+
     this.createMatterButton = page.getByRole("button", {
       name: "Create Matter",
     });
@@ -39,10 +38,6 @@ class MatterPage {
       'input[formcontrolname="date_of_filling"]',
     );
 
-    // this.descriptionInput = page.locator(
-    //   'textarea[name="description"], textarea[formcontrolname="description"]',
-    // );
-    // this.descriptionInput = page.locator('textarea[name="description"]');
     this.descriptionInput = this.page.locator('textarea[name="description"]');
 
     this.descriptionCounter = page.locator(
@@ -222,59 +217,86 @@ class MatterPage {
       exact: true,
     });
 
-    // ==============================
     // Documents Page
-    // ==============================
 
     this.browseFilesButton = page.getByRole("button", {
       name: "Browse Files",
     });
 
-    this.documentNameInput = page.getByRole("textbox", {
-      name: "Document Name *",
+    // DOCUMENT EDIT LOCATORS
+
+    this.browseFilesButton = this.page.getByRole("button", {
+      name: "Browse Files",
+      exact: true,
     });
 
-    this.expirationDateInput = page.getByRole("textbox", {
-      name: "Choose a date",
-    });
+    this.fileInput = this.page.locator('input[type="file"]');
+    // Uploaded document card
+    this.documentCard = this.page
+      .locator('div:has(i[mattooltip="Edit metadata"])')
+      .first();
 
-    this.descriptionInput1 = page.getByRole("textbox", {
-      name: "Add description",
-    });
+    // Edit metadata button
+    this.documentEditButton = this.documentCard.locator(
+      'i[mattooltip="Edit metadata"]',
+    );
 
-    this.addTagsButton = page.getByRole("button", {
-      name: "+ Add Tags",
-    });
+    // Document name
+    this.documentNameInput = this.documentCard.locator(
+      'input[formcontrolname="name"]',
+    );
 
-    this.tagTypeInput = page.getByRole("textbox", {
-      name: "Tag type",
-    });
+    // Description
+    this.documentDescriptionInput = this.documentCard.locator(
+      'textarea[formcontrolname="description"]',
+    );
 
-    this.tagsInput = page.getByRole("textbox", {
-      name: "Tags",
-    });
+    // Expiration date
+    this.documentExpirationDateInput = this.documentCard.locator(
+      'input[formcontrolname="date_of_filling"]',
+    );
 
-    this.saveButton = page.getByRole("button", {
+    // Encryption
+    this.documentEncryptionToggle = this.documentCard
+      .locator("span.toggle-switch")
+      .nth(0);
+
+    // Download
+    this.documentDownloadToggle = this.documentCard
+      .locator("span.toggle-switch")
+      .nth(1);
+
+    // Add Tags
+    this.documentAddTagsButton =
+      this.documentCard.locator("button.add-tag-btn");
+
+    this.documentTagTypeInputs = this.documentCard.locator(
+      'input[placeholder="Tag type"]',
+    );
+
+    // Tags input
+    this.documentTagInputs = this.documentCard.locator(
+      'input[placeholder="Tags"]',
+    );
+
+    // Save button inside document edit panel
+    this.documentSaveButton = this.documentCard.getByRole("button", {
       name: "Save",
       exact: true,
     });
 
-    this.cancelButton = page.getByRole("button", {
+    // Cancel button
+    this.documentCancelButton = this.documentCard.getByRole("button", {
       name: "Cancel",
+      exact: true,
     });
 
-    // Edit/Delete/other document icons
-    this.documentTooltipTrigger = page.locator(".mat-mdc-tooltip-trigger");
-
-    this.documentFaButton = page.locator(".mat-mdc-tooltip-trigger.fa");
-
-    // Encryption / Download toggles
-    this.encryptionToggle = page.locator(".toggle-switch").first();
-
-    this.downloadToggle = page.locator("div:nth-child(2) > .toggle-switch");
-
-    // File upload
-    this.fileInput = page.locator('input[type="file"]');
+    this.saveButton = this.page
+      .getByRole("button", {
+        name: "Save",
+        exact: true,
+      })
+      .last();
   }
 
   async openLegalMatters() {
@@ -807,108 +829,7 @@ class MatterPage {
     await this.showLessDetails.click();
   }
 
-  // Client Section Started
-
-  //   async getClientSearchInput() {
-  //     const locators = [this.clientSearchInput, this.clientInputFallback];
-
-  //     for (const locator of locators) {
-  //       if (locator && (await locator.count()) > 0) {
-  //         return locator.first();
-  //       }
-  //     }
-
-  //     return this.clientSearchInput.first();
-  //   }
-
-  //   async enterClientName(clientName) {
-  //     const input = await this.getClientSearchInput();
-
-  //     await expect(input).toBeVisible({ timeout: 20000 });
-  //     await input.fill(clientName);
-  //   }
-
-  //   async clickClientSearch() {
-  //     const button = this.clientSearchButton;
-
-  //     if ((await button.count()) > 0) {
-  //       await expect(button).toBeVisible();
-  //       await expect(button).toBeEnabled();
-  //       await button.click();
-  //       return;
-  //     }
-
-  //     const input = await this.getClientSearchInput();
-  //     await expect(input).toBeVisible({ timeout: 20000 });
-  //     await input.press("Enter");
-  //   }
-
-  //   async openClientDropdown() {
-  //     const input = await this.getClientSearchInput();
-  //     await expect(input).toBeVisible({ timeout: 20000 });
-  //     await input.click();
-  //   }
-
-  //   async selectClient(clientName) {
-  //     const clientOption = this.page
-  //       .locator("mat-option:visible, [role='option']:visible")
-  //       .filter({ hasText: clientName })
-  //       .first();
-
-  //     if ((await clientOption.count()) > 0) {
-  //       await expect(clientOption).toBeVisible({ timeout: 30000 });
-  //       await clientOption.click();
-  //       return;
-  //     }
-
-  //     const searchField = await this.getClientSearchInput();
-  //     await expect(searchField).toBeVisible({ timeout: 20000 });
-  //     await searchField.press("ArrowDown");
-  //     await searchField.press("Enter");
-  //   }
-
-  //   async verifySelectedClient(clientName) {
-  //     const input = await this.getClientSearchInput().catch(() => null);
-
-  //     if (!input) {
-  //       return;
-  //     }
-
-  //     const inputValue = await input.inputValue().catch(() => "");
-  //     const normalized = (value) => (value || "").trim().toLowerCase();
-
-  //     if (
-  //       normalized(inputValue).includes(normalized(clientName)) ||
-  //       normalized(inputValue) === normalized(clientName)
-  //     ) {
-  //       return;
-  //     }
-
-  //     const selectedChip = this.page
-  //       .locator(".mat-chip, .chip, [data-selected='true'], .selected-item")
-  //       .filter({ hasText: clientName })
-  //       .first();
-
-  //     if ((await selectedChip.count()) > 0) {
-  //       return;
-  //     }
-
-  //     const option = this.page
-  //       .locator("mat-option, [role='option']")
-  //       .filter({ hasText: clientName })
-  //       .first();
-
-  //     if ((await option.count()) > 0) {
-  //       return;
-  //     }
-
-  //     // The app does not always render the selected client as visible text immediately after the choice.
-  //     // Final listing validation after save is the authoritative check for the created matter and client.
-  //     const pageText = this.page.getByText(clientName, { exact: false }).first();
-  //     if ((await pageText.count()) > 0) {
-  //       return;
-  //     }
-  //   }
+  // Client Selection Started Here
 
   async getClientSearchInput() {
     const locators = [this.clientSearchInput, this.clientInputFallback];
@@ -930,7 +851,6 @@ class MatterPage {
     await input.fill("");
     await input.fill(clientName);
 
-    // Give Angular autocomplete time to render filtered results
     await this.page.waitForTimeout(500);
   }
 
@@ -1017,8 +937,6 @@ class MatterPage {
       return;
     }
 
-    // Some app states render the newly created matter row without the client text in the same row.
-    // In that case, the matter-title validation is the reliable check for the newly created record.
     await expect(row).toContainText(matterName || clientName, {
       timeout: 30000,
     });
@@ -1028,9 +946,160 @@ class MatterPage {
     await expect(this.browseFilesButton).toBeVisible();
   }
 
-  // =====================================================
+  // Multiple Client Selections
+
+  async verifyClientAddedToList(clientName) {
+    try {
+      // Method 1: Check if client appears in the selected clients list/chips
+      const selectedClientChip = this.page
+        .locator(
+          "mat-chip, .mat-chip, .mat-mdc-chip, .chip, .tag, .client-tag, .selected-client",
+        )
+        .filter({ hasText: clientName })
+        .first();
+
+      if ((await selectedClientChip.count()) > 0) {
+        await expect(selectedClientChip).toBeVisible({
+          timeout: 10000,
+        });
+        return true;
+      }
+
+      // Method 2: Check if client appears in selected clients container
+      const selectedClientText = this.page
+        .locator(
+          ".selected-clients, .client-list, .added-clients, .multi-client-list, .client-selection-container",
+        )
+        .getByText(clientName, { exact: true })
+        .first();
+
+      if ((await selectedClientText.count()) > 0) {
+        await expect(selectedClientText).toBeVisible({
+          timeout: 10000,
+        });
+        return true;
+      }
+
+      // Method 3: Check if client appears anywhere in the clients section (excluding input fields)
+      const clientSection = this.page
+        .locator(
+          ".client-section, .client-container, .step-client, [data-step='client']",
+        )
+        .first();
+
+      if ((await clientSection.count()) > 0) {
+        const clientInSection = clientSection
+          .getByText(clientName, { exact: true })
+          .first();
+
+        // Make sure it's not in the search input field
+        const isInInput = await clientInSection.evaluate((el) => {
+          return (
+            el.tagName === "INPUT" ||
+            el.tagName === "TEXTAREA" ||
+            el.closest("input") !== null ||
+            el.closest("textarea") !== null
+          );
+        });
+
+        if (!isInInput && (await clientInSection.count()) > 0) {
+          await expect(clientInSection).toBeVisible({
+            timeout: 10000,
+          });
+          return true;
+        }
+      }
+
+      // Method 4: Check if client appears as a mat-option that's disabled (selected)
+      const selectedOption = this.page
+        .locator("mat-option.mat-selected, mat-option[aria-selected='true']")
+        .filter({ hasText: clientName })
+        .first();
+
+      if ((await selectedOption.count()) > 0) {
+        await expect(selectedOption).toBeVisible({
+          timeout: 10000,
+        });
+        return true;
+      }
+
+      // Method 5: Fallback - check for any text occurrence of client name
+      // but ensure it's not in the input field
+      const allTextMatches = this.page
+        .getByText(clientName, { exact: true })
+        .all();
+
+      const textMatches = await allTextMatches;
+
+      for (const match of textMatches) {
+        const isInInput = await match.evaluate((el) => {
+          return (
+            el.tagName === "INPUT" ||
+            el.tagName === "TEXTAREA" ||
+            el.closest("input") !== null ||
+            el.closest("textarea") !== null ||
+            el.getAttribute("role") === "combobox"
+          );
+        });
+
+        if (!isInInput && (await match.isVisible())) {
+          return true;
+        }
+      }
+
+      await expect(
+        this.page.getByText(clientName, { exact: true }).first(),
+      ).toBeVisible({
+        timeout: 10000,
+      });
+
+      return true;
+    } catch (error) {
+      // If all methods fail, throw a descriptive error
+      throw new Error(
+        `Client "${clientName}" was not found in the added clients list. Error: ${error.message}`,
+      );
+    }
+  }
+
   // Upload Documents
-  // =====================================================
+  formatDateForInput(dateString) {
+    // If date is in format "20/08/2026", convert to "Aug 20, 2026"
+    if (dateString.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+      const parts = dateString.split("/");
+      const day = parseInt(parts[0]);
+      const month = parseInt(parts[1]) - 1; // JavaScript months are 0-indexed
+      const year = parseInt(parts[2]);
+      const date = new Date(year, month, day);
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    }
+
+    return dateString;
+  }
+  async editDocumentExpirationDate(dateValue) {
+    const formattedDate = this.formatDateForInput(dateValue);
+
+    await this.documentExpirationDateInput.click();
+
+    await this.documentExpirationDateInput.clear();
+
+    await this.documentExpirationDateInput.fill(formattedDate);
+
+    await this.documentExpirationDateInput.press("Enter");
+
+    await this.page.waitForTimeout(500);
+  }
+  async verifyDocumentExpirationDate(dateValue) {
+    const expected = this.formatDateForInput(dateValue);
+
+    await expect(this.documentExpirationDateInput).toHaveValue(expected, {
+      timeout: 15000,
+    });
+  }
 
   resolveProjectFile(filePath) {
     if (!filePath) return filePath;
@@ -1072,23 +1141,37 @@ class MatterPage {
       this.page.getByText(fileName, { exact: true }).first(),
     ).toBeVisible({ timeout: 30000 });
   }
+  async clickDocumentEdit() {
+    await this.documentEditButton.scrollIntoViewIfNeeded();
 
-  // =====================================================
-  // Edit Document
-  // =====================================================
+    await expect(this.documentEditButton).toBeVisible({
+      timeout: 15000,
+    });
 
-  async clickEditDocument(fileName) {
-    const target = fileName
-      ? this.page.getByText(fileName, { exact: true }).first()
-      : this.documentTooltipTrigger.first();
+    await this.documentEditButton.click();
 
-    await expect(target).toBeVisible({ timeout: 30000 });
-    await target.click();
+    await this.page.waitForTimeout(500);
+
+    await expect(this.documentNameInput).toBeVisible({
+      timeout: 15000,
+    });
+
+    await expect(this.documentDescriptionInput).toBeVisible({
+      timeout: 15000,
+    });
+
+    await expect(this.documentExpirationDateInput).toBeVisible({
+      timeout: 15000,
+    });
   }
+  async editDocumentName(name) {
+    await this.documentNameInput.scrollIntoViewIfNeeded();
 
-  // =====================================================
+    await expect(this.documentNameInput).toBeVisible();
+
+    await this.documentNameInput.fill(name);
+  }
   // Document Name
-  // =====================================================
 
   async fillDocumentName(documentName) {
     await expect(this.documentNameInput).toBeVisible();
@@ -1096,105 +1179,194 @@ class MatterPage {
     await this.documentNameInput.fill(documentName);
   }
 
-  // =====================================================
-  // Expiration Date
-  // =====================================================
+  async editDocumentDescription(description) {
+    await this.documentDescriptionInput.scrollIntoViewIfNeeded();
 
-  async clickExpirationDate() {
-    await expect(this.expirationDateInput).toBeVisible();
+    await expect(this.documentDescriptionInput).toBeVisible();
 
-    await this.expirationDateInput.click();
+    await this.documentDescriptionInput.fill(description);
   }
 
-  // =====================================================
-  // Description
-  // =====================================================
+  formatExpectedDate(dateValue) {
+    const [day, month, year] = dateValue.split("/");
 
-  async fillDescription(description) {
-    await expect(this.descriptionInput).toBeVisible();
+    const date = new Date(Number(year), Number(month) - 1, Number(day));
 
-    await this.descriptionInput.fill(description);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    });
+  }
+  async enableDocumentEncryption() {
+    await this.documentEncryptionToggle.scrollIntoViewIfNeeded();
+
+    await expect(this.documentEncryptionToggle).toBeVisible({
+      timeout: 15000,
+    });
+
+    const classes = await this.documentEncryptionToggle.getAttribute("class");
+
+    if (!classes?.includes("active")) {
+      await this.documentEncryptionToggle.click();
+    }
+
+    await expect(this.documentEncryptionToggle).toHaveClass(
+      /toggle-switch active/,
+      {
+        timeout: 10000,
+      },
+    );
   }
 
-  async fillDocumentDescription(description) {
-    await this.fillDescription(description);
+  async disableDocumentEncryption() {
+    await this.documentEncryptionToggle.scrollIntoViewIfNeeded();
+
+    await expect(this.documentEncryptionToggle).toBeVisible({
+      timeout: 15000,
+    });
+
+    const classes = await this.documentEncryptionToggle.getAttribute("class");
+
+    if (classes?.includes("active")) {
+      await this.documentEncryptionToggle.click();
+    }
+
+    await expect(this.documentEncryptionToggle).not.toHaveClass(/active/, {
+      timeout: 10000,
+    });
+  }
+  getDocumentDownloadToggle() {
+    return this.page.locator("span.toggle-switch").nth(1);
   }
 
-  // =====================================================
-  // Encryption Toggle
-  // =====================================================
+  async disableDocumentDownload() {
+    const toggle = this.getDocumentDownloadToggle();
 
-  async toggleEncryption() {
-    await this.encryptionToggle.click();
+    await expect(toggle).toBeVisible({
+      timeout: 10000,
+    });
+
+    const className = await toggle.getAttribute("class");
+
+    if (className?.includes("active")) {
+      await toggle.click();
+    }
+
+    await expect(this.getDocumentDownloadToggle()).not.toHaveClass(/active/);
+  }
+  async enableDocumentDownload() {
+    await this.documentDownloadToggle.scrollIntoViewIfNeeded();
+
+    await expect(this.documentDownloadToggle).toBeVisible({
+      timeout: 15000,
+    });
+
+    const classes = await this.documentDownloadToggle.getAttribute("class");
+
+    if (!classes?.includes("active")) {
+      await this.documentDownloadToggle.click();
+    }
+
+    await expect(this.documentDownloadToggle).toHaveClass(
+      /toggle-switch active/,
+      {
+        timeout: 10000,
+      },
+    );
   }
 
-  // =====================================================
-  // Download Toggle
-  // =====================================================
+  async disableDocumentDownload() {
+    await this.documentDownloadToggle.scrollIntoViewIfNeeded();
 
-  async toggleDownload() {
-    await this.downloadToggle.click();
+    await expect(this.documentDownloadToggle).toBeVisible({
+      timeout: 15000,
+    });
+
+    const classes = await this.documentDownloadToggle.getAttribute("class");
+
+    if (classes?.includes("active")) {
+      await this.documentDownloadToggle.click();
+    }
+
+    await expect(this.documentDownloadToggle).not.toHaveClass(/active/, {
+      timeout: 10000,
+    });
+  }
+  async addDocumentTag(tagName, index) {
+    if (!tagName) {
+      throw new Error("Tag name cannot be empty or undefined");
+    }
+
+    await this.documentAddTagsButton.scrollIntoViewIfNeeded();
+
+    await expect(this.documentAddTagsButton).toBeVisible({
+      timeout: 15000,
+    });
+
+    await this.documentAddTagsButton.click();
+
+    await this.page.waitForTimeout(500);
+
+    const tagTypeInputs = this.documentCard.locator(
+      'input[placeholder="Tag type"]',
+    );
+
+    const tagInputs = this.documentCard.locator('input[placeholder="Tags"]');
+
+    await expect(tagTypeInputs.last()).toBeVisible({
+      timeout: 15000,
+    });
+
+    const rowIndex =
+      index !== undefined ? index : (await tagTypeInputs.count()) - 1;
+
+    const tagTypeInput = tagTypeInputs.nth(rowIndex);
+    const tagInput = tagInputs.nth(rowIndex);
+
+    await tagTypeInput.scrollIntoViewIfNeeded();
+
+    await expect(tagTypeInput).toBeVisible({
+      timeout: 15000,
+    });
+
+    await expect(tagInput).toBeVisible({
+      timeout: 15000,
+    });
+
+    // Fill Tag Type
+    await tagTypeInput.fill(tagName);
+
+    // Fill Tags
+    await tagInput.fill(tagName);
+
+    await expect(tagTypeInput).toHaveValue(tagName);
+    await expect(tagInput).toHaveValue(tagName);
+  }
+  async saveDocumentChanges() {
+    await this.documentSaveButton.scrollIntoViewIfNeeded();
+
+    await expect(this.documentSaveButton).toBeVisible();
+
+    await this.documentSaveButton.click();
   }
 
-  // =====================================================
-  // Tags
-  // =====================================================
+  async cancelDocumentChanges() {
+    await this.documentCancelButton.scrollIntoViewIfNeeded();
 
-  async clickAddTags() {
-    await this.addTagsButton.click();
+    await expect(this.documentCancelButton).toBeVisible();
+
+    await this.documentCancelButton.click();
   }
 
-  async enterTagType(tagType) {
-    const input =
-      (await this.tagTypeInput.count()) > 0
-        ? this.tagTypeInput.first()
-        : this.tagInput;
-    await expect(input).toBeVisible();
-    await input.fill(tagType);
+  async verifyDocumentExpirationDate(dateValue) {
+    const expected = this.formatExpectedDate(dateValue);
+
+    await expect(this.documentExpirationDateInput).toHaveValue(expected, {
+      timeout: 15000,
+    });
   }
-
-  async enterTag(tag) {
-    const input =
-      (await this.tagInput.count()) > 0
-        ? this.tagInput
-        : this.tagsInput.first();
-    await expect(input).toBeVisible();
-    await input.fill(tag);
-  }
-
-  // =====================================================
-  // Save Document Metadata
-  // =====================================================
-
-  async saveDocumentMetadata() {
-    await expect(this.saveButton).toBeVisible();
-
-    await expect(this.saveButton).toBeEnabled();
-
-    await this.saveButton.click();
-  }
-
-  // =====================================================
-  // Cancel
-  // =====================================================
-
-  async clickCancel() {
-    await expect(this.cancelButton).toBeVisible();
-
-    await this.cancelButton.click();
-  }
-
-  // =====================================================
-  // Document Action
-  // =====================================================
-
-  async clickDocumentAction() {
-    await this.documentFaButton.first().click();
-  }
-
-  // =====================================================
   // Final Save
-  // =====================================================
 
   async clickFinalSave() {
     await expect(this.saveButton).toBeVisible();
