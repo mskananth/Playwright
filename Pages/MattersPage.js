@@ -809,6 +809,107 @@ class MatterPage {
 
   // Client Section Started
 
+  //   async getClientSearchInput() {
+  //     const locators = [this.clientSearchInput, this.clientInputFallback];
+
+  //     for (const locator of locators) {
+  //       if (locator && (await locator.count()) > 0) {
+  //         return locator.first();
+  //       }
+  //     }
+
+  //     return this.clientSearchInput.first();
+  //   }
+
+  //   async enterClientName(clientName) {
+  //     const input = await this.getClientSearchInput();
+
+  //     await expect(input).toBeVisible({ timeout: 20000 });
+  //     await input.fill(clientName);
+  //   }
+
+  //   async clickClientSearch() {
+  //     const button = this.clientSearchButton;
+
+  //     if ((await button.count()) > 0) {
+  //       await expect(button).toBeVisible();
+  //       await expect(button).toBeEnabled();
+  //       await button.click();
+  //       return;
+  //     }
+
+  //     const input = await this.getClientSearchInput();
+  //     await expect(input).toBeVisible({ timeout: 20000 });
+  //     await input.press("Enter");
+  //   }
+
+  //   async openClientDropdown() {
+  //     const input = await this.getClientSearchInput();
+  //     await expect(input).toBeVisible({ timeout: 20000 });
+  //     await input.click();
+  //   }
+
+  //   async selectClient(clientName) {
+  //     const clientOption = this.page
+  //       .locator("mat-option:visible, [role='option']:visible")
+  //       .filter({ hasText: clientName })
+  //       .first();
+
+  //     if ((await clientOption.count()) > 0) {
+  //       await expect(clientOption).toBeVisible({ timeout: 30000 });
+  //       await clientOption.click();
+  //       return;
+  //     }
+
+  //     const searchField = await this.getClientSearchInput();
+  //     await expect(searchField).toBeVisible({ timeout: 20000 });
+  //     await searchField.press("ArrowDown");
+  //     await searchField.press("Enter");
+  //   }
+
+  //   async verifySelectedClient(clientName) {
+  //     const input = await this.getClientSearchInput().catch(() => null);
+
+  //     if (!input) {
+  //       return;
+  //     }
+
+  //     const inputValue = await input.inputValue().catch(() => "");
+  //     const normalized = (value) => (value || "").trim().toLowerCase();
+
+  //     if (
+  //       normalized(inputValue).includes(normalized(clientName)) ||
+  //       normalized(inputValue) === normalized(clientName)
+  //     ) {
+  //       return;
+  //     }
+
+  //     const selectedChip = this.page
+  //       .locator(".mat-chip, .chip, [data-selected='true'], .selected-item")
+  //       .filter({ hasText: clientName })
+  //       .first();
+
+  //     if ((await selectedChip.count()) > 0) {
+  //       return;
+  //     }
+
+  //     const option = this.page
+  //       .locator("mat-option, [role='option']")
+  //       .filter({ hasText: clientName })
+  //       .first();
+
+  //     if ((await option.count()) > 0) {
+  //       return;
+  //     }
+
+  //     // The app does not always render the selected client as visible text immediately after the choice.
+  //     // Final listing validation after save is the authoritative check for the created matter and client.
+  //     const pageText = this.page.getByText(clientName, { exact: false }).first();
+  //     if ((await pageText.count()) > 0) {
+  //       return;
+  //     }
+  //   }
+
   async getClientSearchInput() {
     const locators = [this.clientSearchInput, this.clientInputFallback];
 
@@ -824,90 +925,54 @@ class MatterPage {
   async enterClientName(clientName) {
     const input = await this.getClientSearchInput();
 
-    await expect(input).toBeVisible({ timeout: 20000 });
+    await expect(input).toBeVisible({ timeout: 30000 });
+
+    await input.fill("");
     await input.fill(clientName);
-  }
 
-  async clickClientSearch() {
-    const button = this.clientSearchButton;
-
-    if ((await button.count()) > 0) {
-      await expect(button).toBeVisible();
-      await expect(button).toBeEnabled();
-      await button.click();
-      return;
-    }
-
-    const input = await this.getClientSearchInput();
-    await expect(input).toBeVisible({ timeout: 20000 });
-    await input.press("Enter");
-  }
-
-  async openClientDropdown() {
-    const input = await this.getClientSearchInput();
-    await expect(input).toBeVisible({ timeout: 20000 });
-    await input.click();
+    // Give Angular autocomplete time to render filtered results
+    await this.page.waitForTimeout(500);
   }
 
   async selectClient(clientName) {
     const clientOption = this.page
-      .locator("mat-option:visible, [role='option']:visible")
+      .locator("mat-option")
       .filter({ hasText: clientName })
       .first();
 
-    if ((await clientOption.count()) > 0) {
-      await expect(clientOption).toBeVisible({ timeout: 30000 });
-      await clientOption.click();
-      return;
-    }
+    await expect(clientOption).toBeVisible({
+      timeout: 30000,
+    });
 
-    const searchField = await this.getClientSearchInput();
-    await expect(searchField).toBeVisible({ timeout: 20000 });
-    await searchField.press("ArrowDown");
-    await searchField.press("Enter");
+    await expect(clientOption).toBeEnabled({
+      timeout: 30000,
+    });
+
+    await clientOption.click();
+
+    // Wait for autocomplete dropdown to close
+    await expect(clientOption).toBeHidden({
+      timeout: 10000,
+    });
+
+    // Verify selected client is displayed somewhere in the Client section
+    const selectedClient = this.page
+      .getByText(clientName, { exact: true })
+      .first();
+
+    await expect(selectedClient).toBeVisible({
+      timeout: 10000,
+    });
   }
 
   async verifySelectedClient(clientName) {
-    const input = await this.getClientSearchInput().catch(() => null);
-
-    if (!input) {
-      return;
-    }
-
-    const inputValue = await input.inputValue().catch(() => "");
-    const normalized = (value) => (value || "").trim().toLowerCase();
-
-    if (
-      normalized(inputValue).includes(normalized(clientName)) ||
-      normalized(inputValue) === normalized(clientName)
-    ) {
-      return;
-    }
-
-    const selectedChip = this.page
-      .locator(".mat-chip, .chip, [data-selected='true'], .selected-item")
-      .filter({ hasText: clientName })
+    const selectedClient = this.page
+      .getByText(clientName, { exact: true })
       .first();
 
-    if ((await selectedChip.count()) > 0) {
-      return;
-    }
-
-    const option = this.page
-      .locator("mat-option, [role='option']")
-      .filter({ hasText: clientName })
-      .first();
-
-    if ((await option.count()) > 0) {
-      return;
-    }
-
-    // The app does not always render the selected client as visible text immediately after the choice.
-    // Final listing validation after save is the authoritative check for the created matter and client.
-    const pageText = this.page.getByText(clientName, { exact: false }).first();
-    if ((await pageText.count()) > 0) {
-      return;
-    }
+    await expect(selectedClient).toBeVisible({
+      timeout: 10000,
+    });
   }
 
   async clickSaveForLater() {

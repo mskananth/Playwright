@@ -1,17 +1,17 @@
 {
   "TC75_CreateLegalMatterSaveForLater": {
-    "caseTitle": "SFL with Four Fields Legal36",
+    "caseTitle": "SFL with Four Fields Legal_CLM75",
     "caseNumber": "KA/007/1565"
   },
   "TC76_CreateLegalMatterSelectClient": {
-    "caseTitle": "SFL with Client Legal76",
+    "caseTitle": "SFL with Client NewTestCLM76",
     "caseNumber": "KA/007/1576",
     "client": {
       "name": "Brett Lee"
     }
   },
   "TC77_CreateLegalMatterSaveNextX2Documents": {
-    "caseTitle": "SFL With Client And Document777",
+    "caseTitle": "SFL With Client And Document_CLM775",
     "caseNumber": "KA/007/1677",
     "client": {
       "name": "Brett Lee"
@@ -28,7 +28,7 @@
     }
   },
   "TC78_CreateMatterWithAdditionalDetails": {
-    "caseTitle": "SFL With Add Details781",
+    "caseTitle": "SFL With Add Details_CLM7812",
     "caseNumber": "KA/007/1278",
     "dateOfFiling": "13/08/2026",
     "description": "Legal matter created with additional details",
@@ -45,7 +45,7 @@
     }
   },
   "TC79_CreateMatterWithAdditionalDetailsAndClient": {
-    "caseTitle": "SFL With Add Details Client0957",
+    "caseTitle": "SFL With Add Details Client_79",
     "caseNumber": "KA/007/1279",
     "dateOfFiling": "13/08/2026",
     "description": "Legal matter with additional details and client",
@@ -60,7 +60,7 @@
     }
   },
   "TC80_CreateLegalMatter_with_allFields": {
-    "caseTitle": "SNXT With All Fields Legal2323",
+    "caseTitle": "SNXT With All Fields Legal80CLM",
     "caseNumber": "KA/007/1680",
     "dateOfFiling": "13/08/2026",
     "description": "Legal matter created with additional details, client and multiple documents",
@@ -84,16 +84,15 @@
       ]
     }
   },
-  
   "TC81_CreateLegalMatterSelectClient_SoloLawyer": {
-    "caseTitle": "SFL with Client Legal Solo1",
+    "caseTitle": "SFL with Client Legal Solo181",
     "caseNumber": "KA/007/1576",
     "client": {
       "name": "Pranav Associates"
     }
   },
   "TC82_CreateLegalMatterSaveNextX2Documents_SoloLawyer": {
-    "caseTitle": "SFL With Client And Document solo2",
+    "caseTitle": "SFL With Client And Document solo282",
     "caseNumber": "KA/007/1677",
     "client": {
       "name": "Pranav Associates"
@@ -110,7 +109,7 @@
     }
   },
   "TC83_CreateMatterWithAdditionalDetails_SoloLawyer": {
-    "caseTitle": "SFL With Add Detailss3",
+    "caseTitle": "SFL With Add Detailss83CLM83",
     "caseNumber": "KA/007/1278",
     "dateOfFiling": "13/08/2026",
     "description": "Legal matter created with additional details",
@@ -127,7 +126,7 @@
     }
   },
   "TC84_CreateMatterWithAdditionalDetailsAndClient_SoloLawyer": {
-    "caseTitle": "SFL With Add Details Client99",
+    "caseTitle": "SFL With Add Details Client84CLM84",
     "caseNumber": "KA/007/1279",
     "dateOfFiling": "13/08/2026",
     "description": "Legal matter with additional details and client",
@@ -142,7 +141,7 @@
     }
   },
   "TC85_CreateLegalMatter_with_allFields_SoloLawyer": {
-    "caseTitle": "SNXT With All Fields Legal851",
+    "caseTitle": "SNXT With All Fields Legal_CLM85",
     "caseNumber": "KA/007/1680",
     "dateOfFiling": "13/08/2026",
     "description": "Legal matter created with additional details, client and multiple documents",
@@ -166,15 +165,15 @@
       ]
     }
   },
-   "TC86_CreateLegalMatterSelectClient_Corporate": {
-    "caseTitle": "SFL with Client Legal Corp12",
+  "TC86_CreateLegalMatterSelectClient_Corporate": {
+    "caseTitle": "SFL with Client Legal Corp_86",
     "caseNumber": "KA/007/1576",
     "client": {
       "name": "Perficient Technologent"
     }
   },
   "TC87_CreateLegalMatterSaveNextX2Documents_Corporate": {
-    "caseTitle": "SFL With Client And Document Corp1",
+    "caseTitle": "SFL With Client And Document Corp_CLM87",
     "caseNumber": "KA/007/1677",
     "client": {
       "name": "Perficient Technologent"
@@ -191,7 +190,7 @@
     }
   },
   "TC88_CreateMatterWithAdditionalDetails_Corporate": {
-    "caseTitle": "SFL With Add Detailss3 Corp3",
+    "caseTitle": "SFL With Add Detailss3 CorpCLM88",
     "caseNumber": "KA/007/1278",
     "dateOfFiling": "13/08/2026",
     "description": "Legal matter created with additional details",
@@ -208,7 +207,7 @@
     }
   },
   "TC89_CreateMatterWithAdditionalDetailsAndClient_Corporate": {
-    "caseTitle": "SFL With Add Details Corp4",
+    "caseTitle": "SFL With Add Details CorpCLM89",
     "caseNumber": "KA/007/1279",
     "dateOfFiling": "13/08/2026",
     "description": "Legal matter with additional details and client",
@@ -223,7 +222,7 @@
     }
   },
   "TC90_CreateLegalMatter_with_allFields_Corporate": {
-    "caseTitle": "SNXT With All Fields Legal Corp5",
+    "caseTitle": "SNXT With All Fields Legal Corp_90",
     "caseNumber": "KA/007/1680",
     "dateOfFiling": "13/08/2026",
     "description": "Legal matter created with additional details, client and multiple documents",
@@ -236,6 +235,37 @@
     "client": {
       "name": "Perficient Technologent"
     },
+    "document": {
+      "filePath": "testData/documents/JPG_Format.jpg",
+      "fileName": "JPG_Format.jpg",
+      "documentName": "Legal Matter Document",
+      "description": "Documents uploaded for legal matter automation testing.",
+      "multiUploadFiles": [
+        "testData/documents/TXT_Format.txt",
+        "testData/documents/JPG_Format.jpg"
+      ]
+    }
+  },
+  "TC91_CreateLegalMatter_with_allFields_MultipleClients": {
+    "caseTitle": "SNXT With All Fields Multiple Clients 91",
+    "caseNumber": "KA/007/1691",
+    "dateOfFiling": "13/08/2026",
+    "description": "Legal matter created with additional details, multiple clients and documents",
+    "caseType": "Civil",
+    "court": "High Court",
+    "judge": "Justice Kumar",
+    "tag": "Important",
+    "priority": "Medium",
+    "status": "Open",
+    "clients": [
+      {
+        "name": "Brett Lee"
+      },
+      {
+        "name": "Pranav Associates"
+      }
+    
+    ],
     "document": {
       "filePath": "testData/documents/JPG_Format.jpg",
       "fileName": "JPG_Format.jpg",
