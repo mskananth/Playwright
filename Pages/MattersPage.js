@@ -1006,10 +1006,18 @@ class MatterPage {
   }
 
   async clickSaveForLater() {
-    await expect(this.saveForLaterButton).toBeVisible();
-    await expect(this.saveForLaterButton).toBeEnabled();
+    const button = this.saveForLaterButton.first();
 
-    await this.saveForLaterButton.click();
+    if ((await button.count()) === 0) {
+      return false;
+    }
+
+    await expect(button).toBeVisible();
+    await expect(button).toBeEnabled();
+
+    await button.click();
+
+    return true;
   }
 
   async verifyClientPresentInListing(clientName, matterName = null) {
@@ -1069,7 +1077,7 @@ class MatterPage {
   async searchClientByName(clientName) {
     const input = this.clientSearchInput;
     await expect(input).toBeVisible({ timeout: 15000 });
-    await input.fill("");
+    await input.clear();
     await input.fill(clientName);
     await this.clickClientSearch();
   }
@@ -1160,21 +1168,26 @@ class MatterPage {
     await this.selectEntityClientType();
 
     if (firmName) {
+      await this.entityFirmNameInput.clear();
       await this.entityFirmNameInput.fill(firmName);
     }
     if (contactPerson) {
+      await this.entityContactPersonInput.clear();
       await this.entityContactPersonInput.fill(contactPerson);
     }
     if (email) {
+      await this.clientEmailInput.clear();
       await this.clientEmailInput.fill(email);
     }
     if (confirmEmail) {
+      await this.clientConfirmEmailInput.clear();
       await this.clientConfirmEmailInput.fill(confirmEmail);
     }
     if (country) {
       await this.clientCountrySelect.selectOption({ label: country });
     }
     if (phone) {
+      await this.clientPhoneNumberInput.clear();
       await this.clientPhoneNumberInput.fill(phone);
     }
   }

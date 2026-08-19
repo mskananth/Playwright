@@ -439,5 +439,75 @@
         "testData/documents/JPG_Format.jpg"
       ]
     }
+  },
+  "TC133_ExistingClientAndNewIndividualTemporaryClient": {
+    "caseTitle": "SFL ExistingClient Plus NewIndividual_CLM133",
+    "caseNumber": "KA/007/1833",
+    "existingClient": "Brett Lee",
+    "newClient": {
+      "searchNotFound": "alwin",
+      "firstName": "TempIndividual",
+      "lastName": "Client133",
+      "email": "tc-133-tempclient@example.com",
+      "confirmEmail": "tc-133-tempclient@example.com",
+      "country": "India",
+      "phone": "9876543133"
+    },
+    "document": {
+      "filePath": "testData/documents/JPG_Format.jpg",
+      "fileName": "JPG_Format.jpg",
+      "multiUploadFiles": [
+        "testData/documents/TXT_Format.txt",
+        "testData/documents/JPG_Format.jpg"
+      ]
+    }
+  },
+  "TC134_ExistingClientAndNewEntityTemporaryClient": {
+    "caseTitle": "SFL ExistingClient Plus NewEntity_CLM134",
+    "caseNumber": "KA/007/1834",
+    "existingClient": "Brett Lee",
+    "newClient": {
+      "searchNotFound": "alwin",
+      "firmName": "TempEntity Corp134",
+      "contactPerson": "Entity Contact134",
+      "email": "tc-134-tempclient@example.com",
+      "confirmEmail": "tc-134-tempclient@example.com",
+      "country": "India",
+      "phone": "9876543134"
+    },
+    "document": {
+      "filePath": "testData/documents/JPG_Format.jpg",
+      "fileName": "JPG_Format.jpg",
+      "multiUploadFiles": [
+        "testData/documents/TXT_Format.txt",
+        "testData/documents/JPG_Format.jpg"
+      ]
+    }
+  },
+  "TC135_NotFoundIndividualClient_SaveForLater": {
+    "caseTitle": "SFL NotFound Individual SaveForLater_CLM135",
+    "caseNumber": "KA/007/1835",
+    "newClient": {
+      "searchNotFound": "alwin",
+      "firstName": "SaveLater",
+      "lastName": "Individual135",
+      "email": "tc-135-sflclient@example.com",
+      "confirmEmail": "tc-135-sflclient@example.com",
+      "country": "India",
+      "phone": "9876543135"
+    }
+  },
+  "TC136_NotFoundEntityClient_SaveForLater": {
+    "caseTitle": "SFL NotFound Entity SaveForLater_786",
+    "caseNumber": "KA/007/1836",
+    "newClient": {
+      "searchNotFound": "David Billa3",
+      "firmName": "SaveLater Entity 786",
+      "contactPerson": "Entity Contact SFL136",
+      "email": "tc-619-sflclient@example.com",
+      "confirmEmail": "tc-619-sflclient@example.com",
+      "country": "India",
+      "phone": "9876543136"
+    }
   }
 }
