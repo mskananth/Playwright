@@ -565,18 +565,71 @@ class TimelinePage {
   // Matter Summary
 
   async verifySummarySection() {
-    await expect(this.summarySection).toBeVisible();
+    await expect(this.summarySection.first()).toBeVisible({ timeout: 15000 });
   }
 
   async verifySummaryField(fieldText) {
     await expect(
       this.page.getByText(fieldText, { exact: true }).first(),
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 10000 });
+  }
+
+  async verifySummaryTextContains(text) {
+    await expect(
+      this.page.getByText(text, { exact: false }).first(),
+    ).toBeVisible({ timeout: 10000 });
+  }
+
+  async verifySummaryFieldNotEmpty(label) {
+    const valueEl = this.page
+      .locator("dt, .summary-label, th, .label, .field-label")
+      .filter({ hasText: new RegExp(`^${label}$`, "i") })
+      .locator("xpath=following-sibling::*[1]");
+    await expect(valueEl.first()).toBeVisible({ timeout: 10000 });
+    const text = (await valueEl.first().textContent()) || "";
+    expect(text.trim().length).toBeGreaterThan(0);
   }
 
   async clickEditButton() {
     await expect(this.editButton).toBeVisible();
     await this.editButton.click();
+  }
+
+  async verifyEditButtonVisible() {
+    await expect(this.editButton).toBeVisible();
+  }
+
+  async verifyEditButtonEnabled() {
+    await expect(this.editButton).toBeEnabled();
+  }
+
+  async editSummaryFieldByLabel(label, newValue) {
+    const input = this.page
+      .locator("tr, .form-group, .field-row, .edit-field, .mat-form-field")
+      .filter({ hasText: new RegExp(label, "i") })
+      .locator("input, textarea, select")
+      .first();
+    await expect(input).toBeVisible({ timeout: 10000 });
+    await input.clear();
+    await input.fill(newValue);
+  }
+
+  async saveSummaryChanges() {
+    const saveBtn = this.page.getByRole("button", { name: /Save/i }).first();
+    await expect(saveBtn).toBeVisible({ timeout: 10000 });
+    await expect(saveBtn).toBeEnabled();
+    await saveBtn.click();
+    await this.page.waitForTimeout(1000);
+  }
+
+  async cancelSummaryChanges() {
+    const cancelBtn = this.page
+      .getByRole("button", { name: /Cancel/i })
+      .first();
+    await expect(cancelBtn).toBeVisible({ timeout: 10000 });
+    await expect(cancelBtn).toBeEnabled();
+    await cancelBtn.click();
+    await this.page.waitForTimeout(500);
   }
 
   // Notes - Add
@@ -679,6 +732,229 @@ class TimelinePage {
     await this.clickNoteActionButton(oldNote);
     await this.clearAndEnterNote(newNote);
     await this.saveNote();
+  }
+
+  // =========================
+  // Matter Details - Summary Section
+  // =========================
+
+  async openMatterDetails(matterName) {
+    await this.openLegalMatters();
+
+    const matterRow = this.matterRowByTitle(matterName);
+    await expect(matterRow).toBeVisible({ timeout: 30000 });
+    await matterRow.click();
+
+    await this.page.waitForLoadState("networkidle");
+  }
+
+  getSummaryFieldByLabel(label) {
+    return this.page
+      .locator(`dt, .summary-label, th`)
+      .filter({ hasText: new RegExp(`^${label}$`, "i") })
+      .locator("xpath=following-sibling::*[1]");
+  }
+
+  getSummaryFieldValue(label) {
+    const labelEl = this.page
+      .locator("dt, .summary-label, th, .label, .field-label")
+      .filter({ hasText: new RegExp(`^${label}$`, "i") });
+    return labelEl.locator("xpath=following-sibling::*[1]");
+  }
+
+  getSummaryText(text) {
+    return this.page.getByText(text, { exact: true }).first();
+  }
+
+  async verifySummarySectionVisible() {
+    await expect(
+      this.page
+        .locator(
+          ".summary, .matter-summary, .detail-summary, .right-panel, .summary-section, [class*='summary']",
+        )
+        .first(),
+    ).toBeVisible({ timeout: 15000 });
+  }
+
+  async verifySummaryFieldVisible(label) {
+    const field = this.page
+      .locator("dt, .summary-label, th, .label, .field-label")
+      .filter({ hasText: new RegExp(`^${label}$`, "i") });
+    await expect(field.first()).toBeVisible({ timeout: 10000 });
+  }
+
+  async verifySummaryFieldValue(label, expectedValue) {
+    const valueEl = this.getSummaryFieldValue(label);
+    await expect(valueEl.first()).toBeVisible({ timeout: 10000 });
+    await expect(valueEl.first()).toContainText(expectedValue, {
+      timeout: 10000,
+    });
+  }
+
+  async verifySummaryTextVisible(text) {
+    await expect(
+      this.page.getByText(text, { exact: true }).first(),
+    ).toBeVisible({ timeout: 10000 });
+  }
+
+  async verifySummaryTextContains(text) {
+    await expect(
+      this.page.getByText(text, { exact: false }).first(),
+    ).toBeVisible({ timeout: 10000 });
+  }
+
+  get summaryEditButton() {
+    return this.page.getByRole("button", { name: /Edit/i }).first();
+  }
+
+  async clickSummaryEdit() {
+    const editBtn = this.summaryEditButton;
+    await expect(editBtn).toBeVisible({ timeout: 10000 });
+    await expect(editBtn).toBeEnabled();
+    await editBtn.click();
+    await this.page.waitForTimeout(500);
+  }
+
+  async verifySummaryEditButtonVisible() {
+    await expect(this.summaryEditButton).toBeVisible();
+  }
+
+  async verifySummaryEditButtonEnabled() {
+    await expect(this.summaryEditButton).toBeEnabled();
+  }
+
+  getSummaryEditInput(label) {
+    const row = this.page
+      .locator("tr, .form-group, .field-row, .edit-field, .mat-form-field")
+      .filter({ hasText: new RegExp(label, "i") });
+    return row.locator("input, textarea, select").first();
+  }
+
+  async editSummaryFieldByLabel(label, newValue) {
+    const input = this.getSummaryEditInput(label);
+    await expect(input).toBeVisible({ timeout: 10000 });
+    await input.clear();
+    await input.fill(newValue);
+  }
+
+  async verifyEditInputValue(label, expectedValue) {
+    const input = this.getSummaryEditInput(label);
+    await expect(input).toBeVisible({ timeout: 10000 });
+    await expect(input).toHaveValue(expectedValue, { timeout: 10000 });
+  }
+
+  async saveSummaryChanges() {
+    const saveBtn = this.page.getByRole("button", { name: /Save/i }).first();
+    await expect(saveBtn).toBeVisible({ timeout: 10000 });
+    await expect(saveBtn).toBeEnabled();
+    await saveBtn.click();
+    await this.page.waitForTimeout(1000);
+  }
+
+  async cancelSummaryChanges() {
+    const cancelBtn = this.page
+      .getByRole("button", { name: /Cancel/i })
+      .first();
+    await expect(cancelBtn).toBeVisible({ timeout: 10000 });
+    await expect(cancelBtn).toBeEnabled();
+    await cancelBtn.click();
+    await this.page.waitForTimeout(500);
+  }
+
+  get summarySection() {
+    return this.page
+      .locator(
+        ".summary, .matter-summary, .detail-summary, .right-panel, .summary-section, [class*='summary']",
+      )
+      .first();
+  }
+
+  get summaryCaseTitle() {
+    return this.page
+      .locator(".case-title, [class*='case-title'], [class*='title']")
+      .filter({ hasText: "Case Title" })
+      .first();
+  }
+
+  get summaryCaseNumber() {
+    return this.page
+      .locator(".case-number, [class*='case-number']")
+      .filter({ hasText: "Case Number" })
+      .first();
+  }
+
+  get summaryMatterNumber() {
+    return this.page
+      .locator("[class*='matter-number'], [class*='matterNumber']")
+      .filter({ hasText: "Matter Number" })
+      .first();
+  }
+
+  get summaryCreatedDate() {
+    return this.page
+      .locator("[class*='created'], [class*='date']")
+      .filter({ hasText: "Created Date" })
+      .first();
+  }
+
+  get summaryCourt() {
+    return this.page
+      .locator("[class*='court']")
+      .filter({ hasText: "Court" })
+      .first();
+  }
+
+  get summaryDateOfFiling() {
+    return this.page
+      .locator("[class*='filing'], [class*='dateOfFiling']")
+      .filter({ hasText: "Date of Filing" })
+      .first();
+  }
+
+  get summaryDescription() {
+    return this.page
+      .locator("[class*='description'], textarea")
+      .filter({ hasText: "Description" })
+      .first();
+  }
+
+  get summaryTags() {
+    return this.page
+      .locator("[class*='tag'], .tag-chip, .tag-pill")
+      .filter({ hasText: "Tag" })
+      .first();
+  }
+
+  get summaryJudges() {
+    return this.page
+      .locator("[class*='judge']")
+      .filter({ hasText: "Judge" })
+      .first();
+  }
+
+  get summaryCaseType() {
+    return this.page
+      .locator("[class*='case-type'], [class*='caseType']")
+      .filter({ hasText: "Case Type" })
+      .first();
+  }
+
+  async getSummaryFieldText(label) {
+    const valueEl = this.getSummaryFieldValue(label);
+    if ((await valueEl.count()) > 0) {
+      return (await valueEl.first().textContent()) || "";
+    }
+    return "";
+  }
+
+  async verifySummaryFieldNotEmpty(label) {
+    const text = await this.getSummaryFieldText(label);
+    expect(text.trim().length).toBeGreaterThan(0);
+  }
+
+  async verifySummaryFieldExactValue(label, expectedValue) {
+    const text = await this.getSummaryFieldText(label);
+    expect(text.trim()).toContain(expectedValue);
   }
 }
 

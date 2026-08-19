@@ -107,6 +107,11 @@ class MatterPage {
     this.cancelMatterButton = page.getByRole("button", {
       name: /Cancel|Close|Dismiss/,
     });
+
+    this.saveButton = page.getByRole("button", {
+      name: "Save",
+      exact: true,
+    });
     this.optionalHint = page.locator(
       'text=Optional, label:has-text("Optional")',
     );
@@ -194,9 +199,9 @@ class MatterPage {
       exact: true,
     });
 
-    this.clientSearchInput = this.page.locator(
-      'input[placeholder="Type to Select"], input[formcontrolname*="client"], input[name*="client"], input[placeholder*="Client Name"], input[aria-label*="Client"], input[aria-label*="Select Client"]',
-    );
+    this.clientSearchInput = this.page.getByRole("combobox", {
+      name: "Type to Select",
+    });
 
     this.clientSearchButton = this.page.getByRole("button", {
       name: "Search",
@@ -211,6 +216,90 @@ class MatterPage {
       this.page.getByText(clientName, {
         exact: true,
       });
+
+    // =========================
+    // New Client Form
+    // =========================
+
+    this.individualButton = page.getByRole("button", {
+      name: "Individual",
+      exact: true,
+    });
+
+    this.entityButton = page.getByRole("button", {
+      name: "Entity",
+      exact: true,
+    });
+
+    this.clientTypeConfirmYes = page.getByRole("button", {
+      name: "Yes",
+      exact: true,
+    });
+
+    // Individual fields
+    this.individualFirstNameInput = page.getByRole("textbox", {
+      name: "First Name *",
+    });
+
+    this.individualLastNameInput = page.getByRole("textbox", {
+      name: "Last Name *",
+    });
+
+    // Entity fields
+    this.entityFirmNameInput = page.getByRole("textbox", {
+      name: "Firm Name *",
+    });
+
+    this.entityContactPersonInput = page.getByRole("textbox", {
+      name: "Contact Person *",
+    });
+
+    // Common fields (both Individual and Entity)
+    this.clientEmailInput = page.getByRole("textbox", {
+      name: "Email Address *",
+      exact: true,
+    });
+
+    this.clientConfirmEmailInput = page.getByRole("textbox", {
+      name: "Confirm Email Address *",
+    });
+
+    this.clientCountrySelect = page.locator("select").first();
+
+    this.clientPhoneNumberInput = page.getByRole("textbox", {
+      name: "Phone Number",
+    });
+
+    this.addAsClientButton = page.getByRole("button", {
+      name: "Add as Client",
+    });
+
+    this.clientNotFoundMessage = (clientName) =>
+      page.getByText(new RegExp(`${clientName}.*not found`, "i")).first();
+
+    this.newClientFormMessage = (clientName) =>
+      page
+        .getByText(
+          new RegExp(
+            `Please fill in the details below to add.*${clientName}`,
+            "i",
+          ),
+        )
+        .first();
+
+    this.newClientForm = page.getByText(
+      /Please fill in the details below to add/i,
+    );
+
+    this.clientValidationMessage = (fieldName) =>
+      page
+        .locator(".error, .validation-error, .mat-error, [class*='error']")
+        .filter({ hasText: new RegExp(fieldName, "i") })
+        .first();
+
+    this.selectedClientsSection = page.getByText("Selected Client(s)", {
+      exact: true,
+    });
 
     this.saveForLaterButton = this.page.getByRole("button", {
       name: "Save for Later",
@@ -967,6 +1056,240 @@ class MatterPage {
     await expect(this.browseFilesButton).toBeVisible();
   }
 
+  // =========================
+  // New Client Form Methods
+  // =========================
+
+  async clickClientSearch() {
+    await expect(this.clientSearchButton).toBeVisible();
+    await this.clientSearchButton.click();
+    await this.page.waitForTimeout(1000);
+  }
+
+  async searchClientByName(clientName) {
+    const input = this.clientSearchInput;
+    await expect(input).toBeVisible({ timeout: 15000 });
+    await input.fill("");
+    await input.fill(clientName);
+    await this.clickClientSearch();
+  }
+
+  async verifyClientNotFound(clientName) {
+    await expect(this.clientNotFoundMessage(clientName)).toBeVisible({
+      timeout: 10000,
+    });
+  }
+
+  async verifyNewClientFormDisplayed(clientName) {
+    await expect(this.newClientFormMessage(clientName)).toBeVisible({
+      timeout: 10000,
+    });
+  }
+
+  async verifyNewClientFormVisible() {
+    await expect(this.newClientForm).toBeVisible({ timeout: 10000 });
+  }
+
+  async selectIndividualClientType() {
+    await expect(this.individualButton).toBeVisible();
+    await this.individualButton.click();
+  }
+
+  async selectEntityClientType() {
+    await expect(this.entityButton).toBeVisible();
+    await this.entityButton.click();
+  }
+
+  async confirmClientTypeSwitch() {
+    await expect(this.clientTypeConfirmYes).toBeVisible({ timeout: 5000 });
+    await this.clientTypeConfirmYes.click();
+  }
+
+  async verifyIndividualFormVisible() {
+    await expect(this.individualFirstNameInput).toBeVisible({ timeout: 10000 });
+    await expect(this.individualLastNameInput).toBeVisible();
+    await expect(this.clientEmailInput).toBeVisible();
+    await expect(this.clientConfirmEmailInput).toBeVisible();
+  }
+
+  async verifyEntityFormVisible() {
+    await expect(this.entityFirmNameInput).toBeVisible({ timeout: 10000 });
+    await expect(this.entityContactPersonInput).toBeVisible();
+    await expect(this.clientEmailInput).toBeVisible();
+    await expect(this.clientConfirmEmailInput).toBeVisible();
+  }
+
+  async fillIndividualClient(
+    firstName,
+    lastName,
+    email,
+    confirmEmail,
+    country,
+    phone,
+  ) {
+    await this.selectIndividualClientType();
+
+    if (firstName) {
+      await this.individualFirstNameInput.fill(firstName);
+    }
+    if (lastName) {
+      await this.individualLastNameInput.fill(lastName);
+    }
+    if (email) {
+      await this.clientEmailInput.fill(email);
+    }
+    if (confirmEmail) {
+      await this.clientConfirmEmailInput.fill(confirmEmail);
+    }
+    if (country) {
+      await this.clientCountrySelect.selectOption({ label: country });
+    }
+    if (phone) {
+      await this.clientPhoneNumberInput.fill(phone);
+    }
+  }
+
+  async fillEntityClient(
+    firmName,
+    contactPerson,
+    email,
+    confirmEmail,
+    country,
+    phone,
+  ) {
+    await this.selectEntityClientType();
+
+    if (firmName) {
+      await this.entityFirmNameInput.fill(firmName);
+    }
+    if (contactPerson) {
+      await this.entityContactPersonInput.fill(contactPerson);
+    }
+    if (email) {
+      await this.clientEmailInput.fill(email);
+    }
+    if (confirmEmail) {
+      await this.clientConfirmEmailInput.fill(confirmEmail);
+    }
+    if (country) {
+      await this.clientCountrySelect.selectOption({ label: country });
+    }
+    if (phone) {
+      await this.clientPhoneNumberInput.fill(phone);
+    }
+  }
+
+  async clickAddAsClient() {
+    await expect(this.addAsClientButton).toBeVisible();
+    await expect(this.addAsClientButton).toBeEnabled();
+    await this.addAsClientButton.click();
+    await this.page.waitForTimeout(1000);
+  }
+
+  async verifyClientAddedToSelected(clientName) {
+    await expect(
+      this.page.getByText(clientName, { exact: true }).first(),
+    ).toBeVisible({ timeout: 15000 });
+  }
+
+  async verifyClientNotAdded(clientName) {
+    await expect(this.page.getByText(clientName, { exact: true })).toHaveCount(
+      0,
+    );
+  }
+
+  async removeSelectedClient(clientName) {
+    const clientChip = this.page
+      .locator("mat-chip, .chip, .tag, .selected-client, .client-tag")
+      .filter({ hasText: clientName })
+      .first();
+
+    if ((await clientChip.count()) > 0) {
+      const removeIcon = clientChip
+        .locator("i.fa-times, i.fa-close, i[class*='remove'], .close, .remove")
+        .first();
+      if ((await removeIcon.count()) > 0) {
+        await removeIcon.click();
+      } else {
+        await clientChip.locator("button, .close-btn").first().click();
+      }
+    }
+  }
+
+  async verifyValidationMessagePresent(fieldName) {
+    const message = this.page
+      .locator(
+        ".error, .validation-error, .mat-error, [class*='error'], [class*='invalid']",
+      )
+      .filter({ hasText: new RegExp(fieldName, "i") })
+      .first();
+
+    const anyError = this.page
+      .locator(
+        ".error, .validation-error, .mat-error, [class*='error'], [class*='invalid']",
+      )
+      .first();
+
+    const hasFieldError = (await message.count()) > 0;
+    const hasAnyError = (await anyError.count()) > 0;
+
+    expect(hasFieldError || hasAnyError).toBeTruthy();
+  }
+
+  async verifyNoValidationErrors() {
+    const errors = this.page.locator(
+      ".error:visible, .validation-error:visible, .mat-error:visible",
+    );
+    expect(await errors.count()).toBe(0);
+  }
+
+  async clearIndividualForm() {
+    if ((await this.individualFirstNameInput.count()) > 0) {
+      await this.individualFirstNameInput.clear();
+    }
+    if ((await this.individualLastNameInput.count()) > 0) {
+      await this.individualLastNameInput.clear();
+    }
+    if ((await this.clientEmailInput.count()) > 0) {
+      await this.clientEmailInput.clear();
+    }
+    if ((await this.clientConfirmEmailInput.count()) > 0) {
+      await this.clientConfirmEmailInput.clear();
+    }
+    if ((await this.clientPhoneNumberInput.count()) > 0) {
+      await this.clientPhoneNumberInput.clear();
+    }
+  }
+
+  async clearEntityForm() {
+    if ((await this.entityFirmNameInput.count()) > 0) {
+      await this.entityFirmNameInput.clear();
+    }
+    if ((await this.entityContactPersonInput.count()) > 0) {
+      await this.entityContactPersonInput.clear();
+    }
+    if ((await this.clientEmailInput.count()) > 0) {
+      await this.clientEmailInput.clear();
+    }
+    if ((await this.clientConfirmEmailInput.count()) > 0) {
+      await this.clientConfirmEmailInput.clear();
+    }
+    if ((await this.clientPhoneNumberInput.count()) > 0) {
+      await this.clientPhoneNumberInput.clear();
+    }
+  }
+
+  async clickCancelNewClient() {
+    const cancelBtn = this.page.getByRole("button", {
+      name: "Cancel",
+      exact: true,
+    });
+    if ((await cancelBtn.count()) > 0) {
+      await expect(cancelBtn).toBeVisible();
+      await cancelBtn.click();
+    }
+  }
+
   // Multiple Client Selections
 
   async verifyClientAddedToList(clientName) {
@@ -1387,6 +1710,7 @@ class MatterPage {
       timeout: 15000,
     });
   }
+
   // Final Save
 
   async clickFinalSave() {

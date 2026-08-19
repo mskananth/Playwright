@@ -42,5 +42,291 @@
     "court": "District Court",
     "dateOfFiling": "2025-01-15",
     "description": "Test matter for client assignment verification"
+  },
+  "TC_MatterSummary": {
+    "matterName": "TC-93 Full Matter Creation9",
+    "caseTitle": "TC-93 Full Matter Creation9",
+    "caseNumber": "TC-93",
+    "caseType": "Civil Law",
+    "court": "District Court",
+    "dateOfFiling": "Jan 15, 2008",
+    "description": "Test matter for client assignment verification",
+    "judges": "Justice Kumar",
+    "editedCaseTitle": "TC-93 Summary Edited Title",
+    "editedCaseNumber": "TC-93-EDITED",
+    "editedCaseType": "Criminal Law",
+    "editedCourt": "Supreme Court",
+    "editedDateOfFiling": "01/06/2026",
+    "editedDescription": "Updated description after editing summary",
+    "editedMatterNumber": "1001-EDITED",
+    "editedTags": "UpdatedTag"
+  },
+  "TC_CLIENT_001": {
+    "caseTitle": "TC-CLIENT-001 Test Matter1",
+    "existingClient": "Brett Lee"
+  },
+  "TC_CLIENT_002": {
+    "caseTitle": "TC-CLIENT-002 Test Matter1",
+    "searchNotFound": "alwin"
+  },
+  "TC_CLIENT_003": {
+    "caseTitle": "TC-CLIENT-003 Test Matter1",
+    "searchNotFound": "alwin"
+  },
+  "TC_CLIENT_004": {
+    "caseTitle": "TC-CLIENT-004 Test Matter1",
+    "searchNotFound": "alwin",
+    "firstName": "TestTemp",
+    "lastName": "Individual",
+    "email": "tc-client-004@example.com",
+    "confirmEmail": "tc-client-004@example.com",
+    "country": "India",
+    "phone": "9876543210"
+  },
+  "TC_CLIENT_005": {
+    "caseTitle": "TC-CLIENT-005 Test Matter",
+    "searchNotFound": "alwin",
+    "firmName": "TestTemp Entity Corp",
+    "contactPerson": "Entity Contact",
+    "email": "tc-client-005@example.com",
+    "confirmEmail": "tc-client-005@example.com",
+    "country": "India",
+    "phone": "9876543212"
+  },
+  "TC_CLIENT_006": {
+    "caseTitle": "TC-CLIENT-006 Test Matter",
+    "searchNotFound": "alwin",
+    "lastName": "Individual",
+    "email": "tc-client-006@example.com",
+    "confirmEmail": "tc-client-006@example.com",
+    "country": "India",
+    "phone": "9876543210"
+  },
+  "TC_CLIENT_007": {
+    "caseTitle": "TC-CLIENT-007 Test Matter",
+    "searchNotFound": "alwin",
+    "firstName": "TestTemp",
+    "email": "tc-client-007@example.com",
+    "confirmEmail": "tc-client-007@example.com",
+    "country": "India",
+    "phone": "9876543210"
+  },
+  "TC_CLIENT_008": {
+    "caseTitle": "TC-CLIENT-008 Test Matter",
+    "searchNotFound": "alwin",
+    "firstName": "TestTemp",
+    "lastName": "Individual",
+    "confirmEmail": "tc-client-008@example.com",
+    "country": "India",
+    "phone": "9876543210"
+  },
+  "TC_CLIENT_009": {
+    "caseTitle": "TC-CLIENT-009 Test Matter",
+    "searchNotFound": "alwin",
+    "firstName": "TestTemp",
+    "lastName": "Individual",
+    "email": "tc-client-009@example.com",
+    "country": "India",
+    "phone": "9876543210"
+  },
+  "TC_CLIENT_010": {
+    "caseTitle": "TC-CLIENT-010 Test Matter",
+    "searchNotFound": "alwin",
+    "firstName": "TestTemp",
+    "lastName": "Individual",
+    "email": "tc-client-010@example.com",
+    "confirmEmail": "tc-client-010@example.com",
+    "phone": "9876543210"
+  },
+  "TC_CLIENT_011": {
+    "caseTitle": "TC-CLIENT-011 Test Matter",
+    "searchNotFound": "alwin",
+    "firstName": "TestTemp",
+    "lastName": "Individual",
+    "invalidEmail": "test@",
+    "country": "India",
+    "phone": "9876543210"
+  },
+  "TC_CLIENT_012": {
+    "caseTitle": "TC-CLIENT-012 Test Matter",
+    "searchNotFound": "alwin",
+    "firstName": "TestTemp",
+    "lastName": "Individual",
+    "email": "tc-client-012@example.com",
+    "mismatchEmail": "tc-client-012-mismatch@example.com",
+    "country": "India",
+    "phone": "9876543210"
+  },
+  "TC_CLIENT_013": {
+    "caseTitle": "TC-CLIENT-013 Test Matter",
+    "searchNotFound": "alwin",
+    "firstName": "TestTemp",
+    "lastName": "Individual",
+    "email": "tc-client-013@example.com",
+    "confirmEmail": "tc-client-013@example.com",
+    "country": "India",
+    "phone": "9876543210"
+  },
+  "TC_CLIENT_014": {
+    "caseTitle": "TC-CLIENT-014 Test Matter",
+    "searchNotFound": "alwin",
+    "firstName": "TestTemp",
+    "lastName": "Individual",
+    "email": "tc-client-014@example.com",
+    "confirmEmail": "tc-client-014@example.com",
+    "country": "India"
+  },
+  "TC_CLIENT_015": {
+    "caseTitle": "TC-CLIENT-015 Test Matter",
+    "searchNotFound": "alwin",
+    "firstName": "TestTemp",
+    "lastName": "Individual",
+    "email": "tc-client-015@example.com",
+    "confirmEmail": "tc-client-015@example.com",
+    "country": "India",
+    "phone": "abc!@#$%"
+  },
+  "TC_CLIENT_016": {
+    "caseTitle": "TC-CLIENT-016 Test Matter",
+    "searchNotFound": "alwin",
+    "firstName": "Anne-Marie",
+    "lastName": "Individual",
+    "email": "tc-client-016@example.com",
+    "confirmEmail": "tc-client-016@example.com",
+    "country": "India",
+    "phone": "9876543210"
+  },
+  "TC_CLIENT_017": {
+    "caseTitle": "TC-CLIENT-017 Test Matter",
+    "searchNotFound": "alwin",
+    "firstName": "  TestTemp  ",
+    "lastName": "  Individual  ",
+    "email": "tc-client-017@example.com",
+    "confirmEmail": "tc-client-017@example.com",
+    "country": "India",
+    "phone": "9876543210"
+  },
+  "TC_CLIENT_018": {
+    "caseTitle": "TC-CLIENT-018 Test Matter",
+    "searchNotFound": "alwin",
+    "firstName": "TestTemp",
+    "lastName": "Individual",
+    "email": "tc-client-018@example.com",
+    "confirmEmail": "tc-client-018@example.com",
+    "country": "India",
+    "phone": "9876543210"
+  },
+  "TC_CLIENT_019": {
+    "caseTitle": "TC-CLIENT-019 Test Matter",
+    "searchNotFound": "alwin",
+    "firstName": "TestTemp",
+    "lastName": "Individual",
+    "email": "tc-client-019@example.com",
+    "confirmEmail": "tc-client-019@example.com",
+    "country": "India",
+    "phone": "9876543210"
+  },
+  "TC_CLIENT_020": {
+    "caseTitle": "TC-CLIENT-020 Test Matter",
+    "searchNotFound": "randomtest999"
+  },
+  "TC_CLIENT_021": {
+    "caseTitle": "TC-CLIENT-021 Test Matter",
+    "searchNotFound": "alwin",
+    "firstName": "TestTemp",
+    "firmName": "TestTemp Entity Corp"
+  },
+  "TC_CLIENT_022": {
+    "caseTitle": "TC-CLIENT-022 Test Matter",
+    "searchNotFound": "alwin",
+    "firmName": "TestTemp Entity Corp"
+  },
+  "TC_CLIENT_023": {
+    "caseTitle": "TC-CLIENT-023 Test Matter",
+    "searchNotFound": "alwin",
+    "firstName": "TestTemp",
+    "lastName": "Individual",
+    "email": "tc-client-023@example.com",
+    "confirmEmail": "tc-client-023@example.com",
+    "country": "India",
+    "phone": "9876543210"
+  },
+  "TC_CLIENT_024": {
+    "caseTitle": "TC-CLIENT-024 Test Matter",
+    "existingClient": "Brett Lee",
+    "searchNotFound": "alwin",
+    "firstName": "TestTemp",
+    "lastName": "Individual",
+    "email": "tc-client-024@example.com",
+    "confirmEmail": "tc-client-024@example.com",
+    "country": "India",
+    "phone": "9876543210"
+  },
+  "TC_CLIENT_025": {
+    "caseTitle": "TC-CLIENT-025 Test Matter",
+    "existingClient": "Brett Lee"
+  },
+  "TC_CLIENT_026": {
+    "caseTitle": "TC-CLIENT-026 Test Matter",
+    "existingClient": "Brett Lee",
+    "searchNotFound": "alwin",
+    "firstName": "TestTemp",
+    "lastName": "Individual",
+    "email": "tc-client-026@example.com",
+    "confirmEmail": "tc-client-026@example.com",
+    "country": "India",
+    "phone": "9876543210"
+  },
+  "TC_CLIENT_027": {
+    "caseTitle": "TC-CLIENT-027 Test Matter",
+    "searchKeyword": "Brett"
+  },
+  "TC_CLIENT_028": {
+    "caseTitle": "TC-CLIENT-028 Test Matter"
+  },
+  "TC_CLIENT_029": {
+    "caseTitle": "TC-CLIENT-029 Test Matter",
+    "searchKeyword": "@#$%"
+  },
+  "TC_CLIENT_030": {
+    "caseTitle": "TC-CLIENT-030 Test Matter",
+    "searchNotFound": "alwin",
+    "firstName": "TestTemp",
+    "lastName": "Individual",
+    "email": "tc-client-030@example.com",
+    "confirmEmail": "tc-client-030@example.com",
+    "country": "India",
+    "phone": "9876543210"
+  },
+  "TC_CLIENT_031": {
+    "caseTitle": "TC-CLIENT-031 Test Matter",
+    "email": "tc-client-031@example.com"
+  },
+  "TC_CLIENT_032": {
+    "caseTitle": "TC-CLIENT-032 Test Matter",
+    "searchNotFound": "alwin"
+  },
+  "TC_CLIENT_033": {
+    "caseTitle": "TC-CLIENT-033 Test Matter",
+    "searchNotFound": "alwin",
+    "firstName": "TestTemp",
+    "email": "tc-client-033@example.com",
+    "confirmEmail": "tc-client-033@example.com",
+    "country": "India",
+    "phone": "9876543210"
+  },
+  "TC_CLIENT_034": {
+    "caseTitle": "TC-CLIENT-034 Test Matter",
+    "searchKeyword": "TestTemp"
+  },
+  "TC_CLIENT_035": {
+    "caseTitle": "TC-CLIENT-035 Test Matter",
+    "searchNotFound": "alwin",
+    "firstName": "TestTemp",
+    "lastName": "Individual",
+    "email": "tc-client-035@example.com",
+    "confirmEmail": "tc-client-035@example.com",
+    "country": "India",
+    "phone": "9876543210"
   }
 }

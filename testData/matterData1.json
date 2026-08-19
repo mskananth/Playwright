@@ -28,7 +28,7 @@
     }
   },
   "TC78_CreateMatterWithAdditionalDetails": {
-    "caseTitle": "SFL With Add Details_CLM7812",
+    "caseTitle": "SFL With Add Details_CLM00786",
     "caseNumber": "KA/007/1278",
     "dateOfFiling": "13/08/2026",
     "description": "Legal matter created with additional details",
@@ -333,6 +333,110 @@
         "Legal",
         "Important",
         "Urgent"
+      ]
+    }
+  },
+  "TC129_CreateMatterWithNotFoundClient_SoloLawyer": {
+    "caseTitle": "SFL NotFound Client Docs_CLM129",
+    "caseNumber": "KA/007/1829",
+    "dateOfFiling": "19/08/2026",
+    "description": "Legal matter with additional details, not-found client added as new, and document upload",
+    "caseType": "Civil",
+    "court": "High Court",
+    "judge": "Justice Kumar",
+    "tag": "Important",
+    "priority": "Medium",
+    "status": "Open",
+    "newClient": {
+      "searchNotFound": "alwin",
+      "firstName": "NewSolo",
+      "lastName": "Client129",
+      "email": "tc-129-newclient@example.com",
+      "confirmEmail": "tc-129-newclient@example.com",
+      "country": "India",
+      "phone": "9876543129"
+    },
+    "document": {
+      "filePath": "testData/documents/JPG_Format.jpg",
+      "fileName": "JPG_Format.jpg",
+      "documentName": "Legal Matter Document",
+      "description": "Document uploaded for not-found client matter automation testing.",
+      "multiUploadFiles": [
+        "testData/documents/TXT_Format.txt",
+        "testData/documents/JPG_Format.jpg"
+      ]
+    }
+  },
+  "TC130_CreateMatterWithNotFoundClient_Entity": {
+    "caseTitle": "Corp NotFound Client Docs_CLM130BA1",
+    "caseNumber": "KA/007/1830",
+    "dateOfFiling": "19/08/2026",
+    "description": "Corporate matter with additional details, not-found client added as new, and document upload",
+    "caseType": "Civil",
+    "court": "High Court",
+    "judge": "Justice Kumar",
+    "tag": "Important",
+    "priority": "Medium",
+    "status": "Open",
+    "newClient": {
+      "searchNotFound": "alwin",
+      "firstName": "NewCorp",
+      "lastName": "Client130",
+      "email": "tc-130bA1-newclient@example.com",
+      "confirmEmail": "tc-130bA1-newclient@example.com",
+      "country": "India",
+      "phone": "9876543130"
+    },
+    "document": {
+      "filePath": "testData/documents/JPG_Format.jpg",
+      "fileName": "JPG_Format.jpg",
+      "documentName": "Legal Matter Document",
+      "description": "Document uploaded for not-found client matter automation testing.",
+      "multiUploadFiles": [
+        "testData/documents/TXT_Format.txt",
+        "testData/documents/JPG_Format.jpg"
+      ]
+    }
+  },
+  "TC131_CreateMatterWithNotFoundClient_NoAdditionalDetails_SoloLawyer": {
+    "caseTitle": "SFL NotFound Client NoDetails_CLM131",
+    "caseNumber": "KA/007/1831",
+    "newClient": {
+      "searchNotFound": "alwin",
+      "firstName": "NewSolo",
+      "lastName": "Client131",
+      "email": "tc-131-newclient@example.com",
+      "confirmEmail": "tc-131-newclient@example.com",
+      "country": "India",
+      "phone": "9876543131"
+    },
+    "document": {
+      "filePath": "testData/documents/JPG_Format.jpg",
+      "fileName": "JPG_Format.jpg",
+      "multiUploadFiles": [
+        "testData/documents/TXT_Format.txt",
+        "testData/documents/JPG_Format.jpg"
+      ]
+    }
+  },
+  "TC132_CreateMatterWithNotFoundClient_NoAdditionalDetails_Entity": {
+    "caseTitle": "Corp NotFound Client NoDetails_CLM132",
+    "caseNumber": "KA/007/1832",
+    "newClient": {
+      "searchNotFound": "alwin",
+      "firstName": "NewCorp",
+      "lastName": "Client132",
+      "email": "tc-132-newclient@example.com",
+      "confirmEmail": "tc-132-newclient@example.com",
+      "country": "India",
+      "phone": "9876543132"
+    },
+    "document": {
+      "filePath": "testData/documents/JPG_Format.jpg",
+      "fileName": "JPG_Format.jpg",
+      "multiUploadFiles": [
+        "testData/documents/TXT_Format.txt",
+        "testData/documents/JPG_Format.jpg"
       ]
     }
   }
