@@ -1,0 +1,46 @@
+{
+  "TC_MatterSearch": {
+    "exactMatterName": "TC-93 Full Matter Creation9",
+    "partialMatterName": "TC-93 Full Matter",
+    "keyword": "Creation9",
+    "secondMatterName": "TC-93 Full Matter Creation8",
+    "invalidMatterName": "Matter_Name_Not_Exist"
+  },
+  "TC_MatterSearchTimeline": {
+    "matterName": "TC-93 Full Matter Creation9",
+    "dateOfFiling": "Jan 15, 2008 | 9:27 AM",
+    "createdDate": "Aug 18, 2026 | 9:27 AM",
+    "caseFiling": "TC-93 Full Matter Creation9 - Case filling",
+    "note": "This is a test note added to the timeline.",
+    "originalNote": "This is a test note added to the timeline.",
+    "editedNote": "This is an updated test note for the timeline.",
+    "invalidNote": "This note does not exist.",
+    "documentSearch": "Format",
+    "invalidDocumentSearch": "NonExistentDocument123",
+    "singleUploadFile": "testData/documents/JPG_Format.jpg",
+    "multipleUploadFiles": [
+      "testData/documents/JPG_Format.jpg",
+      "testData/documents/PDF_Format.pdf",
+      "testData/documents/PNG_Format.png",
+      "testData/documents/RTF_Format.rtf",
+      "testData/documents/TXT_Format.txt",
+      "testData/documents/XLS_Format.xls",
+      "testData/documents/XLSX_Format.xlsx"
+    ]
+  },
+  "TC_MatterClients": {
+    "matterName": "TC-93 Full Matter Creation9",
+    "existingClient1": "Ananth Subramanian",
+    "existingClient2": "Brett Lee",
+    "partialClientName": "Ananth",
+    "invalidClientName": "NonExistentClient999",
+    "newClientName": "John Smith",
+    "caseTitle": "TC-93 Full Matter Creation9",
+    "caseNumber": "TC-93",
+    "matterNumber": "1001",
+    "caseType": "Civil Law",
+    "court": "District Court",
+    "dateOfFiling": "2025-01-15",
+    "description": "Test matter for client assignment verification"
+  }
+}

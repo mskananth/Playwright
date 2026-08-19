@@ -264,7 +264,6 @@
       {
         "name": "Ananth Subramanian"
       }
-     
     ],
     "document": {
       "filePath": "testData/documents/JPG_Format.jpg",
@@ -277,25 +276,64 @@
       ]
     }
   },
-  
   "TC92_CreateLegalMatterSaveNextX2Documents": {
-  "caseTitle": "Test Legal Matter Doc FinaL30",
-  "caseNumber": "CASE-1001",
-  "client": {
-    "name": "Ananth Subramanian"
+    "caseTitle": "Test Legal Matter Doc FinaL31",
+    "caseNumber": "CASE-1001",
+    "client": {
+      "name": "Ananth Subramanian"
+    },
+    "document": {
+      "filePath": "TestData/Documents/TXT_Format.txt",
+      "fileName": "TXT_Format.txt",
+      "updatedDocumentName": "Updated_Legal_Document.txt",
+      "updatedDescription": "Updated legal document description",
+      "expirationDate": "20/08/2026",
+      "encryption": true,
+      "download": false,
+      "tags": [
+        "Legal",
+        "Important"
+      ]
+    }
   },
-  "document": {
-    "filePath": "TestData/Documents/TXT_Format.txt",
-    "fileName": "TXT_Format.txt",
-    "updatedDocumentName": "Updated_Legal_Document.txt",
-    "updatedDescription": "Updated legal document description",
-    "expirationDate": "20/08/2026",  
-    "encryption": true,
-    "download": false,
-    "tags": [
-      "Legal",
-      "Important"
-    ]
+  "TC93_CompleteMatterCreation": {
+    "caseTitle": "TC-93 Full Matter Creation9",
+    "caseNumber": "CASE-0093",
+    "additionalDetails": {
+      "dateOfFiling": "15/08/2026",
+      "description": "Complete test matter with all combinations",
+      "caseType": "Civil",
+      "court": "District Court",
+      "judge": "Judge Johnson",
+      "tag": "Priority",
+      "priority": "High",
+      "status": "Active"
+    },
+    "clients": [
+      {
+        "name": "Ananth Subramanian"
+      },
+      {
+        "name": "Brett Lee"
+      }
+    
+    ],
+    "documents": {
+      "filePath": "TestData/Documents/TXT_Format.txt",
+      "multiUploadFiles": [
+        "TestData/Documents/TXT_Format.txt",
+        "TestData/Documents/PDF_Format.pdf"
+      ],
+      "updatedDocumentName": "Updated_TC93_Document.pdf",
+      "updatedDescription": "Updated description for TC-93",
+      "expirationDate": "31/12/2027",
+      "encryption": true,
+      "download": false,
+      "tags": [
+        "Legal",
+        "Important",
+        "Urgent"
+      ]
+    }
   }
-}
 }

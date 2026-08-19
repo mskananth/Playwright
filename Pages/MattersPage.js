@@ -237,10 +237,13 @@ class MatterPage {
       .first();
 
     // Edit metadata button
-    this.documentEditButton = this.documentCard.locator(
-      'i[mattooltip="Edit metadata"]',
-    );
+    // this.documentEditButton = this.documentCard.locator(
+    //   'i[mattooltip="Edit metadata"]',
+    //   );
 
+    this.documentEditButton = this.page
+      .locator('.document-header .doc-actions i[mattooltip="Edit metadata"]')
+      .first();
     // Document name
     this.documentNameInput = this.documentCard.locator(
       'input[formcontrolname="name"]',
@@ -291,12 +294,18 @@ class MatterPage {
       exact: true,
     });
 
-    this.saveButton = this.page
+    this.notesSaveButton = this.page
       .getByRole("button", {
         name: "Save",
         exact: true,
       })
       .last();
+  }
+  async saveNote() {
+    await expect(this.notesSaveButton).toBeVisible();
+    await expect(this.notesSaveButton).toBeEnabled();
+
+    await this.notesSaveButton.click();
   }
 
   async openLegalMatters() {
@@ -511,8 +520,15 @@ class MatterPage {
     return true;
   }
 
+  // matterRowByTitle(title) {
+  //   return this.page.getByText(title, { exact: true });
+  // }
+
   matterRowByTitle(title) {
-    return this.page.getByText(title, { exact: true });
+    // Find the row that contains a cell with the exact title
+    return this.page.locator("tr", {
+      has: this.page.locator(`td:has-text("${title}")`),
+    });
   }
 
   async verifyMatterCreatedInView(title) {
@@ -728,7 +744,12 @@ class MatterPage {
   }
 
   async verifyTagDisplayed(tag) {
-    await expect(this.page.getByText(tag, { exact: true })).toBeVisible();
+    // Use first() to handle strict mode violation
+    await expect(this.page.getByText(tag, { exact: true }).first()).toBeVisible(
+      {
+        timeout: 10000,
+      },
+    );
   }
 
   async addOpponentAdvocateButton() {

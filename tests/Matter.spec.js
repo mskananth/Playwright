@@ -2125,7 +2125,7 @@ test("TC-91. Create Legal Matter with Additional Details, Multiple Clients and U
   }
 });
 
-test.only("TC-92 - Create Legal Matter 1st Page Save and Next Select Client Save & Next Upload Documents Edit Document", async () => {
+test("TC-92 - Create Legal Matter 1st Page Save and Next Select Client Save & Next Upload Documents Edit Document", async () => {
   const data = matterData1.TC92_CreateLegalMatterSaveNextX2Documents;
 
   // STEP 1 - Verify basic Matter fields
@@ -2185,8 +2185,6 @@ test.only("TC-92 - Create Legal Matter 1st Page Save and Next Select Client Save
   await expect(matterPage.documentDescriptionInput).toHaveValue(
     data.document.updatedDescription,
   );
-
-  // STEP 12 - Expiration Date
 
   // Clear existing date first
   await matterPage.documentExpirationDateInput.clear();
@@ -2256,9 +2254,260 @@ test.only("TC-92 - Create Legal Matter 1st Page Save and Next Select Client Save
 
   // STEP 21 - Verify Matter Row
 
+  // Step 24: Verify Matter Row
   const matterRow = matterPage.matterRowByTitle(data.caseTitle);
   await expect(matterRow).toBeVisible({
     timeout: 30000,
   });
   await expect(matterRow).toContainText(data.caseTitle);
+
+  // Step 27: Verify Additional Details in Listing
+  if (data.additionalDetails.caseType) {
+    await expect(matterRow).toContainText(data.additionalDetails.caseType);
+  }
+  await expect(matterRow).toContainText(data.caseTitle);
+});
+
+test("TC-93 - Create Legal Matter with All Fields, Additional Details, Multiple Clients, Documents, Tags, and Complete Metadata", async () => {
+  const data = matterData1.TC93_CompleteMatterCreation;
+
+  // =====================================================
+  // SECTION 1: BASIC MATTER DETAILS
+  // =====================================================
+
+  // Step 1: Verify basic matter fields visibility
+  await expect(matterPage.caseTitleInput).toBeVisible();
+  await expect(matterPage.caseNumberInput).toBeVisible();
+  await expect(matterPage.matterNumberInput).toBeVisible();
+  await expect(matterPage.createdDateInput).toBeVisible();
+
+  // Step 2: Fill basic details
+  await matterPage.fillCaseTitle(data.caseTitle);
+  await matterPage.fillCaseNumber(data.caseNumber);
+
+  // Step 3: Assert field values entered
+  await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
+  await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
+
+  // Step 4: Store generated matter number
+  await expect(matterPage.matterNumberInput).not.toHaveValue("", {
+    timeout: 15000,
+  });
+  const matterNumber = await matterPage.matterNumberInput.inputValue();
+  console.log(`📝 Matter Number captured: "${matterNumber}"`);
+
+  if (!matterNumber || matterNumber.trim() === "") {
+    throw new Error("❌ Failed to capture matter number - input is empty");
+  }
+
+  // =====================================================
+  // SECTION 2: ADDITIONAL DETAILS
+  // =====================================================
+
+  // Step 5: Fill additional details fields
+  await matterPage.clickAdditionalDetails();
+
+  if (data.additionalDetails.dateOfFiling) {
+    await matterPage.fillDateOfFiling(data.additionalDetails.dateOfFiling);
+  }
+
+  if (data.additionalDetails.description) {
+    await matterPage.fillDescription(data.additionalDetails.description);
+  }
+
+  if (data.additionalDetails.caseType) {
+    await matterPage.selectCaseType(data.additionalDetails.caseType);
+  }
+
+  if (data.additionalDetails.court) {
+    await matterPage.fillCourt(data.additionalDetails.court);
+  }
+
+  if (data.additionalDetails.judge) {
+    await matterPage.fillJudge(data.additionalDetails.judge);
+  }
+
+  // Step 6: Configure tag, priority, and status
+  if (data.additionalDetails.tag) {
+    await matterPage.addTag(data.additionalDetails.tag);
+    await matterPage.verifyTagDisplayed(data.additionalDetails.tag);
+  }
+
+  if (data.additionalDetails.priority) {
+    await matterPage.selectPriorityButton(data.additionalDetails.priority);
+    await matterPage.verifyPrioritySelected(data.additionalDetails.priority);
+  }
+
+  if (data.additionalDetails.status) {
+    await matterPage.selectStatusButton(data.additionalDetails.status);
+    await matterPage.verifyStatusSelected(data.additionalDetails.status);
+  }
+
+  // =====================================================
+  // SECTION 3: SAVE & NEXT TO CLIENTS
+  // =====================================================
+
+  // Step 7: Click 'Save & Next' to move to Client step
+  const movedToClientSelection = await matterPage.clickSaveAndNext();
+  expect(movedToClientSelection).toBe(true);
+
+  // =====================================================
+  // SECTION 4: MULTIPLE CLIENTS
+  // =====================================================
+
+  // Step 8: Search and select multiple clients
+  for (const client of data.clients) {
+    await matterPage.enterClientName(client.name);
+    await matterPage.selectClient(client.name);
+    await matterPage.verifySelectedClient(client.name);
+  }
+
+  // Step 9: Verify all selected clients are displayed
+  for (const client of data.clients) {
+    await matterPage.verifyClientAddedToList(client.name);
+  }
+
+  // =====================================================
+  // SECTION 5: PROCEED TO DOCUMENTS
+  // =====================================================
+
+  // Step 10: Proceed to Documents section
+  await matterPage.clickSaveAndNext();
+
+  // =====================================================
+  // SECTION 6: DOCUMENT UPLOADS
+  // =====================================================
+
+  // Step 11: Upload multiple document files
+  const uploadFiles = data.documents.multiUploadFiles || [
+    data.documents.filePath,
+  ];
+  await matterPage.uploadDocuments(uploadFiles);
+
+  // Step 12: Verify uploaded document files listed
+  for (const file of uploadFiles) {
+    const fileName = file.split("/").pop();
+    await matterPage.verifyUploadedDocument(fileName);
+  }
+
+  // =====================================================
+  // SECTION 7: EDIT FIRST DOCUMENT METADATA
+  // =====================================================
+
+  // Step 13: Click Edit Metadata on first document
+  const firstDocument = uploadFiles[0].split("/").pop();
+  await matterPage.clickDocumentEdit(firstDocument);
+
+  // Step 14: Edit Document Name
+  if (data.documents.updatedDocumentName) {
+    await matterPage.fillDocumentName(data.documents.updatedDocumentName);
+    await expect(matterPage.documentNameInput).toHaveValue(
+      data.documents.updatedDocumentName,
+    );
+  }
+
+  // Step 15: Edit Description
+  if (data.documents.updatedDescription) {
+    await matterPage.editDocumentDescription(data.documents.updatedDescription);
+    await expect(matterPage.documentDescriptionInput).toHaveValue(
+      data.documents.updatedDescription,
+    );
+  }
+
+  // Step 16: Edit Expiration Date
+  if (data.documents.expirationDate) {
+    await matterPage.documentExpirationDateInput.clear();
+    await matterPage.editDocumentExpirationDate(data.documents.expirationDate);
+    await matterPage.verifyDocumentExpirationDate(
+      data.documents.expirationDate,
+    );
+  }
+
+  // Step 17: Configure Encryption
+  if (data.documents.encryption === true) {
+    await matterPage.enableDocumentEncryption();
+    await expect(matterPage.documentEncryptionToggle).toHaveClass(
+      /toggle-switch active/,
+    );
+  } else if (data.documents.encryption === false) {
+    await matterPage.disableDocumentEncryption();
+    await expect(matterPage.documentEncryptionToggle).not.toHaveClass(/active/);
+  }
+
+  // Step 18: Configure Download
+  if (data.documents.download === true) {
+    await matterPage.enableDocumentDownload();
+    await expect(matterPage.documentDownloadToggle).toHaveClass(
+      /toggle-switch active/,
+    );
+  } else if (data.documents.download === false) {
+    await matterPage.disableDocumentDownload();
+    await expect(matterPage.documentDownloadToggle).not.toHaveClass(/active/);
+  }
+
+  // Step 19: Add Tags to Document
+  if (data.documents.tags && data.documents.tags.length > 0) {
+    for (let i = 0; i < data.documents.tags.length; i++) {
+      await matterPage.addDocumentTag(data.documents.tags[i], i);
+    }
+  }
+
+  // Step 20: Save Document Changes
+  await matterPage.saveDocumentChanges();
+
+  // Step 21: Verify Updated Document Name
+  if (data.documents.updatedDocumentName) {
+    await expect(
+      matterPage.page.getByText(data.documents.updatedDocumentName, {
+        exact: true,
+      }),
+    ).toBeVisible({
+      timeout: 30000,
+    });
+  }
+
+  // =====================================================
+  // SECTION 8: FINAL SAVE AND VERIFICATION
+  // =====================================================
+
+  // Step 22: Final Save Matter
+  await matterPage.clickFinalSave();
+
+  // Step 23: Verify Matter Created
+  await matterPage.verifyMatterCreatedInView(data.caseTitle);
+
+  // Step 24: Verify Matter Row
+  // Step 24: Verify Matter Row
+  const matterRow = matterPage.matterRowByTitle(data.caseTitle);
+  await expect(matterRow).toBeVisible({
+    timeout: 30000,
+  });
+  await expect(matterRow).toContainText(data.caseTitle);
+
+  // Step 27: Verify Additional Details in Listing
+  if (data.additionalDetails.caseType) {
+    await expect(matterRow).toContainText(data.additionalDetails.caseType);
+  }
+  await expect(matterRow).toContainText(data.caseTitle);
+
+  // Step 25: Verify All Clients in Listing
+  for (const client of data.clients) {
+    await matterPage.verifyClientPresentInListing(client.name, data.caseTitle);
+  }
+
+  // Step 26: Verify Matter Number
+  if (matterNumber) {
+    await expect(
+      matterPage.page.getByText(matterNumber, {
+        exact: true,
+      }),
+    ).toBeVisible({
+      timeout: 30000,
+    });
+  }
+
+  // Step 27: Verify Additional Details in Listing
+  if (data.additionalDetails.caseType) {
+    await expect(matterRow).toContainText(data.additionalDetails.caseType);
+  }
 });
