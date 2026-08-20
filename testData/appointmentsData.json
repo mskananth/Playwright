@@ -1,0 +1,13 @@
+{
+  "TC_APPT_001_SearchAndBookAppointment": {
+    "email": "pranav.s.a@outlook.com",
+    "password": "Test@123",
+    "city": "Bengaluru",
+    "specialization": "Consumer Law",
+    "lawyerName": "Automations",
+    "slotTime": "09:30 am",
+    "cardNumber": "4100 2800 0000 1007",
+    "cardExpiry": "12/30",
+    "cardCvv": "123"
+  }
+}
