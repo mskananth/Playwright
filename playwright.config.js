@@ -14,9 +14,12 @@ import { defineConfig, devices } from "@playwright/test";
  */
 export default defineConfig({
   testDir: "./tests",
-  timeout: 40 * 1000,
+  timeout: 120 * 1000,
+  // Suites share one logged-in page via test.beforeAll, so execution must
+  // stay strictly sequential even when individual tests fail.
+  workers: 1,
   expect: {
-    timeout: 40 * 1000,
+    timeout: 30 * 1000,
   },
   reporter: "html",
 

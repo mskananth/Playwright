@@ -1,13 +1,284 @@
 {
+  "lawyerLogin": {
+    "email": "agile.ananth@gmail.com",
+    "password": "Test@123"
+  },
   "TC_APPT_001_SearchAndBookAppointment": {
+    "email": "kosero5632@copawoke.com",
+    "password": "Test@321",
+    "city": "Bengaluru",
+    "specialization": "Arbitration & Mediation",
+    "lawyerName": "AK & Partners",
+    "slotTime": "01:30 pm",
+    "cardNumber": "4100 2800 0000 1007",
+    "cardExpiry": "12/30",
+    "cardCvv": "123",
+    "clientName": "Ananth Subramanian",
+    "expectedTime": "Today • 01:30 PM to 02:00 PM",
+    "expectedPayment": "Paid - ₹1000",
+    "appointmentHeading": "Appointments",
+    "appointmentSubHeading": "List of Appointments"
+  },
+  "TC_E2E_001": {
     "email": "pranav.s.a@outlook.com",
     "password": "Test@123",
     "city": "Bengaluru",
-    "specialization": "Consumer Law",
-    "lawyerName": "Automations",
-    "slotTime": "09:30 am",
+    "specialization": "Immigration Law",
+    "lawyerName": "Mark Wood",
+    "slotTime": "04:00 pm",
     "cardNumber": "4100 2800 0000 1007",
     "cardExpiry": "12/30",
-    "cardCvv": "123"
+    "cardCvv": "123",
+    "clientName": "Karal Marks",
+    "expectedTime": "4:30 PM",
+    "expectedPayment": "Paid - ₹1000"
+  },
+ 
+  "TC_APT_001": {
+    "description": "Verify Appointments page loads successfully"
+  },
+  "TC_APT_002": {
+    "heading": "Appointments",
+    "subHeading": "List of Appointments"
+  },
+  "TC_APT_003": {
+    "columns": ["Client Name", "Date & Time", "Status", "Mode", "Payment"]
+  },
+  "TC_APT_004": {
+    "clientName": "Karal Marks"
+  },
+  "TC_APT_005": {
+    "slotTime": "3:00 PM",
+    "endTime": "3:30 PM"
+  },
+  "TC_APT_006": {
+    "status": "Ongoing"
+  },
+  "TC_APT_007": {
+    "status": "Upcoming"
+  },
+  "TC_APT_008": {
+    "mode": "Online"
+  },
+  "TC_APT_009": {
+    "status": "Ongoing",
+    "meetingLinkText": "Meeting Link"
+  },
+  "TC_APT_010": {
+    "status": "Upcoming",
+    "meetingLinkText": "Meeting Link"
+  },
+  "TC_APT_011": {
+    "paymentText": "Paid"
+  },
+  "TC_APT_012": {
+    "paymentAmount": "1000"
+  },
+  "TC_APT_013": {
+    "searchName": "Karal Marks"
+  },
+  "TC_APT_014": {
+    "partialName": "Karal"
+  },
+  "TC_APT_015": {
+    "invalidName": "XYZNonExist999"
+  },
+  "TC_APT_016": {},
+  "TC_APT_017": {
+    "sortColumn": "Client Name"
+  },
+  "TC_APT_018": {
+    "sortColumn": "Date & Time"
+  },
+  "TC_APT_019": {
+    "sortColumn": "Status"
+  },
+  "TC_APT_020": {
+    "sortColumn": "Mode"
+  },
+  "TC_APT_021": {
+    "sortColumn": "Payment"
+  },
+  "TC_APT_022": {
+    "clientName": "Karal Marks"
+  },
+  "TC_APT_023": {
+    "clientName": "Karal Marks",
+    "menuOption": "Appointment History"
+  },
+  "TC_APT_024": {
+    "clientName": "Karal Marks",
+    "menuOption": "Settlement History"
+  },
+  "TC_APT_025": {},
+  "TC_APT_026": {},
+  "TC_APT_027": {},
+  "TC_APT_028": {
+    "clientName": "Karal Marks",
+    "slotTime": "3:00 PM",
+    "status": "Ongoing",
+    "paymentText": "Paid"
+  },
+  "TC_APH_001": {
+    "description": "Verify Appointment History page loads successfully"
+  },
+  "TC_APH_002": {
+    "clientName": "Karal Marks"
+  },
+  "TC_APH_003": {
+    "clientName": "Karal Marks"
+  },
+  "TC_APH_004": {
+    "description": "Verify appointment numbers/titles display correctly"
+  },
+  "TC_APH_005": {
+    "date": "Today",
+    "time": "3:00 PM"
+  },
+  "TC_APH_006": {
+    "paymentAmount": "1000"
+  },
+  "TC_APH_007": {
+    "status": "Upcoming"
+  },
+  "TC_APH_008": {
+    "description": "Verify chronological ordering"
+  },
+  "TC_APH_009": {
+    "description": "Verify scrolling through history"
+  },
+  "TC_APH_010": {
+    "addNoteText": "+ Add Note"
+  },
+  "TC_APH_011": {
+    "description": "Verify note is associated with specific appointment"
+  },
+  "TC_APH_012": {
+    "description": "Verify back navigation returns to previous page"
+  },
+  "TC_APH_013": {
+    "clientName": "Karal Marks",
+    "slotTime": "3:00 PM",
+    "paymentAmount": "1000"
+  },
+  "TC_NOTE_001": {
+    "description": "Verify Add Note UI elements appear"
+  },
+  "TC_NOTE_002": {
+    "placeholder": "Type your note here..."
+  },
+  "TC_NOTE_003": {
+    "initialCounter": "0/500"
+  },
+  "TC_NOTE_004": {
+    "validNote": "This is a test note for the appointment."
+  },
+  "TC_NOTE_005": {
+    "noteText": "Testing character counter update"
+  },
+  "TC_NOTE_006": {
+    "maxNote": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+  },
+  "TC_NOTE_007": {
+    "overflowNote": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAExtra"
+  },
+  "TC_NOTE_008": {
+    "validNote": "Note for saved test - TC-49"
+  },
+  "TC_NOTE_009": {
+    "validNote": "Note for verify saved - TC-50"
+  },
+  "TC_NOTE_010": {
+    "validNote": "This note should be cancelled and not saved."
+  },
+  "TC_NOTE_011": {
+    "emptyNote": ""
+  },
+  "TC_NOTE_012": {
+    "whitespaceNote": "     "
+  },
+  "TC_NOTE_013": {
+    "specialCharsNote": "Note with @#$%^&*()_+{}|:<>?/~`"
+  },
+  "TC_NOTE_014": {
+    "multilineNote": "Line 1\nLine 2\nLine 3"
+  },
+  "TC_NOTE_015": {
+    "validNote": "Note only for this appointment - TC-56"
+  },
+  "TC_SH_001": {
+    "description": "Verify Settlement History page loads successfully"
+  },
+  "TC_SH_002": {
+    "expectedCount": "4"
+  },
+  "TC_SH_003": {
+    "totalPaid": "5,000"
+  },
+  "TC_SH_004": {
+    "refunded": "N/A"
+  },
+  "TC_SH_005": {
+    "refundInitiated": "N/A"
+  },
+  "TC_SH_006": {
+    "totalTransactions": "6 "
+  },
+  "TC_SH_007": {
+    "expectedCount": "6"
+  },
+  "TC_SH_008": {
+    "columns": ["Client Name", "Appointment Date", "Amount Received", "Payment Method", "Payment Status"]
+  },
+  "TC_SH_009": {
+    "clientName": "Karal Marks"
+  },
+  "TC_SH_010": {
+    "date": "Today"
+  },
+  "TC_SH_011": {
+    "amount": "1000"
+  },
+  "TC_SH_012": {
+    "paymentMethod": "Card"
+  },
+  "TC_SH_013": {
+    "paymentStatus": "Paid"
+  },
+  "TC_SH_014": {
+    "searchName": "Karal"
+  },
+  "TC_SH_015": {
+    "invalidSearch": "XYZNonExist999"
+  },
+  "TC_SH_016": {},
+  "TC_SH_017": {
+    "sortColumn": "Client Name"
+  },
+  "TC_SH_018": {
+    "sortColumn": "Appointment Date"
+  },
+  "TC_SH_019": {
+    "sortColumn": "Amount Received"
+  },
+  "TC_SH_020": {
+    "sortColumn": "Payment Method"
+  },
+  "TC_SH_021": {
+    "sortColumn": "Payment Status"
+  },
+  "TC_SH_022": {
+    "amount": "1000"
+  },
+  "TC_SH_023": {
+    "expectedTotal": "4,000",
+    "transactionCount": "4",
+    "amountPerTxn": "1000"
+  },
+  "TC_SH_024": {
+    "description": "Verify refund transaction updates correctly"
+  },
+  "TC_SH_025": {
+    "description": "Verify refund initiated updates correctly"
   }
 }

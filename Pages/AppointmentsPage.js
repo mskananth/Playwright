@@ -278,7 +278,7 @@ class AppointmentsPage extends BasePage {
 
     this.historyPageTitle = page
       .locator("h2, h3, [class*='title']")
-      .filter({ hasText: /appointment\s*history/i })
+      .filter({ hasText: /appointments?\s+history/i })
       .first();
 
     this.historyClientName = page
@@ -489,56 +489,51 @@ class AppointmentsPage extends BasePage {
       : null;
     const maxPages = 10;
 
-    const clickBookButton = async (btn) => {
-      await expect(btn).toBeVisible({ timeout: 10000 });
-      await expect(btn).toBeEnabled({ timeout: 10000 });
-      await btn.click();
-      // Confirm the booking screen is for the requested lawyer
-      await expect(
-        this.page.getByText(lawyerName, { exact: false }).first(),
-      ).toBeVisible({ timeout: 10000 });
-    };
-
     for (let i = 0; i < maxPages; i++) {
-      // Candidate = each Book button; climb to the tightest ancestor whose
-      // text contains the lawyer name — that element is this lawyer's card.
-      // A class-substring XPath can stop at a nested sub-block (e.g. an
-      // actions/footer div) whose text never includes the name, causing
-      // every candidate to be skipped even when the lawyer is on screen.
-      const bookButtons = this.page.getByRole("button", {
-        name: /book\s*appointment|book now/i,
-      });
-      const btnCount = await bookButtons.count();
+      // Anchor on the NAME itself: getByText returns the deepest element
+      // containing it, which always lives inside the target lawyer's card.
+      // Climbing from there to the lowest ancestor owning a Book button can
+      // never pair the name with another lawyer's button — unlike
+      // class/tag guesses ('card', 'lawyer', article/li…), which miss on
+      // utility-class markup and resolve to the shared list wrapper whose
+      // first Book button belongs to the first lawyer on the page.
+      const nameEl = this.page.getByText(nameRegex).first();
+      const onPage = await nameEl
+        .waitFor({ state: "visible", timeout: 5000 })
+        .then(() => true)
+        .catch(() => false);
 
-      let nameOnlyBtn = null;
-      for (let j = 0; j < btnCount; j++) {
-        const btn = bookButtons.nth(j);
-        let scope = btn;
-        let text = "";
-        for (let depth = 0; depth < 8; depth++) {
-          scope = scope.locator("xpath=..");
-          text = await scope.innerText().catch(() => "");
-          if (nameRegex.test(text)) break;
+      if (onPage) {
+        let scope = nameEl;
+        let bookBtn = null;
+        for (let depth = 0; depth < 8 && !bookBtn; depth++) {
+          const candidate = scope
+            .getByRole("button", { name: /book\s*appointment|book now/i })
+            .first();
+          if ((await candidate.count()) > 0) {
+            bookBtn = candidate;
+          } else {
+            scope = scope.locator("xpath=..");
+          }
         }
-        if (!nameRegex.test(text)) continue;
-        if (!specRegex || specRegex.test(text)) {
-          // Card shows BOTH lawyer name and specialization
-          await clickBookButton(btn);
+
+        if (bookBtn) {
+          const cardText = await scope.innerText().catch(() => "");
+          await expect(bookBtn).toBeEnabled({ timeout: 10000 });
+          await bookBtn.click();
+
+          // Booking screen must belong to the requested lawyer...
+          await expect(
+            this.page.getByText(lawyerName, { exact: false }).first(),
+          ).toBeVisible({ timeout: 15000 });
+          // ...and show the requested specialization (cards may truncate it)
+          if (specRegex && !specRegex.test(cardText)) {
+            await expect(this.page.getByText(specRegex).first()).toBeVisible({
+              timeout: 10000,
+            });
+          }
           return;
         }
-        // Name matches but specialization truncated/hidden on card (e.g. "+1 more")
-        if (!nameOnlyBtn) nameOnlyBtn = btn;
-      }
-
-      if (nameOnlyBtn) {
-        await clickBookButton(nameOnlyBtn);
-        // Specialization must still be confirmed on the booking screen
-        if (specRegex) {
-          await expect(this.page.getByText(specRegex).first()).toBeVisible({
-            timeout: 10000,
-          });
-        }
-        return;
       }
 
       // Lawyer not on this page → go to Next page
@@ -547,23 +542,14 @@ class AppointmentsPage extends BasePage {
         .first();
       if (
         (await nextBtn.count()) === 0 ||
-        (await nextBtn.isDisabled().catch(() => true))
+        !(await nextBtn.isEnabled().catch(() => false))
       ) {
         break;
       }
-      const before = await this.page.locator("body").innerText();
       await nextBtn.click();
-      await this.page.waitForLoadState("networkidle").catch(() => {});
-      // Only proceed once content actually changed (avoids rescanning same page)
-      await this.page
-        .waitForFunction(
-          (prev) => document.body.innerText !== prev,
-          before,
-          { timeout: 15000 },
-        )
-        .catch(() => {});
-      await this.page.waitForTimeout(1000);
+      await this.page.waitForLoadState("domcontentloaded").catch(() => {});
     }
+
     throw new Error(
       `Lawyer "${lawyerName}"${specRegex ? ` with "${specialization}"` : ""} not found after ${maxPages} pages`,
     );
@@ -575,18 +561,21 @@ class AppointmentsPage extends BasePage {
     const input = this.specializationDropdown.first();
     await expect(input).toBeVisible({ timeout: 10000 });
     await input.click();
-    await input.fill(label);
 
-    // The app either opens an ARIA listbox (role=option) or commits the
-    // value directly as a removable "<label> SPECIALITY ✕" chip.
+    // Type real keystrokes: fill() sets the value programmatically and some
+    // autocompletes only react to actual key events.
+    await input.pressSequentially(label, { delay: 80 });
+
+    // The app either opens an ARIA listbox (role=option) or commits the value
+    // as a removable "<label> SPECIALITY ✕" chip. Suggestion resolution is
+    // debounced on staging, so wait generously — and NEVER press Enter here:
+    // the input sits in a form, and Enter submits an unfiltered search.
     const option = this.page.getByRole("option", { name: pattern }).first();
     const chip = this.page
       .getByText(new RegExp(`${escapeRe(label)}\\s+SPECIALITY`, "i"))
       .first();
-    await expect(option.or(chip)).toBeVisible({ timeout: 5000 });
+    await expect(option.or(chip)).toBeVisible({ timeout: 15000 });
 
-    // Only the listbox variant needs an explicit selection; the chip means
-    // the filter is already committed.
     if (await option.isVisible()) {
       await option.click();
     }
@@ -839,6 +828,37 @@ class AppointmentsPage extends BasePage {
     await expect(statusEl).toBeVisible({ timeout: 10000 });
   }
 
+  // Instant (non-retrying) precondition probe for time-dependent statuses:
+  // "Ongoing" only exists while an appointment's slot window is active.
+  async clientHasStatus(clientName, status) {
+    return this.page
+      .locator("table tbody tr")
+      .filter({ hasText: clientName })
+      .getByText(new RegExp(`^\\s*${status}\\s*$`, "i"))
+      .first()
+      .isVisible()
+      .catch(() => false);
+  }
+
+  // Live cell values of the client's "Today" appointment, so tests can
+  // assert consistency without hard-coding time-dependent data.
+  async getTodayRowData(clientName) {
+    const row = this.page
+      .locator("table tbody tr")
+      .filter({ hasText: clientName })
+      .filter({ hasText: /today/i })
+      .first();
+    await expect(row).toBeVisible({ timeout: 10000 });
+    const cells = row.locator("td");
+    const read = (i) => cells.nth(i).innerText().then((t) => t.trim());
+    return {
+      date: await read(1),
+      status: await read(2),
+      mode: await read(3),
+      payment: await read(4),
+    };
+  }
+
   async verifyStatusBadge(status) {
     const badge = this.statusBadge(status);
     await expect(badge).toBeVisible({ timeout: 10000 });
@@ -1048,7 +1068,8 @@ class AppointmentsPage extends BasePage {
   // ═══════════════════════════════════════════════════════════════════
 
   async verifyHistoryPageLoaded() {
-    const title = this.page.getByText(/appointment\s*history/i).first();
+    // Page title reads "Appointments History" (plural) — accept both
+    const title = this.page.getByText(/appointments?\s+history/i).first();
     await expect(title).toBeVisible({ timeout: 15000 });
   }
 
@@ -1080,6 +1101,19 @@ class AppointmentsPage extends BasePage {
     await expect(statusEl).toBeVisible({ timeout: 10000 });
   }
 
+  // Instant (non-retrying) precondition probe for time-dependent statuses
+  // on the history page (cards instead of table rows).
+  async historyHasStatus(status) {
+    // Bounded wait (not instant isVisible) so late-rendered cards are
+    // caught before we decide to skip.
+    return this.historyAppointmentCard
+      .getByText(new RegExp(`^\\s*${status}\\s*$`, "i"))
+      .first()
+      .waitFor({ state: "visible", timeout: 3000 })
+      .then(() => true)
+      .catch(() => false);
+  }
+
   async verifyHistoryOrdering() {
     const cards = this.historyAppointmentCard;
     const count = await cards.count();
@@ -1097,6 +1131,20 @@ class AppointmentsPage extends BasePage {
   }
 
   async clickAddNote() {
+    // "+ Add Note" only exists on cards WITHOUT a note. Earlier tests in
+    // this serial suite leave notes on every appointment, so fall back to
+    // opening the first existing note's editor via its edit icon —
+    // enterNote() uses fill(), which replaces any pre-filled content.
+    if ((await this.addNoteButton.count()) === 0) {
+      const editIcon = this.page
+        .getByRole("heading", { name: /^note$/i })
+        .first()
+        .locator("xpath=following::button[1]");
+      await expect(editIcon).toBeVisible({ timeout: 10000 });
+      await editIcon.click();
+      await this.page.waitForTimeout(1000);
+      return;
+    }
     await expect(this.addNoteButton).toBeVisible({ timeout: 10000 });
     await this.addNoteButton.click();
     await this.page.waitForTimeout(1000);
@@ -1129,8 +1177,9 @@ class AppointmentsPage extends BasePage {
   }
 
   async verifyNotePlaceholder() {
-    const placeholder = this.page.getByText(/type your note here/i).first();
-    await expect(placeholder).toBeVisible({ timeout: 10000 });
+    // A placeholder is an attribute, not text content — getByText() cannot
+    // match it. Use getByPlaceholder (already encapsulated in noteTextarea).
+    await expect(this.noteTextarea).toBeVisible({ timeout: 10000 });
   }
 
   async verifyCharacterCounter(expected) {
@@ -1138,6 +1187,23 @@ class AppointmentsPage extends BasePage {
       .getByText(new RegExp(expected.replace("/", "\\/"), "i"))
       .first();
     await expect(counter).toBeVisible({ timeout: 10000 });
+  }
+
+  // Parse the live "N/M characters" counter into numbers
+  async getNoteCounter() {
+    const el = this.page.getByText(/\d+\s*\/\s*\d+/i).first();
+    await expect(el).toBeVisible({ timeout: 10000 });
+    const text = await el.innerText();
+    const match = text.match(/(\d+)\s*\/\s*(\d+)/);
+    return { current: Number(match[1]), max: Number(match[2]) };
+  }
+
+  async getNoteValue() {
+    const textarea =
+      (await this.noteTextarea.count()) > 0
+        ? this.noteTextarea
+        : this.noteTextareaAlt;
+    return textarea.inputValue();
   }
 
   async enterNote(text) {
@@ -1195,10 +1261,17 @@ class AppointmentsPage extends BasePage {
   }
 
   async verifyTotalPaid(expectedAmount) {
-    const paidEl = this.page
-      .getByText(new RegExp(expectedAmount.replace(",", "[, ]?"), "i"))
-      .first();
-    await expect(paidEl).toBeVisible({ timeout: 10000 });
+    const card = this.page
+      .locator("div")
+      .filter({ has: this.page.getByText("Total Paid", { exact: true }) })
+      .filter({ has: this.page.getByRole("heading") })
+      .last();
+
+    const digits = expectedAmount.replace(/\D/g, "").split("").join("\\D*");
+    await expect(card.getByRole("heading")).toHaveText(
+      new RegExp(`^\\s*₹?\\s*${digits}\\s*$`),
+      { timeout: 10000 },
+    );
   }
 
   async verifyRefunded(expectedValue) {

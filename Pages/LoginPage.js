@@ -3,7 +3,7 @@ const { expect } = require("@playwright/test");
 class LoginModule {
   constructor(page) {
     this.page = page;
-    this.emailInput = page.locator('input[placeholder="Enter Email Address"]');
+    this.emailInput = page.locator('input[placeholder="Enter Email or Mobile Number"]');
     this.passwordInput = page.locator('input[placeholder="Enter Password"]');
     this.usePasswordLink = page.getByRole("link", {
       name: "Use Password Instead",
