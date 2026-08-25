@@ -1574,6 +1574,113 @@ test("TC-93 - Create Legal Matter with All Fields, Additional Details, Multiple 
   }
 });
 
+test("TC-93A - Create Legal Matter with All Fields, Additional Details, Multiple Clients, Documents, Tags, and Complete Metadata", async () => {
+  const data = matterData1.TC93A_CompleteMatterCreationMultiDocument_Edit;
+
+  await expect(matterPage.caseTitleInput).toBeVisible();
+  await expect(matterPage.caseNumberInput).toBeVisible();
+  await expect(matterPage.matterNumberInput).toBeVisible();
+  await expect(matterPage.createdDateInput).toBeVisible();
+
+  await matterPage.fillCaseTitle(data.caseTitle);
+  await matterPage.fillCaseNumber(data.caseNumber);
+
+  await expect(matterPage.caseTitleInput).toHaveValue(data.caseTitle);
+  await expect(matterPage.caseNumberInput).toHaveValue(data.caseNumber);
+  await expect(matterPage.matterNumberInput).not.toHaveValue("", {
+    timeout: 15000,
+  });
+
+  const matterNumber = await matterPage.matterNumberInput.inputValue();
+  if (!matterNumber || matterNumber.trim() === "") {
+    throw new Error(" Failed to capture matter number - input is empty");
+  }
+
+  await matterPage.clickAdditionalDetails();
+
+  if (data.additionalDetails.dateOfFiling) {
+    await matterPage.fillDateOfFiling(data.additionalDetails.dateOfFiling);
+  }
+  if (data.additionalDetails.description) {
+    await matterPage.fillDescription(data.additionalDetails.description);
+  }
+  if (data.additionalDetails.caseType) {
+    await matterPage.selectCaseType(data.additionalDetails.caseType);
+  }
+  if (data.additionalDetails.court) {
+    await matterPage.fillCourt(data.additionalDetails.court);
+  }
+  if (data.additionalDetails.judge) {
+    await matterPage.fillJudge(data.additionalDetails.judge);
+  }
+  if (data.additionalDetails.tag) {
+    await matterPage.addTag(data.additionalDetails.tag);
+    await matterPage.verifyTagDisplayed(data.additionalDetails.tag);
+  }
+  if (data.additionalDetails.priority) {
+    await matterPage.selectPriorityButton(data.additionalDetails.priority);
+    await matterPage.verifyPrioritySelected(data.additionalDetails.priority);
+  }
+  if (data.additionalDetails.status) {
+    await matterPage.selectStatusButton(data.additionalDetails.status);
+    await matterPage.verifyStatusSelected(data.additionalDetails.status);
+  }
+
+  const movedToClientSelection = await matterPage.clickSaveAndNext();
+  expect(movedToClientSelection).toBe(true);
+
+  for (const client of data.clients) {
+    await matterPage.enterClientName(client.name);
+    await matterPage.selectClient(client.name);
+    await matterPage.verifySelectedClient(client.name);
+  }
+  for (const client of data.clients) {
+    await matterPage.verifyClientAddedToList(client.name);
+  }
+
+  await matterPage.clickSaveAndNext();
+
+  const uploadFiles = data.documents.multiUploadFiles || [
+    data.documents.filePath,
+  ];
+  await matterPage.uploadDocuments(uploadFiles);
+  for (const file of uploadFiles) {
+    const fileName = file.split("/").pop();
+    await matterPage.verifyUploadedDocument(fileName);
+  }
+
+  // ── Edit metadata for every uploaded document ────────────────────
+  const edits = data.documents.edits || [];
+  for (const edit of edits) {
+    await matterPage.editDocumentMetadata(edit.fileName, edit);
+  }
+
+  await matterPage.clickFinalSave();
+  await matterPage.verifyMatterCreatedInView(data.caseTitle);
+
+  const matterRow = matterPage.matterRowByTitle(data.caseTitle);
+  await expect(matterRow).toBeVisible({ timeout: 30000 });
+  await expect(matterRow).toContainText(data.caseTitle);
+
+  if (data.additionalDetails.caseType) {
+    await expect(matterRow).toContainText(data.additionalDetails.caseType);
+  }
+
+  for (const client of data.clients) {
+    await matterPage.verifyClientPresentInListing(client.name, data.caseTitle);
+  }
+
+  if (matterNumber) {
+    await expect(
+      matterPage.page.getByText(matterNumber, { exact: true }),
+    ).toBeVisible({ timeout: 30000 });
+  }
+
+  if (data.additionalDetails.caseType) {
+    await expect(matterRow).toContainText(data.additionalDetails.caseType);
+  }
+});
+
 async function navigateToClientStep() {
   const data = matterSearch.TC_CLIENT_001;
   await matterPage.openMatterCreation();

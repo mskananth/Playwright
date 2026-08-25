@@ -290,14 +290,12 @@
       "expirationDate": "20/08/2026",
       "encryption": true,
       "download": false,
-      "tags": [
-        "Legal",
-        "Important"
-      ]
+      "tags": ["Legal", "Important"]
     }
   },
+
   "TC93_CompleteMatterCreation": {
-    "caseTitle": "TC-93 Full Matter Creation9",
+    "caseTitle": "TC-93 Full Matter Creation932test",
     "caseNumber": "CASE-0093",
     "additionalDetails": {
       "dateOfFiling": "15/08/2026",
@@ -316,7 +314,6 @@
       {
         "name": "Brett Lee"
       }
-    
     ],
     "documents": {
       "filePath": "TestData/Documents/TXT_Format.txt",
@@ -329,13 +326,59 @@
       "expirationDate": "31/12/2027",
       "encryption": true,
       "download": false,
-      "tags": [
-        "Legal",
-        "Important",
-        "Urgent"
+      "tags": ["Legal", "Important", "Urgent"]
+    }
+  },
+  "TC93A_CompleteMatterCreationMultiDocument_Edit": {
+    "caseTitle": "TC-93 Full Matter Creation93AC",
+    "caseNumber": "CASE-0093A81",
+    "additionalDetails": {
+      "dateOfFiling": "15/08/2026",
+      "description": "Complete test matter with all combinations",
+      "caseType": "Civil",
+      "court": "District Court",
+      "judge": "Judge Johnson",
+      "tag": "Priority",
+      "priority": "High",
+      "status": "Active"
+    },
+    "clients": [
+      {
+        "name": "Ananth Subramanian"
+      },
+      {
+        "name": "Brett Lee"
+      }
+    ],
+    "documents": {
+      "filePath": "TestData/Documents/TXT_Format.txt",
+      "multiUploadFiles": [
+        "TestData/Documents/TXT_Format.txt",
+        "TestData/Documents/PDF_Format.pdf"
+      ],
+      "edits": [
+        {
+          "fileName": "TXT_Format.txt",
+          "updatedDocumentName": "Updated_TC93A_TXT.txt",
+          "updatedDescription": "Updated description for TXT doc",
+          "expirationDate": "31/12/2027",
+          "encryption": true,
+          "download": false,
+          "tags": ["Legal", "Urgent"]
+        },
+        {
+          "fileName": "PDF_Format.pdf",
+          "updatedDocumentName": "Updated_TC93A_PDF.pdf",
+          "updatedDescription": "Updated description for PDF doc",
+          "expirationDate": "31/12/2027",
+          "encryption": false,
+          "download": true,
+          "tags": ["Important"]
+        }
       ]
     }
   },
+
   "TC129_CreateMatterWithNotFoundClient_SoloLawyer": {
     "caseTitle": "SFL NotFound Client Docs_CLM129",
     "caseNumber": "KA/007/1829",

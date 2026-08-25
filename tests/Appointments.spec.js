@@ -12,7 +12,7 @@ const e2eFlowData = appointmentsData;
 const { loginData } = require("../testData/loginData");
 
 const defaultLogin = (loginData && loginData[0]) || {};
-const BASE_URL = "https://staging.consumer.lexiz.ai/consumer";
+const BASE_URL = process.env.CLIENT_URL;
 
 let page;
 let appointmentsPage;
@@ -678,7 +678,7 @@ test.describe("Settlement History", () => {
     await appointmentsPage.verifySettlementAmount(data.amount);
   });
 
-  test("TC-SH-023. Verify total calculation", async () => {
+  test.only("TC-SH-023. Verify total calculation", async () => {
     const data = settlementHistoryData.TC_SH_023;
     await appointmentsPage.verifyTotalPaid(data.expectedTotal);
     await appointmentsPage.verifyTotalTransactions(data.transactionCount);

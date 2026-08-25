@@ -345,8 +345,14 @@ class ClientBookingPage extends BasePage {
   // Tolerates "02:30 pm" vs "2:30 PM" / "02:30PM" render differences
   slotTimeRegex(time) {
     const [, h, min, mer] =
-      String(time).trim().match(/(\d{1,2}):(\d{2})\s*([AaPp][Mm])?/) ?? [];
-    if (!h) return new RegExp(String(time).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+      String(time)
+        .trim()
+        .match(/(\d{1,2}):(\d{2})\s*([AaPp][Mm])?/) ?? [];
+    if (!h)
+      return new RegExp(
+        String(time).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+        "i",
+      );
     const meridian = mer ? `(?:\\s*${mer.toUpperCase()})?` : "";
     return new RegExp(`\\b0?${Number(h)}:${min}${meridian}\\b`, "i");
   }

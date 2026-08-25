@@ -244,16 +244,29 @@ class AppointmentsPage extends BasePage {
         .first();
 
     // ── Three-dot menu ─────────────────────────────────────────────
-    this.threeDotMenu = (clientName) =>
-      page
-        .locator(
-          "[class*='appointment'], [class*='booking'], tr, [role='row'], [role='listitem']",
-        )
-        .filter({ hasText: clientName })
-        .locator("td")
-        .last()
-        .getByRole("button")
+    // this.threeDotMenu = (clientName) =>
+    //   page
+    //     .locator(
+    //       "[class*='appointment'], [class*='booking'], tr, [role='row'], [role='listitem']",
+    //     )
+    //     .filter({ hasText: clientName })
+    //     .locator("td")
+    //     .last()
+    //     .getByRole("button")
+    //     .first();
+    // ── Three-dot menu ─────────────────────────────────────────────
+    // Real markup: <span class="action-dots">⋮</span> inside the row —
+    // not a <button>, so getByRole("button") won't reliably match it.
+    this.threeDotMenu = (clientName, dateTime) => {
+      let row = page.locator("table tbody tr").filter({ hasText: clientName });
+      if (dateTime) {
+        row = row.filter({ hasText: dateTime });
+      }
+      return row
+        .first()
+        .locator(".action-dots, [class*='action-dots']")
         .first();
+    };
 
     this.menuItem = (option) =>
       page
@@ -431,9 +444,7 @@ class AppointmentsPage extends BasePage {
         .first();
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  EXISTING: Login
-  // ═══════════════════════════════════════════════════════════════════
 
   async login(email, password) {
     await this.emailInput.fill(email);
@@ -455,9 +466,7 @@ class AppointmentsPage extends BasePage {
     await expect(dialog).toBeHidden({ timeout: 15000 });
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  EXISTING: Search
-  // ═══════════════════════════════════════════════════════════════════
 
   async searchLocation(city) {
     await this.locationInput.clear();
@@ -490,13 +499,6 @@ class AppointmentsPage extends BasePage {
     const maxPages = 10;
 
     for (let i = 0; i < maxPages; i++) {
-      // Anchor on the NAME itself: getByText returns the deepest element
-      // containing it, which always lives inside the target lawyer's card.
-      // Climbing from there to the lowest ancestor owning a Book button can
-      // never pair the name with another lawyer's button — unlike
-      // class/tag guesses ('card', 'lawyer', article/li…), which miss on
-      // utility-class markup and resolve to the shared list wrapper whose
-      // first Book button belongs to the first lawyer on the page.
       const nameEl = this.page.getByText(nameRegex).first();
       const onPage = await nameEl
         .waitFor({ state: "visible", timeout: 5000 })
@@ -562,14 +564,8 @@ class AppointmentsPage extends BasePage {
     await expect(input).toBeVisible({ timeout: 10000 });
     await input.click();
 
-    // Type real keystrokes: fill() sets the value programmatically and some
-    // autocompletes only react to actual key events.
     await input.pressSequentially(label, { delay: 80 });
 
-    // The app either opens an ARIA listbox (role=option) or commits the value
-    // as a removable "<label> SPECIALITY ✕" chip. Suggestion resolution is
-    // debounced on staging, so wait generously — and NEVER press Enter here:
-    // the input sits in a form, and Enter submits an unfiltered search.
     const option = this.page.getByRole("option", { name: pattern }).first();
     const chip = this.page
       .getByText(new RegExp(`${escapeRe(label)}\\s+SPECIALITY`, "i"))
@@ -587,9 +583,7 @@ class AppointmentsPage extends BasePage {
     await this.page.waitForTimeout(2000);
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  EXISTING: Lawyer & Slot
-  // ═══════════════════════════════════════════════════════════════════
 
   async selectLawyer(name) {
     const card = this.lawyerCard(name);
@@ -606,9 +600,7 @@ class AppointmentsPage extends BasePage {
     await this.page.waitForTimeout(500);
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  EXISTING: Payment
-  // ═══════════════════════════════════════════════════════════════════
 
   async getRazorpayFrame() {
     const selectors = [
@@ -691,9 +683,7 @@ class AppointmentsPage extends BasePage {
     await successButton.click();
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  EXISTING: Consumer-side Appointments listing
-  // ═══════════════════════════════════════════════════════════════════
 
   async navigateToAppointments() {
     if ((await this.appointmentsNav.count()) > 0) {
@@ -715,9 +705,7 @@ class AppointmentsPage extends BasePage {
     await expect(row).toContainText(text);
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  EXISTING: La auditor Appointments module
-  // ═══════════════════════════════════════════════════════════════════
 
   async openAppointments() {
     await expect(this.appointmentsMenu).toBeVisible({ timeout: 10000 });
@@ -736,9 +724,7 @@ class AppointmentsPage extends BasePage {
     await expect(this.page).toHaveTitle(expectedTitle);
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  EXISTING: Lawyer-side appointment detail verification
-  // ═══════════════════════════════════════════════════════════════════
 
   async openAppointmentByName(clientName) {
     const row = this.appointmentRow(clientName);
@@ -778,9 +764,7 @@ class AppointmentsPage extends BasePage {
     await expect(dt).toBeVisible({ timeout: 10000 });
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  NEW: Appointments Listing – Page Verification
-  // ═══════════════════════════════════════════════════════════════════
 
   async verifyAppointmentsPageLoaded() {
     await expect(this.page.getByText(/appointments/i).first()).toBeVisible({
@@ -805,9 +789,7 @@ class AppointmentsPage extends BasePage {
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  NEW: Client Details
-  // ═══════════════════════════════════════════════════════════════════
 
   async verifyClientAvatar(clientName) {
     const avatar = this.clientAvatar(clientName);
@@ -819,17 +801,13 @@ class AppointmentsPage extends BasePage {
     await expect(nameEl).toBeVisible({ timeout: 10000 });
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  NEW: Status
-  // ═══════════════════════════════════════════════════════════════════
 
   async verifyStatus(clientName, status) {
     const statusEl = this.statusInRow(clientName, status);
     await expect(statusEl).toBeVisible({ timeout: 10000 });
   }
 
-  // Instant (non-retrying) precondition probe for time-dependent statuses:
-  // "Ongoing" only exists while an appointment's slot window is active.
   async clientHasStatus(clientName, status) {
     return this.page
       .locator("table tbody tr")
@@ -840,8 +818,6 @@ class AppointmentsPage extends BasePage {
       .catch(() => false);
   }
 
-  // Live cell values of the client's "Today" appointment, so tests can
-  // assert consistency without hard-coding time-dependent data.
   async getTodayRowData(clientName) {
     const row = this.page
       .locator("table tbody tr")
@@ -850,7 +826,11 @@ class AppointmentsPage extends BasePage {
       .first();
     await expect(row).toBeVisible({ timeout: 10000 });
     const cells = row.locator("td");
-    const read = (i) => cells.nth(i).innerText().then((t) => t.trim());
+    const read = (i) =>
+      cells
+        .nth(i)
+        .innerText()
+        .then((t) => t.trim());
     return {
       date: await read(1),
       status: await read(2),
@@ -864,18 +844,14 @@ class AppointmentsPage extends BasePage {
     await expect(badge).toBeVisible({ timeout: 10000 });
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  NEW: Mode
-  // ═══════════════════════════════════════════════════════════════════
 
   async verifyMode(clientName, mode) {
     const modeEl = this.modeInRow(clientName, mode);
     await expect(modeEl).toBeVisible({ timeout: 10000 });
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  NEW: Meeting Link
-  // ═══════════════════════════════════════════════════════════════════
 
   async clickMeetingLink(clientName) {
     const link = this.meetingLinkInRow(clientName);
@@ -920,9 +896,7 @@ class AppointmentsPage extends BasePage {
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  NEW: Payment
-  // ═══════════════════════════════════════════════════════════════════
 
   async verifyPaymentStatus(clientName, paymentText) {
     const paymentEl = this.page
@@ -946,9 +920,7 @@ class AppointmentsPage extends BasePage {
     await expect(amountEl).toBeVisible({ timeout: 10000 });
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  NEW: Search
-  // ═══════════════════════════════════════════════════════════════════
 
   async searchClient(searchText) {
     const input = this.clientSearchInput;
@@ -979,9 +951,7 @@ class AppointmentsPage extends BasePage {
     expect(count).toBe(0);
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  NEW: Sorting
-  // ═══════════════════════════════════════════════════════════════════
 
   async clickSortColumn(column) {
     const sortBtn = this.sortButton(column);
@@ -1001,24 +971,14 @@ class AppointmentsPage extends BasePage {
     return firstRow.innerText();
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  NEW: Three-dot Menu
-  // ═══════════════════════════════════════════════════════════════════
 
-  async clickThreeDotMenu(clientName) {
-    const menuBtn = this.threeDotMenu(clientName);
-    if ((await menuBtn.count()) > 0) {
-      await expect(menuBtn).toBeVisible({ timeout: 10000 });
-      await menuBtn.click();
-    } else {
-      const row = this.appointmentRow(clientName);
-      await expect(row).toBeVisible({ timeout: 10000 });
-      const moreBtn = row.locator("button").last();
-      await moreBtn.click();
-    }
+  async clickThreeDotMenu(clientName, dateTime) {
+    const menuBtn = this.threeDotMenu(clientName, dateTime);
+    await expect(menuBtn).toBeVisible({ timeout: 10000 });
+    await menuBtn.click();
     await this.page.waitForTimeout(1000);
   }
-
   async clickMenuItem(option) {
     const item = this.menuItem(option);
     await expect(item).toBeVisible({ timeout: 10000 });
@@ -1027,9 +987,7 @@ class AppointmentsPage extends BasePage {
     await this.page.waitForTimeout(2000);
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  NEW: Pagination
-  // ═══════════════════════════════════════════════════════════════════
 
   async clickNextPage() {
     await expect(this.nextButton).toBeVisible({ timeout: 10000 });
@@ -1063,9 +1021,7 @@ class AppointmentsPage extends BasePage {
     expect(isDisabled).toBeTruthy();
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  NEW: Appointment History
-  // ═══════════════════════════════════════════════════════════════════
 
   async verifyHistoryPageLoaded() {
     // Page title reads "Appointments History" (plural) — accept both
@@ -1101,11 +1057,7 @@ class AppointmentsPage extends BasePage {
     await expect(statusEl).toBeVisible({ timeout: 10000 });
   }
 
-  // Instant (non-retrying) precondition probe for time-dependent statuses
-  // on the history page (cards instead of table rows).
   async historyHasStatus(status) {
-    // Bounded wait (not instant isVisible) so late-rendered cards are
-    // caught before we decide to skip.
     return this.historyAppointmentCard
       .getByText(new RegExp(`^\\s*${status}\\s*$`, "i"))
       .first()
@@ -1131,10 +1083,6 @@ class AppointmentsPage extends BasePage {
   }
 
   async clickAddNote() {
-    // "+ Add Note" only exists on cards WITHOUT a note. Earlier tests in
-    // this serial suite leave notes on every appointment, so fall back to
-    // opening the first existing note's editor via its edit icon —
-    // enterNote() uses fill(), which replaces any pre-filled content.
     if ((await this.addNoteButton.count()) === 0) {
       const editIcon = this.page
         .getByRole("heading", { name: /^note$/i })
@@ -1162,9 +1110,7 @@ class AppointmentsPage extends BasePage {
     await this.page.waitForTimeout(1000);
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  NEW: Note CRUD
-  // ═══════════════════════════════════════════════════════════════════
 
   async verifyNoteSectionVisible() {
     const textarea =
@@ -1177,8 +1123,6 @@ class AppointmentsPage extends BasePage {
   }
 
   async verifyNotePlaceholder() {
-    // A placeholder is an attribute, not text content — getByText() cannot
-    // match it. Use getByPlaceholder (already encapsulated in noteTextarea).
     await expect(this.noteTextarea).toBeVisible({ timeout: 10000 });
   }
 
@@ -1244,9 +1188,7 @@ class AppointmentsPage extends BasePage {
     await expect(noteEl).toBeVisible({ timeout: 10000 });
   }
 
-  // ═══════════════════════════════════════════════════════════════════
   //  NEW: Settlement History
-  // ═══════════════════════════════════════════════════════════════════
 
   async verifySettlementPageLoaded() {
     const title = this.settlementPageTitle;

@@ -1,0 +1,207 @@
+{
+  "allowMutatingActions": false,
+  "TC_IR_002": {
+    "expectedHeading": "Individual Relationships"
+  },
+  "TC_IR_003": {
+    "listSectionTitle": "List of Relationships"
+  },
+  "TC_IR_004": {
+    "columns": ["Name", "Type", "Created On", "Status"]
+  },
+  "TC_IR_005": {
+    "existingRelationship": "Ananth Subramanian",
+    "type": "Consumer"
+  },
+  "TC_IR_006": {
+    "existingRelationship": "Ananth Subramanian",
+    "status": "Active"
+  },
+  "TC_IR_007": {
+    "relationshipName": "Ananth Subramanian"
+  },
+  "TC_IR_008": {
+    "newClient":"Adam GillChrist",
+    "addButtonText": "Add Relationships"
+  },
+  "TC_IR_009": {
+    "addPageHeading": "Add Individual Relationship"
+  },
+  "TC_IR_010": {
+    "searchPlaceholder": "Search by name"
+  },
+  "TC_IR_011": {
+    "individualName": "Neela"
+  },
+  "TC_IR_012": {
+    "exactName": "Neela"
+  },
+  "TC_IR_013": {
+    "partialName": "Nee"
+  },
+  "TC_IR_014": {
+    "nonexistentName": "ZZZNotExist999"
+  },
+  "TC_IR_015": {},
+  "TC_IR_016": {
+    "individualName": "Neela",
+    "details": ["First Name", "Last Name", "Email", "Mobile", "Country"]
+  },
+  "TC_IR_017": {
+    "mandatoryLabels": ["First Name", "Last Name", "Email", "Country"]
+  },
+  "TC_IR_021": {
+    "countryOption": "India"
+  },
+  "TC_IR_022": {
+    "individualName": "Neela",
+    "dialogTitle": "Confirmation"
+  },
+  "TC_IR_024": {
+    "individualName": "Neela"
+  },
+  "TC_IR_025": {
+    "individualName": "Neela"
+  },
+  "TC_IR_026": {
+    "individualName": "Neela"
+  },
+  "TC_IR_027": {
+    "newRelationship": "Neela"
+  },
+  "TC_IR_028": {
+    "duplicateIndividual": "Neela"
+  },
+  "TC_IR_029": {
+    "searchName": "Ananth Subramanian"
+  },
+  "TC_IR_030": {
+    "nonexistentName": "QQQNotExist777"
+  },
+  "TC_IR_031": {},
+  "TC_IR_032": {
+    "column": "Name"
+  },
+  "TC_IR_033": {
+    "column": "Type"
+  },
+  "TC_IR_034": {
+    "column": "Created On"
+  },
+  "TC_IR_035": {
+    "column": "Status"
+  },
+  "TC_IR_036": {
+    "relationshipName": "Ananth Subramanian",
+    "menuOptions": ["Exchange Information", "Delete Relationship"]
+  },
+  "TC_IR_041": {},
+  "TC_IR_042": {
+    "relationshipName": "Ananth Subramanian"
+  },
+  "TC_IR_043": {
+    "individualName": "Neela"
+  },
+  "TC_IR_044": {
+    "invalidEmail": "not-an-email"
+  },
+  "TC_IR_045": {
+    "specialChars": "@#$%^&*"
+  },
+  "TC_IR_046": {
+    "paddedName": " Neela ",
+    "trimmedName": "Neela"
+  },
+  "TC_IR_047": {
+    "lowerCaseName": "neela",
+    "expectedMatch": "Neela"
+  },
+  "TC_IR_050": {},
+
+  "TC_REL_001": {},
+  "TC_REL_002": {
+    "heading": "Individual Relationships"
+  },
+  "TC_REL_003": {
+    "columns": ["Name", "Type", "Created On", "Status"]
+  },
+  "TC_REL_004": {
+    "existingRelationship": "Ananth Subramanian",
+    "type": "Consumer"
+  },
+  "TC_REL_005": {
+    "existingRelationship": "Ananth Subramanian",
+    "status": "Active"
+  },
+  "TC_REL_006": {
+    "searchName": "Ananth Subramanian"
+  },
+  "TC_REL_007": {
+    "nonexistentName": "ZZZNotExist999"
+  },
+  "TC_REL_008": {
+    "addButtonText": "Add Relationships"
+  },
+  "TC_REL_009": {
+    "addPageHeading": "Add Individual Relationship"
+  },
+  "TC_REL_010": {
+    "individualName": "Neela"
+  },
+  "TC_REL_011": {
+    "individualName": "Neela",
+    "details": ["First Name", "Last Name", "Email", "Mobile", "Country"]
+  },
+  "TC_REL_012": {
+    "individualName": "Neela",
+    "dialogTitle": "Confirmation"
+  },
+  "TC_REL_013": {
+    "nonexistentName": "Adam GillChrist"
+  },
+  "TC_REL_014": {
+    "nonexistentName": "Adam GillChrist",
+    "fields": ["First Name", "Last Name", "Email", "Confirm Email", "Country", "Mobile"]
+  },
+  "TC_REL_015": {
+    "mandatoryLabels": ["First Name", "Last Name", "Email", "Country"]
+  },
+  "TC_REL_016": {
+    "invalidEmail": "not-an-email"
+  },
+  "TC_REL_017": {
+    "email": "test@example.com",
+    "confirmEmail": "different@example.com"
+  },
+  "TC_REL_018": {
+    "countryOption": "India"
+  },
+  "TC_REL_019": {},
+  "TC_REL_020": {
+    "nonexistentName": "Adam GillChrist",
+    "firstName": "Test",
+    "lastName": "Automation",
+    "email": "testautomation@example.com",
+    "confirmEmail": "testautomation@example.com",
+    "country": "India"
+  },
+  "TC_REL_021": {},
+  "TC_REL_022": {
+    "column": "Name"
+  },
+  "TC_REL_023": {
+    "column": "Type"
+  },
+  "TC_REL_024": {
+    "column": "Created On"
+  },
+  "TC_REL_025": {
+    "column": "Status"
+  },
+  "TC_REL_026": {
+    "relationshipName": "Ananth Subramanian",
+    "menuOptions": ["Exchange Information", "Delete Relationship"]
+  },
+  "TC_REL_027": {},
+  "TC_REL_028": {}
+}

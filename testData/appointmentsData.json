@@ -9,12 +9,12 @@
     "city": "Bengaluru",
     "specialization": "Arbitration & Mediation",
     "lawyerName": "AK & Partners",
-    "slotTime": "01:30 pm",
+    "slotTime": "04:30 pm",
     "cardNumber": "4100 2800 0000 1007",
     "cardExpiry": "12/30",
     "cardCvv": "123",
     "clientName": "Ananth Subramanian",
-    "expectedTime": "Today • 01:30 PM to 02:00 PM",
+    "expectedTime": "Today • 04:30 PM to 05:00 PM",
     "expectedPayment": "Paid - ₹1000",
     "appointmentHeading": "Appointments",
     "appointmentSubHeading": "List of Appointments"
@@ -29,7 +29,7 @@
     "cardNumber": "4100 2800 0000 1007",
     "cardExpiry": "12/30",
     "cardCvv": "123",
-    "clientName": "Karal Marks",
+    "clientName": "Ananth Subramanian",
     "expectedTime": "4:30 PM",
     "expectedPayment": "Paid - ₹1000"
   },
@@ -45,37 +45,44 @@
     "columns": ["Client Name", "Date & Time", "Status", "Mode", "Payment"]
   },
   "TC_APT_004": {
-    "clientName": "Karal Marks"
+    "clientName": "Ananth Subramanian"
   },
   "TC_APT_005": {
     "slotTime": "3:00 PM",
     "endTime": "3:30 PM"
   },
   "TC_APT_006": {
+    "clientName":"Ananth Subramanian",
     "status": "Ongoing"
   },
   "TC_APT_007": {
+    "clientName":"Ananth Subramanian",
     "status": "Upcoming"
   },
   "TC_APT_008": {
+    "clientName":"Ananth Subramanian",
     "mode": "Online"
   },
   "TC_APT_009": {
+    "clientName":"Ananth Subramanian",
     "status": "Ongoing",
     "meetingLinkText": "Meeting Link"
   },
   "TC_APT_010": {
+    "clientName":"Ananth Subramanian",
     "status": "Upcoming",
     "meetingLinkText": "Meeting Link"
   },
   "TC_APT_011": {
+    "clientName":"Ananth Subramanian",
     "paymentText": "Paid"
   },
   "TC_APT_012": {
+    "clientName":"Ananth Subramanian",
     "paymentAmount": "1000"
   },
   "TC_APT_013": {
-    "searchName": "Karal Marks"
+    "searchName": "Ananth Subramanian"
   },
   "TC_APT_014": {
     "partialName": "Karal"
@@ -100,21 +107,21 @@
     "sortColumn": "Payment"
   },
   "TC_APT_022": {
-    "clientName": "Karal Marks"
+    "clientName": "Ananth Subramanian"
   },
   "TC_APT_023": {
-    "clientName": "Karal Marks",
+    "clientName": "Ananth Subramanian",
     "menuOption": "Appointment History"
   },
   "TC_APT_024": {
-    "clientName": "Karal Marks",
+    "clientName": "Ananth Subramanian",
     "menuOption": "Settlement History"
   },
   "TC_APT_025": {},
   "TC_APT_026": {},
   "TC_APT_027": {},
   "TC_APT_028": {
-    "clientName": "Karal Marks",
+    "clientName": "Ananth Subramanian",
     "slotTime": "3:00 PM",
     "status": "Ongoing",
     "paymentText": "Paid"
@@ -123,10 +130,10 @@
     "description": "Verify Appointment History page loads successfully"
   },
   "TC_APH_002": {
-    "clientName": "Karal Marks"
+    "clientName": "Ananth Subramanian"
   },
   "TC_APH_003": {
-    "clientName": "Karal Marks"
+    "clientName": "Ananth Subramanian"
   },
   "TC_APH_004": {
     "description": "Verify appointment numbers/titles display correctly"
@@ -157,7 +164,7 @@
     "description": "Verify back navigation returns to previous page"
   },
   "TC_APH_013": {
-    "clientName": "Karal Marks",
+    "clientName": "Ananth Subramanian",
     "slotTime": "3:00 PM",
     "paymentAmount": "1000"
   },
@@ -210,7 +217,7 @@
     "description": "Verify Settlement History page loads successfully"
   },
   "TC_SH_002": {
-    "expectedCount": "4"
+    "expectedCount": "5"
   },
   "TC_SH_003": {
     "totalPaid": "5,000"
@@ -231,7 +238,7 @@
     "columns": ["Client Name", "Appointment Date", "Amount Received", "Payment Method", "Payment Status"]
   },
   "TC_SH_009": {
-    "clientName": "Karal Marks"
+    "clientName": "Ananth Subramanian"
   },
   "TC_SH_010": {
     "date": "Today"
@@ -271,8 +278,8 @@
     "amount": "1000"
   },
   "TC_SH_023": {
-    "expectedTotal": "4,000",
-    "transactionCount": "4",
+    "expectedTotal": "3000",
+    "transactionCount": "3",
     "amountPerTxn": "1000"
   },
   "TC_SH_024": {

@@ -443,9 +443,9 @@ class MatterPage {
   }
 
   async fillDateOfFiling(date) {
-    // this.clickAdditionalDetails();
     if ((await this.dateOfFilingInput.count()) > 0) {
-      await this.dateOfFilingInput.fill(date);
+      const formattedDate = this.formatDateForInput(date);
+      await this.dateOfFilingInput.fill(formattedDate);
     }
   }
 
@@ -1722,6 +1722,171 @@ class MatterPage {
     await expect(this.documentExpirationDateInput).toHaveValue(expected, {
       timeout: 15000,
     });
+  }
+
+  // ── Scoped-by-filename document editing ──────────────────────────
+
+  // documentCardByName(fileName) {
+  //   return this.page
+  //     .locator('div:has(i[mattooltip="Edit metadata"])')
+  //     .filter({ hasText: fileName });
+  // }
+
+  // getDocumentEditors(fileName) {
+  //   const card = this.documentCardByName(fileName);
+  //   return {
+  //     card,
+  //     editButton: card
+  //       .locator('.document-header .doc-actions i[mattooltip="Edit metadata"]')
+  //       .first(),
+  //     nameInput: card.locator('input[formcontrolname="name"]'),
+  //     descriptionInput: card.locator('textarea[formcontrolname="description"]'),
+  //     expirationDateInput: card.locator(
+  //       'input[formcontrolname="date_of_filling"]',
+  //     ),
+  //     encryptionToggle: card.locator("span.toggle-switch").nth(0),
+  //     downloadToggle: card.locator("span.toggle-switch").nth(1),
+  //     addTagsButton: card.locator("button.add-tag-btn"),
+  //     tagTypeInputs: card.locator('input[placeholder="Tag type"]'),
+  //     tagInputs: card.locator('input[placeholder="Tags"]'),
+  //     saveButton: card.getByRole("button", { name: "Save", exact: true }),
+  //     cancelButton: card.getByRole("button", { name: "Cancel", exact: true }),
+  //   };
+  // }
+  documentCardByName(fileName) {
+    // .document-header only contains the header row (filename + icon).
+    // The form body (inputs, buttons, toggles) lives as siblings
+    // inside the parent wrapper. Select the parent so every scoped
+    // locator can reach both the header and the form fields.
+    return this.page
+      .locator(".document-header")
+      .filter({ hasText: fileName })
+      .locator("xpath=..");
+  }
+
+  getDocumentEditors(fileName) {
+    const card = this.documentCardByName(fileName);
+    return {
+      card,
+      // Remove .document-header from editButton since card is already scoped to it
+      editButton: card
+        .locator('.doc-actions i[mattooltip="Edit metadata"]')
+        .first(),
+      nameInput: card.locator('input[formcontrolname="name"]'),
+      descriptionInput: card.locator('textarea[formcontrolname="description"]'),
+      expirationDateInput: card.locator(
+        'input[formcontrolname="date_of_filling"]',
+      ),
+      encryptionToggle: card.locator("span.toggle-switch").nth(0),
+      downloadToggle: card.locator("span.toggle-switch").nth(1),
+      addTagsButton: card.locator("button.add-tag-btn"),
+      tagTypeInputs: card.locator('input[placeholder="Tag type"]'),
+      tagInputs: card.locator('input[placeholder="Tags"]'),
+      saveButton: card.getByRole("button", { name: "Save", exact: true }),
+      cancelButton: card.getByRole("button", { name: "Cancel", exact: true }),
+    };
+  }
+
+  async editDocumentMetadata(fileName, edits = {}) {
+    const doc = this.getDocumentEditors(fileName);
+
+    await doc.editButton.scrollIntoViewIfNeeded();
+    await expect(doc.editButton).toBeVisible({ timeout: 15000 });
+    await doc.editButton.click();
+    await expect(doc.nameInput).toBeVisible({ timeout: 15000 });
+    await expect(doc.descriptionInput).toBeVisible({ timeout: 15000 });
+    await expect(doc.expirationDateInput).toBeVisible({ timeout: 15000 });
+
+    if (edits.updatedDocumentName) {
+      await doc.nameInput.fill(edits.updatedDocumentName);
+      await expect(doc.nameInput).toHaveValue(edits.updatedDocumentName);
+    }
+
+    if (edits.updatedDescription) {
+      await doc.descriptionInput.fill(edits.updatedDescription);
+      await expect(doc.descriptionInput).toHaveValue(edits.updatedDescription);
+    }
+
+    if (edits.expirationDate) {
+      const formatted = this.formatDateForInput(edits.expirationDate);
+      await doc.expirationDateInput.click();
+      await doc.expirationDateInput.clear();
+      await doc.expirationDateInput.fill(formatted);
+      await doc.expirationDateInput.press("Enter");
+      await expect(doc.expirationDateInput).toHaveValue(formatted, {
+        timeout: 15000,
+      });
+    }
+
+    if (typeof edits.encryption === "boolean") {
+      const classes = await doc.encryptionToggle.getAttribute("class");
+      const isActive = classes?.includes("active");
+      if (edits.encryption !== isActive) await doc.encryptionToggle.click();
+      if (edits.encryption) {
+        await expect(doc.encryptionToggle).toHaveClass(/toggle-switch active/, {
+          timeout: 10000,
+        });
+      } else {
+        await expect(doc.encryptionToggle).not.toHaveClass(/active/, {
+          timeout: 10000,
+        });
+      }
+    }
+
+    if (typeof edits.download === "boolean") {
+      const classes = await doc.downloadToggle.getAttribute("class");
+      const isActive = classes?.includes("active");
+      if (edits.download !== isActive) await doc.downloadToggle.click();
+      if (edits.download) {
+        await expect(doc.downloadToggle).toHaveClass(/toggle-switch active/, {
+          timeout: 10000,
+        });
+      } else {
+        await expect(doc.downloadToggle).not.toHaveClass(/active/, {
+          timeout: 10000,
+        });
+      }
+    }
+
+    if (edits.tags?.length) {
+      for (let i = 0; i < edits.tags.length; i++) {
+        const tag = edits.tags[i];
+
+        // Reuse any pre-existing empty row first; only click "Add Tags"
+        // when no empty row remains. Prevents orphan blank rows that
+        // block Angular required-field validation.
+        let targetIndex = -1;
+        for (let j = 0; j < (await doc.tagTypeInputs.count()); j++) {
+          if (!(await doc.tagTypeInputs.nth(j).inputValue()).trim()) {
+            targetIndex = j;
+            break;
+          }
+        }
+        if (targetIndex === -1) {
+          await doc.addTagsButton.click();
+          targetIndex = (await doc.tagTypeInputs.count()) - 1;
+        }
+
+        const typeInput = doc.tagTypeInputs.nth(targetIndex);
+        const tagInput = doc.tagInputs.nth(targetIndex);
+        await expect(typeInput).toBeVisible({ timeout: 15000 });
+        await expect(tagInput).toBeVisible({ timeout: 15000 });
+        await typeInput.fill(tag);
+        await tagInput.fill(tag);
+        await expect(typeInput).toHaveValue(tag);
+        await expect(tagInput).toHaveValue(tag);
+      }
+    }
+
+    await doc.saveButton.scrollIntoViewIfNeeded();
+    await expect(doc.saveButton).toBeVisible();
+    await doc.saveButton.click();
+
+    if (edits.updatedDocumentName) {
+      await expect(this.page.getByText(edits.updatedDocumentName)).toBeVisible({
+        timeout: 30000,
+      });
+    }
   }
 
   // Final Save
