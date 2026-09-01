@@ -9,12 +9,12 @@
     "city": "Bengaluru",
     "specialization": "Arbitration & Mediation",
     "lawyerName": "AK & Partners",
-    "slotTime": "04:30 pm",
+    "slotTime": "10:30 am",
     "cardNumber": "4100 2800 0000 1007",
     "cardExpiry": "12/30",
     "cardCvv": "123",
     "clientName": "Ananth Subramanian",
-    "expectedTime": "Today • 04:30 PM to 05:00 PM",
+    "expectedTime": "Today • 10:30 PM to 11:00 A/M",
     "expectedPayment": "Paid - ₹1000",
     "appointmentHeading": "Appointments",
     "appointmentSubHeading": "List of Appointments"
@@ -33,7 +33,7 @@
     "expectedTime": "4:30 PM",
     "expectedPayment": "Paid - ₹1000"
   },
- 
+
   "TC_APT_001": {
     "description": "Verify Appointments page loads successfully"
   },
@@ -52,33 +52,33 @@
     "endTime": "3:30 PM"
   },
   "TC_APT_006": {
-    "clientName":"Ananth Subramanian",
+    "clientName": "Ananth Subramanian",
     "status": "Ongoing"
   },
   "TC_APT_007": {
-    "clientName":"Ananth Subramanian",
+    "clientName": "Ananth Subramanian",
     "status": "Upcoming"
   },
   "TC_APT_008": {
-    "clientName":"Ananth Subramanian",
+    "clientName": "Ananth Subramanian",
     "mode": "Online"
   },
   "TC_APT_009": {
-    "clientName":"Ananth Subramanian",
+    "clientName": "Ananth Subramanian",
     "status": "Ongoing",
     "meetingLinkText": "Meeting Link"
   },
   "TC_APT_010": {
-    "clientName":"Ananth Subramanian",
+    "clientName": "Ananth Subramanian",
     "status": "Upcoming",
     "meetingLinkText": "Meeting Link"
   },
   "TC_APT_011": {
-    "clientName":"Ananth Subramanian",
+    "clientName": "Ananth Subramanian",
     "paymentText": "Paid"
   },
   "TC_APT_012": {
-    "clientName":"Ananth Subramanian",
+    "clientName": "Ananth Subramanian",
     "paymentAmount": "1000"
   },
   "TC_APT_013": {
@@ -124,7 +124,8 @@
     "clientName": "Ananth Subramanian",
     "slotTime": "3:00 PM",
     "status": "Ongoing",
-    "paymentText": "Paid"
+    "paymentText": "Paid",
+    "date": "Today"
   },
   "TC_APH_001": {
     "description": "Verify Appointment History page loads successfully"
@@ -235,7 +236,13 @@
     "expectedCount": "6"
   },
   "TC_SH_008": {
-    "columns": ["Client Name", "Appointment Date", "Amount Received", "Payment Method", "Payment Status"]
+    "columns": [
+      "Client Name",
+      "Appointment Date",
+      "Amount Received",
+      "Payment Method",
+      "Payment Status"
+    ]
   },
   "TC_SH_009": {
     "clientName": "Ananth Subramanian"

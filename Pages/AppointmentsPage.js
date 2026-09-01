@@ -724,6 +724,37 @@ class AppointmentsPage extends BasePage {
     await expect(this.page).toHaveTitle(expectedTitle);
   }
 
+  async assertAppointmentsTitle() {
+    const title = this.pageTitle.first();
+    await expect(title).toBeVisible({ timeout: 15000 });
+    await expect(title).toContainText(/appointment/i);
+  }
+
+  slotTimeRegex(time) {
+    const [, h, min, mer] =
+      String(time)
+        .trim()
+        .match(/(\d{1,2}):(\d{2})\s*([AaPp][Mm])?/) ?? [];
+    if (!h)
+      return new RegExp(
+        String(time).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+        "i",
+      );
+    const meridian = mer ? `(?:\\s*${mer.toUpperCase()})?` : "";
+    return new RegExp(`\\b0?${Number(h)}:${min}${meridian}\\b`, "i");
+  }
+
+  async verifyAppointmentOnLawyerSide(clientName, slotTime) {
+    const row = this.appointmentRow(clientName).first();
+
+    await expect(
+      row,
+      `Appointment for "${clientName}" not listed on lawyer dashboard`,
+    ).toBeVisible({ timeout: 30000 });
+
+    await expect(row).toContainText(this.slotTimeRegex(slotTime));
+  }
+
   //  EXISTING: Lawyer-side appointment detail verification
 
   async openAppointmentByName(clientName) {

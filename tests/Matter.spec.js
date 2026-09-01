@@ -1574,7 +1574,7 @@ test("TC-93 - Create Legal Matter with All Fields, Additional Details, Multiple 
   }
 });
 
-test("TC-93A - Create Legal Matter with All Fields, Additional Details, Multiple Clients, Documents, Tags, and Complete Metadata", async () => {
+test.only("TC-93A - Create Legal Matter with All Fields, Additional Details, Multiple Clients, Documents, Tags, and Complete Metadata", async () => {
   const data = matterData1.TC93A_CompleteMatterCreationMultiDocument_Edit;
 
   await expect(matterPage.caseTitleInput).toBeVisible();
