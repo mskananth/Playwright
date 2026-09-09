@@ -1,20 +1,20 @@
 {
   "lawyerLogin": {
-    "email": "agile.ananth@gmail.com",
+    "email": "msk.ananthakumar@gmail.com",
     "password": "Test@123"
   },
   "TC_APPT_001_SearchAndBookAppointment": {
-    "email": "kosero5632@copawoke.com",
-    "password": "Test@321",
+    "email": "lexizananth@yahoo.com",
+    "password": "Test@123",
     "city": "Bengaluru",
-    "specialization": "Arbitration & Mediation",
-    "lawyerName": "AK & Partners",
-    "slotTime": "10:30 am",
+    "specialization": "Civil Law",
+    "lawyerName": "Test Production Account",
+    "slotTime": "12:30 pm",
     "cardNumber": "4100 2800 0000 1007",
     "cardExpiry": "12/30",
     "cardCvv": "123",
     "clientName": "Ananth Subramanian",
-    "expectedTime": "Today • 10:30 PM to 11:00 A/M",
+    "expectedTime": "Today • 12:30 PM to 01:00 PM",
     "expectedPayment": "Paid - ₹1000",
     "appointmentHeading": "Appointments",
     "appointmentSubHeading": "List of Appointments"

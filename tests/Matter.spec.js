@@ -26,7 +26,7 @@ test.beforeAll(async ({ browser }) => {
     defaultLogin.password || process.env.PASSWORD,
   );
 
-  await loginPage.assertTitle("Lexi-Z Lawyers");
+  await loginPage.assertTitle("Lex-Z Lawyers");
   matterPage = new MatterPage(page);
   await matterPage.openMatterCreation();
 });

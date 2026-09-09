@@ -26,7 +26,7 @@ test.beforeAll(async ({ browser }) => {
     defaultLogin.password || process.env.PASSWORD,
   );
 
-  await loginPage.assertTitle("Lexi-Z Lawyers");
+  await loginPage.assertTitle("Lex-Z Lawyers");
   appointmentsPage = new AppointmentsPage(page);
   await appointmentsPage.openAppointments();
 });
@@ -678,7 +678,7 @@ test.describe("Settlement History", () => {
     await appointmentsPage.verifySettlementAmount(data.amount);
   });
 
-  test.only("TC-SH-023. Verify total calculation", async () => {
+  test("TC-SH-023. Verify total calculation", async () => {
     const data = settlementHistoryData.TC_SH_023;
     await appointmentsPage.verifyTotalPaid(data.expectedTotal);
     await appointmentsPage.verifyTotalTransactions(data.transactionCount);
