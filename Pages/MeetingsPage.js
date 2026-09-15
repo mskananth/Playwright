@@ -172,30 +172,47 @@ class MeetingPage extends BasePage {
 
   async goToMeeting() {
     await this.sideMenuMeeting.waitFor({ state: "visible", timeout: 20000 });
-    
+
     for (let attempt = 0; attempt < 3; attempt++) {
-      const modalVisible = await this.page.locator(".modal").isVisible().catch(() => false);
-      const ngbVisible = await this.page.locator("ngb-modal-window").isVisible().catch(() => false);
-      const overlayVisible = await this.eventOverlay.isVisible().catch(() => false);
-      
+      const modalVisible = await this.page
+        .locator(".modal")
+        .isVisible()
+        .catch(() => false);
+      const ngbVisible = await this.page
+        .locator("ngb-modal-window")
+        .isVisible()
+        .catch(() => false);
+      const overlayVisible = await this.eventOverlay
+        .isVisible()
+        .catch(() => false);
+
       if (!modalVisible && !ngbVisible && !overlayVisible) break;
-      
+
       await this.page.keyboard.press("Escape");
       await this.page.waitForTimeout(1000);
     }
-    
-    const stillBlocked = await this.page.locator(".modal").isVisible().catch(() => false)
-      || await this.page.locator("ngb-modal-window").isVisible().catch(() => false);
-    
+
+    const stillBlocked =
+      (await this.page
+        .locator(".modal")
+        .isVisible()
+        .catch(() => false)) ||
+      (await this.page
+        .locator("ngb-modal-window")
+        .isVisible()
+        .catch(() => false));
+
     if (stillBlocked) {
       await this.page.evaluate(() => {
-        document.querySelectorAll('.modal, ngb-modal-window, .modal-backdrop').forEach(el => el.remove());
-        document.body.classList.remove('modal-open');
-        document.body.style.overflow = '';
+        document
+          .querySelectorAll(".modal, ngb-modal-window, .modal-backdrop")
+          .forEach((el) => el.remove());
+        document.body.classList.remove("modal-open");
+        document.body.style.overflow = "";
       });
       await this.page.waitForTimeout(500);
     }
-    
+
     await this.sideMenuMeeting.click();
     await this.page.waitForLoadState("networkidle");
     if ((await this.eventOverlay.count()) > 0) {
@@ -266,7 +283,10 @@ class MeetingPage extends BasePage {
   }
 
   async selectSubjectTask(subjectTask) {
-    await this.subjectTaskDropdown.waitFor({ state: "visible", timeout: 10000 });
+    await this.subjectTaskDropdown.waitFor({
+      state: "visible",
+      timeout: 10000,
+    });
     await this.page.waitForFunction(
       (sel) => sel.options.length > 1,
       await this.subjectTaskDropdown.elementHandle(),
@@ -323,11 +343,9 @@ class MeetingPage extends BasePage {
     await this.startTime.waitFor({ state: "visible", timeout: 10000 });
     const el = await this.startTime.elementHandle();
     await this.page
-      .waitForFunction(
-        (sel) => sel.options && sel.options.length > 1,
-        el,
-        { timeout: 10000 },
-      )
+      .waitForFunction((sel) => sel.options && sel.options.length > 1, el, {
+        timeout: 10000,
+      })
       .catch(() => {});
     const label = await this.startTime.evaluate((el, value) => {
       const lower = value.toLowerCase();
@@ -348,11 +366,9 @@ class MeetingPage extends BasePage {
     await this.endTime.waitFor({ state: "visible", timeout: 10000 });
     const el = await this.endTime.elementHandle();
     await this.page
-      .waitForFunction(
-        (sel) => sel.options && sel.options.length > 1,
-        el,
-        { timeout: 10000 },
-      )
+      .waitForFunction((sel) => sel.options && sel.options.length > 1, el, {
+        timeout: 10000,
+      })
       .catch(() => {});
     const label = await this.endTime.evaluate((el, value) => {
       const lower = value.toLowerCase();
@@ -396,8 +412,18 @@ class MeetingPage extends BasePage {
   async selectDate(dateSelection) {
     await expect(this.dateInput).toBeVisible();
     const months = [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
     ];
     const monthIndex = months.indexOf(dateSelection.month);
     if (monthIndex === -1) {
@@ -409,19 +435,35 @@ class MeetingPage extends BasePage {
     const datePicker = this.page.locator(".bs-datepicker");
     if ((await datePicker.count()) > 0 && (await datePicker.isVisible())) {
       const monthNames = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
       ];
       const fullMonth = monthNames[monthIndex];
 
       const yearBtn = datePicker.locator("button.current").last();
       if ((await yearBtn.count()) > 0) {
         const btnText = (await yearBtn.textContent()) || "";
-        const displayedYear = parseInt(btnText.replace(/\u200B/g, "").trim(), 10);
+        const displayedYear = parseInt(
+          btnText.replace(/\u200B/g, "").trim(),
+          10,
+        );
         if (displayedYear !== dateSelection.year) {
           await yearBtn.click();
           await this.page.waitForTimeout(500);
-          const yearOpt = datePicker.locator("td span, button").filter({ hasText: String(dateSelection.year) }).first();
+          const yearOpt = datePicker
+            .locator("td span, button")
+            .filter({ hasText: String(dateSelection.year) })
+            .first();
           if ((await yearOpt.count()) > 0) {
             await yearOpt.click();
             await this.page.waitForTimeout(500);
@@ -433,7 +475,10 @@ class MeetingPage extends BasePage {
       const tableClass = (await monthTable.getAttribute("class")) || "";
 
       if (tableClass.includes("months")) {
-        const monthCell = datePicker.locator("td span").filter({ hasText: fullMonth }).first();
+        const monthCell = datePicker
+          .locator("td span")
+          .filter({ hasText: fullMonth })
+          .first();
         if ((await monthCell.count()) > 0) {
           await monthCell.click();
           await this.page.waitForTimeout(500);
@@ -442,7 +487,10 @@ class MeetingPage extends BasePage {
 
       const daysTable = datePicker.locator("table.days");
       if ((await daysTable.count()) > 0) {
-        const dayCell = daysTable.locator("td span:not(.is-other-month):not(.is-disabled)").filter({ hasText: new RegExp(`^${dateSelection.day}$`) }).first();
+        const dayCell = daysTable
+          .locator("td span:not(.is-other-month):not(.is-disabled)")
+          .filter({ hasText: new RegExp(`^${dateSelection.day}$`) })
+          .first();
         if ((await dayCell.count()) > 0) {
           await dayCell.click();
           await this.page.waitForTimeout(300);
@@ -903,23 +951,32 @@ class MeetingPage extends BasePage {
     await this.navigateToEventDate(dateSelection);
     await this.page.waitForTimeout(2000);
 
-    let event = this.page.locator(".cal-event-title").filter({
-      hasText: `${startTime} - ${matter} - ${subjectTask}`,
-    }).first();
+    let event = this.page
+      .locator(".cal-event-title")
+      .filter({
+        hasText: `${startTime} - ${matter} - ${subjectTask}`,
+      })
+      .first();
 
-    if (await event.count() === 0) {
-      event = this.page.locator(".cal-event-title").filter({
-        hasText: subjectTask,
-      }).first();
+    if ((await event.count()) === 0) {
+      event = this.page
+        .locator(".cal-event-title")
+        .filter({
+          hasText: subjectTask,
+        })
+        .first();
     }
 
-    if (await event.count() === 0) {
-      event = this.page.locator(".cal-event-title").filter({
-        hasText: matter,
-      }).first();
+    if ((await event.count()) === 0) {
+      event = this.page
+        .locator(".cal-event-title")
+        .filter({
+          hasText: matter,
+        })
+        .first();
     }
 
-    if (await event.count() === 0) {
+    if ((await event.count()) === 0) {
       const allEvents = this.page.locator(".cal-event-title");
       const eventCount = await allEvents.count();
       if (eventCount > 0) {
@@ -937,7 +994,7 @@ class MeetingPage extends BasePage {
   async clickCalendarEvent(eventText) {
     const event = this.calendarEvent.filter({ hasText: eventText }).first();
     const count = await event.count();
-    
+
     if (count === 0) {
       const anyEvent = this.calendarEvent.first();
       const anyCount = await anyEvent.count();
@@ -948,14 +1005,14 @@ class MeetingPage extends BasePage {
       await expect(event).toBeVisible({ timeout: 10000 });
       await event.click({ force: true });
     }
-    
+
     await this.page.waitForTimeout(2000);
     await this.page.waitForLoadState("networkidle");
-    
+
     const heading = this.page.locator("h2.evt-title, .evt-popover h2").first();
     const overlay = this.page.locator("app-viewevent, .evt-overlay").first();
     const viewBtn = this.page.getByRole("button", { name: /view/i }).first();
-    
+
     let headingFound = false;
     try {
       await expect(heading).toBeVisible({ timeout: 10000 });
@@ -963,14 +1020,17 @@ class MeetingPage extends BasePage {
     } catch (e) {
       // Heading not found
     }
-    
-    if ((await viewBtn.count()) > 0 && (await viewBtn.isVisible().catch(() => false))) {
+
+    if (
+      (await viewBtn.count()) > 0 &&
+      (await viewBtn.isVisible().catch(() => false))
+    ) {
       await viewBtn.click();
       await this.page.waitForTimeout(2000);
       await this.page.waitForLoadState("networkidle");
       return;
     }
-    
+
     if (!headingFound) {
       try {
         await expect(overlay).toBeVisible({ timeout: 15000 });
@@ -978,8 +1038,11 @@ class MeetingPage extends BasePage {
         await expect(overlayReady).toBeVisible({ timeout: 10000 });
       } catch (e) {
         // Retry clicking the event
-        const calEvent = this.page.locator(".cal-event-title").filter({ hasText: eventText }).first();
-        if (await calEvent.count() > 0) {
+        const calEvent = this.page
+          .locator(".cal-event-title")
+          .filter({ hasText: eventText })
+          .first();
+        if ((await calEvent.count()) > 0) {
           await calEvent.click({ force: true });
           await this.page.waitForTimeout(3000);
           await this.page.waitForLoadState("networkidle");
@@ -991,21 +1054,25 @@ class MeetingPage extends BasePage {
   async navigateToDateAndClickEvent(dateSelection, eventText) {
     await this.navigateToEventDate(dateSelection);
     await this.page.waitForTimeout(2000);
-    
+
     // Click on any visible event in the calendar
-    const events = this.page.locator(".cal-event-container, mwl-calendar-month-view .cal-event");
+    const events = this.page.locator(
+      ".cal-event-container, mwl-calendar-month-view .cal-event",
+    );
     const eventCount = await events.count();
-    
+
     if (eventCount > 0) {
       await events.first().click({ force: true });
     } else {
       // Fallback: click on the calendar day cell
-      const dayCell = this.page.locator(".cal-day-cell:not(.cal-out-month)").first();
-      if (await dayCell.count() > 0) {
+      const dayCell = this.page
+        .locator(".cal-day-cell:not(.cal-out-month)")
+        .first();
+      if ((await dayCell.count()) > 0) {
         await dayCell.click();
       }
     }
-    
+
     await this.page.waitForTimeout(3000);
     await this.page.waitForLoadState("networkidle");
   }
@@ -1274,13 +1341,17 @@ class MeetingPage extends BasePage {
 
     const spinner = this.page.locator("ngx-spinner, .ngx-spinner-overlay");
     if ((await spinner.count()) > 0) {
-      await this.page.waitForFunction(
-        () => {
-          const el = document.querySelector("ngx-spinner");
-          return !el || el.style.display === "none" || el.children.length === 0;
-        },
-        { timeout: 15000 },
-      ).catch(() => {});
+      await this.page
+        .waitForFunction(
+          () => {
+            const el = document.querySelector("ngx-spinner");
+            return (
+              !el || el.style.display === "none" || el.children.length === 0
+            );
+          },
+          { timeout: 15000 },
+        )
+        .catch(() => {});
     }
 
     const overlay = this.page.locator("app-viewevent, .evt-overlay").first();
@@ -1292,10 +1363,17 @@ class MeetingPage extends BasePage {
       "button[title='Edit'], button[mattooltip='Edit']",
     );
 
-    if (!(await editBtn.first().isVisible({ timeout: 5000 }).catch(() => false))) {
-      const fallbackBtn = this.page.locator("app-viewevent").getByRole("button", {
-        name: /edit/i,
-      });
+    if (
+      !(await editBtn
+        .first()
+        .isVisible({ timeout: 5000 })
+        .catch(() => false))
+    ) {
+      const fallbackBtn = this.page
+        .locator("app-viewevent")
+        .getByRole("button", {
+          name: /edit/i,
+        });
       if ((await fallbackBtn.count()) > 0) {
         await expect(fallbackBtn.first()).toBeVisible({ timeout: 10000 });
         await fallbackBtn.first().click();
@@ -1320,13 +1398,17 @@ class MeetingPage extends BasePage {
 
     const spinner = this.page.locator("ngx-spinner, .ngx-spinner-overlay");
     if ((await spinner.count()) > 0) {
-      await this.page.waitForFunction(
-        () => {
-          const el = document.querySelector("ngx-spinner");
-          return !el || el.style.display === "none" || el.children.length === 0;
-        },
-        { timeout: 15000 },
-      ).catch(() => {});
+      await this.page
+        .waitForFunction(
+          () => {
+            const el = document.querySelector("ngx-spinner");
+            return (
+              !el || el.style.display === "none" || el.children.length === 0
+            );
+          },
+          { timeout: 15000 },
+        )
+        .catch(() => {});
     }
 
     const overlay = this.page.locator("app-viewevent, .evt-overlay").first();
@@ -1338,10 +1420,18 @@ class MeetingPage extends BasePage {
       "button[title='Delete'], button[mattooltip='Delete'], .evt-overlay button[title='Delete'], app-viewevent button[title='Delete'], app-viewevent button[mattooltip='Delete']",
     );
 
-    if (!(await deleteBtn.first().isVisible({ timeout: 5000 }).catch(() => false))) {
-      const fallbackBtn = this.page.locator("app-viewevent, .evt-overlay").first().getByRole("button", {
-        name: /delete/i,
-      });
+    if (
+      !(await deleteBtn
+        .first()
+        .isVisible({ timeout: 5000 })
+        .catch(() => false))
+    ) {
+      const fallbackBtn = this.page
+        .locator("app-viewevent, .evt-overlay")
+        .first()
+        .getByRole("button", {
+          name: /delete/i,
+        });
       if ((await fallbackBtn.count()) > 0) {
         await expect(fallbackBtn.first()).toBeVisible({ timeout: 10000 });
         await fallbackBtn.first().click();
@@ -1365,28 +1455,53 @@ class MeetingPage extends BasePage {
     const timesheetBtn = this.page.getByRole("button", {
       name: /update both|update event only|event only/i,
     });
-    if ((await timesheetBtn.count()) > 0 && (await timesheetBtn.first().isVisible().catch(() => false))) {
+    if (
+      (await timesheetBtn.count()) > 0 &&
+      (await timesheetBtn
+        .first()
+        .isVisible()
+        .catch(() => false))
+    ) {
       await timesheetBtn.first().click();
       await this.page.waitForTimeout(1000);
     }
 
     for (let i = 0; i < 3; i++) {
-      const modalVisible = await this.page.locator(".modal").isVisible().catch(() => false);
-      const ngbVisible = await this.page.locator("ngb-modal-window").isVisible().catch(() => false);
-      const overlayVisible = await this.eventOverlay.isVisible().catch(() => false);
+      const modalVisible = await this.page
+        .locator(".modal")
+        .isVisible()
+        .catch(() => false);
+      const ngbVisible = await this.page
+        .locator("ngb-modal-window")
+        .isVisible()
+        .catch(() => false);
+      const overlayVisible = await this.eventOverlay
+        .isVisible()
+        .catch(() => false);
       if (!modalVisible && !ngbVisible && !overlayVisible) break;
       await this.page.keyboard.press("Escape");
       await this.page.waitForTimeout(1000);
     }
 
-    const stillBlocked = await this.page.locator(".modal").isVisible().catch(() => false)
-      || await this.page.locator("ngb-modal-window").isVisible().catch(() => false)
-      || await this.eventOverlay.isVisible().catch(() => false);
+    const stillBlocked =
+      (await this.page
+        .locator(".modal")
+        .isVisible()
+        .catch(() => false)) ||
+      (await this.page
+        .locator("ngb-modal-window")
+        .isVisible()
+        .catch(() => false)) ||
+      (await this.eventOverlay.isVisible().catch(() => false));
     if (stillBlocked) {
       await this.page.evaluate(() => {
-        document.querySelectorAll('.modal, .modal-backdrop, ngb-modal-window, app-viewevent, .evt-overlay').forEach(el => el.remove());
-        document.body.classList.remove('modal-open');
-        document.body.style.overflow = '';
+        document
+          .querySelectorAll(
+            ".modal, .modal-backdrop, ngb-modal-window, app-viewevent, .evt-overlay",
+          )
+          .forEach((el) => el.remove());
+        document.body.classList.remove("modal-open");
+        document.body.style.overflow = "";
       });
       await this.page.waitForTimeout(500);
     }
@@ -1407,25 +1522,74 @@ class MeetingPage extends BasePage {
     await this.updateEventButton.scrollIntoViewIfNeeded();
     await this.updateEventButton.click();
 
+    await this.page.waitForTimeout(1500);
+
+    const recurringDialog = this.page.locator(
+      "h4:has-text('Edit recurring event'), .modal-header:has-text('recurring')",
+    );
+    if (
+      (await recurringDialog.count()) > 0 &&
+      (await recurringDialog.first().isVisible().catch(() => false))
+    ) {
+      const radios = this.page.locator(
+        ".modal input[type='radio'], ngb-modal-window input[type='radio'], .modal-body input[type='radio']",
+      );
+      const radioCount = await radios.count();
+
+      if (radioCount > 0) {
+        await radios.first().check({ force: true });
+      } else {
+        const labels = this.page.locator(
+          ".modal label, ngb-modal-window label, .modal-body label",
+        );
+        const labelCount = await labels.count();
+        for (let i = 0; i < labelCount; i++) {
+          const text = (await labels.nth(i).textContent()) || "";
+          if (text.includes("This and Following")) {
+            await labels.nth(i).click();
+            break;
+          }
+        }
+      }
+
+      const okBtn = this.page.getByRole("button", { name: "OK" });
+      await expect(okBtn).toBeVisible({ timeout: 5000 });
+      await okBtn.click();
+      await this.page.waitForTimeout(1500);
+      return;
+    }
+
     const confirmBtn = this.page.getByRole("button", {
       name: /update both|event only/i,
     });
-    await expect(confirmBtn.first()).toBeVisible({ timeout: 10000 });
-    await confirmBtn.first().click();
+    if (
+      (await confirmBtn.count()) > 0 &&
+      (await confirmBtn.first().isVisible().catch(() => false))
+    ) {
+      await confirmBtn.first().click();
+    }
 
     for (let i = 0; i < 3; i++) {
-      const modalVisible = await this.page.locator(".modal").isVisible().catch(() => false);
+      const modalVisible = await this.page
+        .locator(".modal")
+        .isVisible()
+        .catch(() => false);
       if (!modalVisible) break;
       await this.page.keyboard.press("Escape");
       await this.page.waitForTimeout(1000);
     }
 
-    const stillBlocked = await this.page.locator(".modal").isVisible().catch(() => false);
+    const stillBlocked = await this.page
+      .locator(".modal")
+      .isVisible()
+      .catch(() => false);
     if (stillBlocked) {
       await this.page.evaluate(() => {
-        document.querySelectorAll('.modal, .modal-backdrop, ngb-modal-window').forEach(el => el.remove());
-        document.body.classList.remove('modal-open');
-        document.body.style.overflow = '';
+        document
+          .querySelectorAll(".modal, .modal-backdrop, ngb-modal-window")
+          .forEach((el) => el.remove());
+        document.body.classList.remove("modal-open");
+        document.body.style.overflow = "";
       });
       await this.page.waitForTimeout(500);
     }
@@ -1440,7 +1604,9 @@ class MeetingPage extends BasePage {
       .locator(".selected-tag")
       .filter({ hasText: clientName })
       .first();
-    const closeButton = selectedTag.locator(".close, [class*='remove'], [class*='delete']");
+    const closeButton = selectedTag.locator(
+      ".close, [class*='remove'], [class*='delete']",
+    );
     if ((await closeButton.count()) > 0) {
       await closeButton.first().click();
       await this.page.waitForTimeout(500);
@@ -1565,10 +1731,16 @@ class MeetingPage extends BasePage {
         .getByRole("button", { name: /delete/i });
 
       const hasDeleteBtn =
-        (await deleteBtn.count() > 0 &&
-          (await deleteBtn.first().isVisible().catch(() => false))) ||
-        (await fallbackBtn.count() > 0 &&
-          (await fallbackBtn.first().isVisible().catch(() => false)));
+        ((await deleteBtn.count()) > 0 &&
+          (await deleteBtn
+            .first()
+            .isVisible()
+            .catch(() => false))) ||
+        ((await fallbackBtn.count()) > 0 &&
+          (await fallbackBtn
+            .first()
+            .isVisible()
+            .catch(() => false)));
 
       if (hasDeleteBtn) {
         await this.clickDeleteButton();
@@ -1594,6 +1766,108 @@ class MeetingPage extends BasePage {
     }
 
     return deletedCount;
+  }
+
+  // =====================================================
+  //  Verify Repetition Type
+  // =====================================================
+
+  async verifyEventRepetitionType(dateSelection, subjectTask, repetitionType) {
+    await this.navigateToEventDate(dateSelection);
+    await this.page.waitForTimeout(2000);
+
+    const event = this.page
+      .locator(".cal-event-title")
+      .filter({ hasText: subjectTask })
+      .first();
+
+    if ((await event.count()) > 0) {
+      await event.click({ force: true });
+      await this.page.waitForTimeout(2000);
+
+      const repetitionBadge = this.page
+        .locator(
+          ".cal-event-title, .event-repetition, .repetition-badge, [class*='repeat']",
+        )
+        .filter({ hasText: new RegExp(repetitionType, "i") })
+        .first();
+
+      const eventContainer = this.page
+        .locator("app-viewevent, .evt-overlay, .modal")
+        .first();
+
+      let repetitionFound = false;
+
+      if (
+        (await repetitionBadge.count()) > 0 &&
+        (await repetitionBadge.isVisible().catch(() => false))
+      ) {
+        repetitionFound = true;
+      }
+
+      if (!repetitionFound) {
+        const allText = await eventContainer.textContent().catch(() => "");
+        if (allText.toLowerCase().includes(repetitionType.toLowerCase())) {
+          repetitionFound = true;
+        }
+      }
+
+      if (!repetitionFound) {
+        const eventTitle = this.page
+          .locator("h2.evt-title, .evt-popover h2, .modal-title")
+          .first();
+        if ((await eventTitle.count()) > 0) {
+          const titleText = await eventTitle.textContent().catch(() => "");
+          if (titleText.toLowerCase().includes(repetitionType.toLowerCase())) {
+            repetitionFound = true;
+          }
+        }
+      }
+
+      await this.page.keyboard.press("Escape");
+      await this.page.waitForTimeout(1000);
+
+      return repetitionFound;
+    }
+
+    return false;
+  }
+
+  async verifyRepetitionIconOnCalendar(
+    dateSelection,
+    subjectTask,
+    repetitionType,
+  ) {
+    await this.navigateToEventDate(dateSelection);
+    await this.page.waitForTimeout(2000);
+
+    const event = this.page
+      .locator(".cal-event-title")
+      .filter({ hasText: subjectTask })
+      .first();
+
+    if ((await event.count()) > 0) {
+      const eventParent = event.locator("..").first();
+      const repetitionIcon = eventParent
+        .locator(
+          "[class*='repeat'], [title*='repeat'], [class*='recurring'], img[alt*='repeat']",
+        )
+        .first();
+
+      if ((await repetitionIcon.count()) > 0) {
+        return true;
+      }
+
+      const eventHtml = await eventParent.innerHTML().catch(() => "");
+      const repeatIcons = ["repeat", "recurring", "recurrence", "cycle"];
+      for (const icon of repeatIcons) {
+        if (eventHtml.toLowerCase().includes(icon)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 }
 

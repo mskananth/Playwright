@@ -2863,3 +2863,1569 @@ test.describe("Delete Duplicate Events", () => {
     expect(remainingDuplicates.length).toBe(0);
   });
 });
+
+//  SECTION 43: Subject/Task & Repetition Combinations (TC-MTG-REP-001 → 025)
+
+test.describe("Subject/Task & Repetition Combinations - Case filling", () => {
+  test("TC-MTG-REP-001. Case filling + Daily repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_001;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-002. Case filling + Weekly repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_002;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-003. Case filling + Bi-Weekly repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_003;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-004. Case filling + Monthly repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_004;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-005. Case filling + Yearly repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_005;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+});
+
+test.describe("Subject/Task & Repetition Combinations - Creating legal briefs", () => {
+  test("TC-MTG-REP-006. Creating legal briefs + Daily repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_006;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-007. Creating legal briefs + Weekly repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_007;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-008. Creating legal briefs + Bi-Weekly repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_008;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-009. Creating legal briefs + Monthly repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_009;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-010. Creating legal briefs + Yearly repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_010;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+});
+
+test.describe("Subject/Task & Repetition Combinations - Consultation", () => {
+  test("TC-MTG-REP-011. Consultation + Daily repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_011;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-012. Consultation + Weekly repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_012;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-013. Consultation + Bi-Weekly repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_013;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-014. Consultation + Monthly repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_014;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-015. Consultation + Yearly repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_015;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+});
+
+test.describe("Subject/Task & Repetition Combinations - Meeting with client", () => {
+  test("TC-MTG-REP-016. Meeting with client + Daily repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_016;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-017. Meeting with client + Weekly repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_017;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-018. Meeting with client + Bi-Weekly repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_018;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-019. Meeting with client + Monthly repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_019;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-020. Meeting with client + Yearly repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_020;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+});
+
+test.describe("Subject/Task & Repetition Combinations - Hearing", () => {
+  test("TC-MTG-REP-021. Hearing + Daily repetition", async ({ browser }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_021;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-022. Hearing + Weekly repetition", async ({ browser }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_022;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-023. Hearing + Bi-Weekly repetition", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_023;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-024. Hearing + Monthly repetition", async ({ browser }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_024;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-REP-025. Hearing + Yearly repetition", async ({ browser }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_REP_025;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.repetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.repetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+});
+
+//  SECTION 44: Edit Meeting Repetition Change (TC-MTG-EDIT-REP-001 → 020)
+
+test.describe("Edit Meeting - Repetition Change Daily to Others", () => {
+  test("TC-MTG-EDIT-REP-001. Change repetition from Daily to Weekly", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_001;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-EDIT-REP-002. Change repetition from Daily to Bi-Weekly", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_002;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-EDIT-REP-003. Change repetition from Daily to Monthly", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_003;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-EDIT-REP-004. Change repetition from Daily to Yearly", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_004;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+});
+
+test.describe("Edit Meeting - Repetition Change Weekly to Others", () => {
+  test("TC-MTG-EDIT-REP-005. Change repetition from Weekly to Daily", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_005;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-EDIT-REP-006. Change repetition from Weekly to Bi-Weekly", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_006;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-EDIT-REP-007. Change repetition from Weekly to Monthly", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_007;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-EDIT-REP-008. Change repetition from Weekly to Yearly", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_008;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+});
+
+test.describe("Edit Meeting - Repetition Change Bi-Weekly to Others", () => {
+  test("TC-MTG-EDIT-REP-009. Change repetition from Bi-Weekly to Daily", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_009;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-EDIT-REP-010. Change repetition from Bi-Weekly to Weekly", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_010;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-EDIT-REP-011. Change repetition from Bi-Weekly to Monthly", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_011;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-EDIT-REP-012. Change repetition from Bi-Weekly to Yearly", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_012;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+});
+
+test.describe("Edit Meeting - Repetition Change Monthly to Others", () => {
+  test("TC-MTG-EDIT-REP-013. Change repetition from Monthly to Daily", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_013;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-EDIT-REP-014. Change repetition from Monthly to Weekly", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_014;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-EDIT-REP-015. Change repetition from Monthly to Bi-Weekly", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_015;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-EDIT-REP-016. Change repetition from Monthly to Yearly", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_016;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+});
+
+test.describe("Edit Meeting - Repetition Change Yearly to Others", () => {
+  test("TC-MTG-EDIT-REP-017. Change repetition from Yearly to Daily", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_017;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-EDIT-REP-018. Change repetition from Yearly to Weekly", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_018;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test("TC-MTG-EDIT-REP-019. Change repetition from Yearly to Bi-Weekly", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_019;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+
+  test.only("TC-MTG-EDIT-REP-020. Change repetition from Yearly to Monthly", async ({
+    browser,
+  }) => {
+    await ensureLoggedIn(browser);
+    const data = meetingsData.TC_MTG_EDIT_REP_020;
+    await meetingPage.createButtonClick();
+    await meetingPage.selectEventType(data.eventType);
+    await meetingPage.selectMatterName(data.matterName);
+    await meetingPage.selectSubjectTask(data.subjectTask);
+    await meetingPage.selectTimeZone(data.timeZone);
+    await meetingPage.selectDate(data.dateSelection);
+    await meetingPage.selectStartTime(data.startTime);
+    await meetingPage.selectEndTime(data.endTime);
+    await meetingPage.selectRepetition(data.initialRepetition);
+    await meetingPage.scrollToAttendees();
+    await meetingPage.selectEntity(data.entityName);
+    await meetingPage.addClient(data.clientName);
+    await meetingPage.verifyClientAdded(data.clientName);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickSaveEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const eventText = `${data.startTime} - ${data.matterName} - ${data.subjectTask}`;
+    await meetingPage.navigateToEventDate(data.dateSelection);
+    await meetingPage.page.waitForTimeout(1000);
+    await meetingPage.clickCalendarEvent(eventText);
+    await meetingPage.clickEditButton();
+    await meetingPage.selectRepetition(data.newRepetition);
+    await meetingPage.scrollToSaveButton();
+    await meetingPage.clickUpdateEvent();
+    await meetingPage.verifyEventSavedSuccessfully();
+
+    const repetitionVerified = await meetingPage.verifyEventRepetitionType(
+      data.dateSelection,
+      data.subjectTask,
+      data.newRepetition,
+    );
+    expect(repetitionVerified).toBeTruthy();
+  });
+});
