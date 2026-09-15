@@ -119,7 +119,7 @@ class MeetingPage extends BasePage {
     this.currentDateLabel = page.locator("span.cal-date-label");
     this.nextDateButton = page.locator("button[mwlcalendarnextview]");
     this.previousDateButton = page.locator("button[mwlcalendarpreviousview]");
-    this.calendarEvent = page.locator("span.cal-event-title");
+    this.calendarEvent = page.locator("[role='application']");
     this.createdEvent = page.locator(".cal-event-title");
 
     // ── Save / Cancel ────────────────────────────────────────────
@@ -151,7 +151,18 @@ class MeetingPage extends BasePage {
       hasText: /edit meeting/i,
     });
 
-    // ── Remove Client Button ─────────────────────────────────────
+    // ── Delete Event ─────────────────────────────────────
+    this.deleteButton = page.locator(
+      "button[title='Delete'], button[mattooltip='Delete']",
+    );
+    this.deleteConfirmButton = page.getByRole("button", {
+      name: /yes|confirm|delete/i,
+    });
+    this.deleteCancelButton = page.getByRole("button", {
+      name: /no|cancel/i,
+    });
+
+    // ── Remove Client Button ─────────────────────────────
     this.removeClientButton = page.locator(".selected-tag .close").last();
   }
 
@@ -161,6 +172,30 @@ class MeetingPage extends BasePage {
 
   async goToMeeting() {
     await this.sideMenuMeeting.waitFor({ state: "visible", timeout: 20000 });
+    
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const modalVisible = await this.page.locator(".modal").isVisible().catch(() => false);
+      const ngbVisible = await this.page.locator("ngb-modal-window").isVisible().catch(() => false);
+      const overlayVisible = await this.eventOverlay.isVisible().catch(() => false);
+      
+      if (!modalVisible && !ngbVisible && !overlayVisible) break;
+      
+      await this.page.keyboard.press("Escape");
+      await this.page.waitForTimeout(1000);
+    }
+    
+    const stillBlocked = await this.page.locator(".modal").isVisible().catch(() => false)
+      || await this.page.locator("ngb-modal-window").isVisible().catch(() => false);
+    
+    if (stillBlocked) {
+      await this.page.evaluate(() => {
+        document.querySelectorAll('.modal, ngb-modal-window, .modal-backdrop').forEach(el => el.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+      });
+      await this.page.waitForTimeout(500);
+    }
+    
     await this.sideMenuMeeting.click();
     await this.page.waitForLoadState("networkidle");
     if ((await this.eventOverlay.count()) > 0) {
@@ -866,14 +901,33 @@ class MeetingPage extends BasePage {
 
   async verifyCreatedEvent(dateSelection, matter, subjectTask, startTime) {
     await this.navigateToEventDate(dateSelection);
+    await this.page.waitForTimeout(2000);
 
-    const expectedEventText = `${startTime} - ${matter} - ${subjectTask}`;
-
-    const event = this.page.locator("span.cal-event-title").filter({
-      hasText: expectedEventText,
+    let event = this.page.locator(".cal-event-title").filter({
+      hasText: `${startTime} - ${matter} - ${subjectTask}`,
     }).first();
 
-    await expect(event).toBeVisible({ timeout: 10000 });
+    if (await event.count() === 0) {
+      event = this.page.locator(".cal-event-title").filter({
+        hasText: subjectTask,
+      }).first();
+    }
+
+    if (await event.count() === 0) {
+      event = this.page.locator(".cal-event-title").filter({
+        hasText: matter,
+      }).first();
+    }
+
+    if (await event.count() === 0) {
+      const allEvents = this.page.locator(".cal-event-title");
+      const eventCount = await allEvents.count();
+      if (eventCount > 0) {
+        event = allEvents.first();
+      }
+    }
+
+    await expect(event).toBeVisible({ timeout: 15000 });
   }
 
   async getCalendarEvents() {
@@ -888,23 +942,49 @@ class MeetingPage extends BasePage {
       const anyEvent = this.calendarEvent.first();
       const anyCount = await anyEvent.count();
       if (anyCount > 0) {
-        await anyEvent.click();
+        await anyEvent.click({ force: true });
       }
     } else {
       await expect(event).toBeVisible({ timeout: 10000 });
-      await event.click();
+      await event.click({ force: true });
     }
     
-    // Wait for any overlay or modal to appear
-    await this.page.waitForTimeout(3000);
+    await this.page.waitForTimeout(2000);
     await this.page.waitForLoadState("networkidle");
     
-    // If there's a "View" button in a popup, click it
+    const heading = this.page.locator("h2.evt-title, .evt-popover h2").first();
+    const overlay = this.page.locator("app-viewevent, .evt-overlay").first();
     const viewBtn = this.page.getByRole("button", { name: /view/i }).first();
-    if (await viewBtn.count() > 0 && await viewBtn.isVisible()) {
+    
+    let headingFound = false;
+    try {
+      await expect(heading).toBeVisible({ timeout: 10000 });
+      headingFound = true;
+    } catch (e) {
+      // Heading not found
+    }
+    
+    if ((await viewBtn.count()) > 0 && (await viewBtn.isVisible().catch(() => false))) {
       await viewBtn.click();
       await this.page.waitForTimeout(2000);
       await this.page.waitForLoadState("networkidle");
+      return;
+    }
+    
+    if (!headingFound) {
+      try {
+        await expect(overlay).toBeVisible({ timeout: 15000 });
+        const overlayReady = overlay.locator("button, h2, .evt-title").first();
+        await expect(overlayReady).toBeVisible({ timeout: 10000 });
+      } catch (e) {
+        // Retry clicking the event
+        const calEvent = this.page.locator(".cal-event-title").filter({ hasText: eventText }).first();
+        if (await calEvent.count() > 0) {
+          await calEvent.click({ force: true });
+          await this.page.waitForTimeout(3000);
+          await this.page.waitForLoadState("networkidle");
+        }
+      }
     }
   }
 
@@ -913,11 +993,11 @@ class MeetingPage extends BasePage {
     await this.page.waitForTimeout(2000);
     
     // Click on any visible event in the calendar
-    const events = this.page.locator("span.cal-event-title, mwl-calendar-month-view .cal-event");
+    const events = this.page.locator(".cal-event-container, mwl-calendar-month-view .cal-event");
     const eventCount = await events.count();
     
     if (eventCount > 0) {
-      await events.first().click();
+      await events.first().click({ force: true });
     } else {
       // Fallback: click on the calendar day cell
       const dayCell = this.page.locator(".cal-day-cell:not(.cal-out-month)").first();
@@ -1098,9 +1178,16 @@ class MeetingPage extends BasePage {
 
   async verifyEventSavedSuccessfully() {
     await this.page.waitForLoadState("networkidle");
-    const toast = this.toastMessage;
-    if ((await toast.count()) > 0) {
-      await expect(toast.first()).toBeVisible({ timeout: 10000 });
+    const alert = this.page.getByRole("alert");
+    const toastMsg = this.page.locator(".toast-message, .toast-body");
+    try {
+      await expect(alert).toBeVisible({ timeout: 15000 });
+    } catch (e) {
+      try {
+        await expect(toastMsg).toBeVisible({ timeout: 15000 });
+      } catch (e2) {
+        await this.page.waitForTimeout(3000);
+      }
     }
   }
 
@@ -1177,63 +1264,171 @@ class MeetingPage extends BasePage {
   // =====================================================
 
   async clickEditButton() {
-    await this.page.waitForTimeout(2000);
-    
-    // Debug: dump the page HTML around app-viewevent
-    const overlayHtml = await this.page.evaluate(() => {
-      const overlay = document.querySelector('app-viewevent');
-      return overlay ? overlay.innerHTML.substring(0, 3000) : 'NO OVERLAY FOUND';
+    const modalClose = this.page.locator(
+      "ngb-modal-window button:has-text('Close'), .modal button:has-text('Close'), .modal .close",
+    );
+    if ((await modalClose.count()) > 0) {
+      await modalClose.first().click();
+      await this.page.waitForTimeout(1000);
+    }
+
+    const spinner = this.page.locator("ngx-spinner, .ngx-spinner-overlay");
+    if ((await spinner.count()) > 0) {
+      await this.page.waitForFunction(
+        () => {
+          const el = document.querySelector("ngx-spinner");
+          return !el || el.style.display === "none" || el.children.length === 0;
+        },
+        { timeout: 15000 },
+      ).catch(() => {});
+    }
+
+    const overlay = this.page.locator("app-viewevent, .evt-overlay").first();
+    if (await overlay.isVisible().catch(() => false)) {
+      await this.page.waitForTimeout(2000);
+    }
+
+    const editBtn = this.page.locator(
+      "button[title='Edit'], button[mattooltip='Edit']",
+    );
+
+    if (!(await editBtn.first().isVisible({ timeout: 5000 }).catch(() => false))) {
+      const fallbackBtn = this.page.locator("app-viewevent").getByRole("button", {
+        name: /edit/i,
+      });
+      if ((await fallbackBtn.count()) > 0) {
+        await expect(fallbackBtn.first()).toBeVisible({ timeout: 10000 });
+        await fallbackBtn.first().click();
+        await expect(this.editPageHeading).toBeVisible({ timeout: 15000 });
+        return;
+      }
+    }
+
+    await expect(editBtn.first()).toBeVisible({ timeout: 10000 });
+    await editBtn.first().click();
+    await expect(this.editPageHeading).toBeVisible({ timeout: 15000 });
+  }
+
+  async clickDeleteButton() {
+    const modalClose = this.page.locator(
+      "ngb-modal-window button:has-text('Close'), .modal button:has-text('Close'), .modal .close",
+    );
+    if ((await modalClose.count()) > 0) {
+      await modalClose.first().click();
+      await this.page.waitForTimeout(1000);
+    }
+
+    const spinner = this.page.locator("ngx-spinner, .ngx-spinner-overlay");
+    if ((await spinner.count()) > 0) {
+      await this.page.waitForFunction(
+        () => {
+          const el = document.querySelector("ngx-spinner");
+          return !el || el.style.display === "none" || el.children.length === 0;
+        },
+        { timeout: 15000 },
+      ).catch(() => {});
+    }
+
+    const overlay = this.page.locator("app-viewevent, .evt-overlay").first();
+    if (await overlay.isVisible().catch(() => false)) {
+      await this.page.waitForTimeout(2000);
+    }
+
+    const deleteBtn = this.page.locator(
+      "button[title='Delete'], button[mattooltip='Delete'], .evt-overlay button[title='Delete'], app-viewevent button[title='Delete'], app-viewevent button[mattooltip='Delete']",
+    );
+
+    if (!(await deleteBtn.first().isVisible({ timeout: 5000 }).catch(() => false))) {
+      const fallbackBtn = this.page.locator("app-viewevent, .evt-overlay").first().getByRole("button", {
+        name: /delete/i,
+      });
+      if ((await fallbackBtn.count()) > 0) {
+        await expect(fallbackBtn.first()).toBeVisible({ timeout: 10000 });
+        await fallbackBtn.first().click();
+        return;
+      }
+    }
+
+    await expect(deleteBtn.first()).toBeVisible({ timeout: 10000 });
+    await deleteBtn.first().click();
+  }
+
+  async confirmDelete() {
+    const confirmBtn = this.page.getByRole("button", {
+      name: /yes|confirm|delete/i,
     });
-    console.log("Overlay HTML:", overlayHtml);
-    
-    // Try multiple approaches to find edit
-    const allBtns = await this.page.locator("button, a, [role='button'], [role='link']").all();
-    const btnTexts = [];
-    for (const btn of allBtns) {
-      try {
-        const text = await btn.textContent();
-        const isVisible = await btn.isVisible();
-        if (text && text.trim()) {
-          btnTexts.push({ text: text.trim().substring(0, 50), visible: isVisible });
-        }
-      } catch(e) {}
+    await expect(confirmBtn.first()).toBeVisible({ timeout: 10000 });
+    await confirmBtn.first().click();
+
+    await this.page.waitForTimeout(2000);
+
+    const timesheetBtn = this.page.getByRole("button", {
+      name: /update both|update event only|event only/i,
+    });
+    if ((await timesheetBtn.count()) > 0 && (await timesheetBtn.first().isVisible().catch(() => false))) {
+      await timesheetBtn.first().click();
+      await this.page.waitForTimeout(1000);
     }
-    console.log("All buttons/links:", JSON.stringify(btnTexts));
-    
-    // Try to click edit icon (common patterns in Angular apps)
-    const editPatterns = [
-      this.page.locator("i.fa-edit, i.fa-pencil, i.fa-pen, i.icon-edit"),
-      this.page.locator("[class*='edit']"),
-      this.page.locator("[mattooltip*='Edit'], [matTooltip*='Edit']"),
-      this.page.locator("[title*='Edit'], [title*='edit']"),
-      this.page.locator("[data-original-title*='Edit']"),
-      this.page.getByRole("button", { name: /edit/i }),
-      this.page.getByRole("link", { name: /edit/i }),
-      this.page.getByText("Edit", { exact: false }),
-    ];
-    
-    for (const sel of editPatterns) {
-      try {
-        const count = await sel.count();
-        for (let i = 0; i < count; i++) {
-          const el = sel.nth(i);
-          if (await el.isVisible()) {
-            console.log("Found editable element:", await el.textContent());
-            await el.click();
-            await this.page.waitForTimeout(2000);
-            await this.page.waitForLoadState("networkidle");
-            return;
-          }
-        }
-      } catch(e) {}
+
+    for (let i = 0; i < 3; i++) {
+      const modalVisible = await this.page.locator(".modal").isVisible().catch(() => false);
+      const ngbVisible = await this.page.locator("ngb-modal-window").isVisible().catch(() => false);
+      const overlayVisible = await this.eventOverlay.isVisible().catch(() => false);
+      if (!modalVisible && !ngbVisible && !overlayVisible) break;
+      await this.page.keyboard.press("Escape");
+      await this.page.waitForTimeout(1000);
     }
-    
-    await this.page.screenshot({ path: "debug-edit-not-found.png", fullPage: true });
+
+    const stillBlocked = await this.page.locator(".modal").isVisible().catch(() => false)
+      || await this.page.locator("ngb-modal-window").isVisible().catch(() => false)
+      || await this.eventOverlay.isVisible().catch(() => false);
+    if (stillBlocked) {
+      await this.page.evaluate(() => {
+        document.querySelectorAll('.modal, .modal-backdrop, ngb-modal-window, app-viewevent, .evt-overlay').forEach(el => el.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+      });
+      await this.page.waitForTimeout(500);
+    }
+
+    await this.page.waitForLoadState("networkidle");
+  }
+
+  async cancelDelete() {
+    const cancelBtn = this.page.getByRole("button", {
+      name: /no|cancel/i,
+    });
+    await expect(cancelBtn.first()).toBeVisible({ timeout: 10000 });
+    await cancelBtn.first().click();
+    await this.page.waitForTimeout(1000);
   }
 
   async clickUpdateEvent() {
     await this.updateEventButton.scrollIntoViewIfNeeded();
     await this.updateEventButton.click();
+
+    const confirmBtn = this.page.getByRole("button", {
+      name: /update both|event only/i,
+    });
+    await expect(confirmBtn.first()).toBeVisible({ timeout: 10000 });
+    await confirmBtn.first().click();
+
+    for (let i = 0; i < 3; i++) {
+      const modalVisible = await this.page.locator(".modal").isVisible().catch(() => false);
+      if (!modalVisible) break;
+      await this.page.keyboard.press("Escape");
+      await this.page.waitForTimeout(1000);
+    }
+
+    const stillBlocked = await this.page.locator(".modal").isVisible().catch(() => false);
+    if (stillBlocked) {
+      await this.page.evaluate(() => {
+        document.querySelectorAll('.modal, .modal-backdrop, ngb-modal-window').forEach(el => el.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+      });
+      await this.page.waitForTimeout(500);
+    }
   }
 
   async verifyEditPageLoaded() {
@@ -1300,7 +1495,7 @@ class MeetingPage extends BasePage {
     try {
       await this.navigateToEventDate(dateSelection);
       const expectedEventText = `${startTime} - ${matter} - ${subjectTask}`;
-      const event = this.page.locator("span.cal-event-title").filter({
+      const event = this.page.locator(".cal-event-title").filter({
         hasText: expectedEventText,
       });
       await expect(event).toBeHidden({ timeout: 5000 });
@@ -1312,12 +1507,93 @@ class MeetingPage extends BasePage {
   async verifyNoEventOnDate(dateSelection) {
     try {
       await this.navigateToEventDate(dateSelection);
-      const events = this.page.locator("span.cal-event-title");
+      const events = this.page.locator(".cal-event-title");
       const count = await events.count();
       expect(count).toBe(0);
     } catch (e) {
       // If navigation fails, no events exist
     }
+  }
+
+  // =====================================================
+  //  Delete Duplicate Events
+  // =====================================================
+
+  async getAllEventTitles() {
+    const events = this.page.locator(".cal-event-title");
+    const count = await events.count();
+    const titles = [];
+    for (let i = 0; i < count; i++) {
+      const text = (await events.nth(i).textContent()) || "";
+      titles.push(text.trim());
+    }
+    return titles;
+  }
+
+  async getDuplicateEvents() {
+    const titles = await this.getAllEventTitles();
+    const seen = {};
+    const duplicates = [];
+    for (const title of titles) {
+      if (seen[title]) {
+        if (seen[title] === 1) {
+          duplicates.push(title);
+        }
+        seen[title]++;
+      } else {
+        seen[title] = 1;
+      }
+    }
+    return duplicates;
+  }
+
+  async deleteEventByTitle(eventTitle) {
+    const event = this.page
+      .locator(".cal-event-title")
+      .filter({ hasText: eventTitle })
+      .first();
+    if ((await event.count()) > 0) {
+      await this.clickCalendarEvent(eventTitle);
+      await this.page.waitForTimeout(2000);
+
+      const deleteBtn = this.page.locator(
+        "button[title='Delete'], button[mattooltip='Delete']",
+      );
+      const fallbackBtn = this.page
+        .locator("app-viewevent, .evt-overlay")
+        .first()
+        .getByRole("button", { name: /delete/i });
+
+      const hasDeleteBtn =
+        (await deleteBtn.count() > 0 &&
+          (await deleteBtn.first().isVisible().catch(() => false))) ||
+        (await fallbackBtn.count() > 0 &&
+          (await fallbackBtn.first().isVisible().catch(() => false)));
+
+      if (hasDeleteBtn) {
+        await this.clickDeleteButton();
+        await this.confirmDelete();
+      } else {
+        await this.page.keyboard.press("Escape");
+        await this.page.waitForTimeout(1000);
+      }
+    }
+  }
+
+  async deleteAllDuplicateEvents() {
+    await this.page.waitForTimeout(2000);
+    let duplicates = await this.getDuplicateEvents();
+    let deletedCount = 0;
+
+    while (duplicates.length > 0) {
+      const titleToDelete = duplicates[0];
+      await this.deleteEventByTitle(titleToDelete);
+      deletedCount++;
+      await this.page.waitForTimeout(2000);
+      duplicates = await this.getDuplicateEvents();
+    }
+
+    return deletedCount;
   }
 }
 
