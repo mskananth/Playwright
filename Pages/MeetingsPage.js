@@ -166,9 +166,7 @@ class MeetingPage extends BasePage {
     this.removeClientButton = page.locator(".selected-tag .close").last();
   }
 
-  // =====================================================
   //  Navigation
-  // =====================================================
 
   async goToMeeting() {
     await this.sideMenuMeeting.waitFor({ state: "visible", timeout: 20000 });
@@ -226,9 +224,7 @@ class MeetingPage extends BasePage {
     return await this.meetingHeading.isVisible();
   }
 
-  // =====================================================
   //  Create Event
-  // =====================================================
 
   async createButtonClick() {
     if ((await this.eventOverlay.count()) > 0) {
@@ -405,9 +401,7 @@ class MeetingPage extends BasePage {
     }
   }
 
-  // =====================================================
   //  Date Selection
-  // =====================================================
 
   async selectDate(dateSelection) {
     await expect(this.dateInput).toBeVisible();
@@ -553,9 +547,7 @@ class MeetingPage extends BasePage {
     );
   }
 
-  // =====================================================
   //  Checkboxes
-  // =====================================================
 
   async enableAddToTimesheet() {
     if (!(await this.addToTimesheetCheckbox.isChecked())) {
@@ -585,9 +577,7 @@ class MeetingPage extends BasePage {
     return this.allDayCheckbox.isChecked();
   }
 
-  // =====================================================
   //  Notification
-  // =====================================================
 
   async addNotification() {
     await this.addNotificationButton.click();
@@ -612,9 +602,7 @@ class MeetingPage extends BasePage {
     return this.page.locator('[class="notify-delete"]').count();
   }
 
-  // =====================================================
   //  Meeting Details
-  // =====================================================
 
   async enterMeetingLink(value) {
     await this.meetingLink.fill(value);
@@ -655,9 +643,8 @@ class MeetingPage extends BasePage {
     return this.meetingAgenda.inputValue();
   }
 
-  // =====================================================
   //  Attendees - Individual
-  // =====================================================
+
   async addIndividual(individualName) {
     await expect(this.searchConsumer).toBeVisible();
     await this.searchConsumer.fill(individualName);
@@ -687,9 +674,7 @@ class MeetingPage extends BasePage {
     return section.locator(".selected-tag").count();
   }
 
-  // =====================================================
   //  Attendees - Clients
-  // =====================================================
 
   async selectEntity(entityName) {
     const addClientsLabel = this.page
@@ -761,9 +746,7 @@ class MeetingPage extends BasePage {
     return section.locator(".selected-tag").count();
   }
 
-  // =====================================================
   //  Attendees - Corporate
-  // =====================================================
 
   async selectCorporateEntity(corporatName) {
     const addCorporateLabel = this.page
@@ -857,9 +840,7 @@ class MeetingPage extends BasePage {
     return section.locator(".selected-tag").count();
   }
 
-  // =====================================================
   //  Attendees - Document
-  // =====================================================
 
   async attachDocument(documentName) {
     await this.searchDocument.scrollIntoViewIfNeeded();
@@ -922,9 +903,7 @@ class MeetingPage extends BasePage {
     return section.locator(".selected-tag").count();
   }
 
-  // =====================================================
   //  Save / Cancel
-  // =====================================================
 
   async clickSaveEvent() {
     await this.saveEventButton.scrollIntoViewIfNeeded();
@@ -943,9 +922,7 @@ class MeetingPage extends BasePage {
     await expect(toast).toBeVisible({ timeout: 15000 });
   }
 
-  // =====================================================
   //  Calendar Verification
-  // =====================================================
 
   async verifyCreatedEvent(dateSelection, matter, subjectTask, startTime) {
     await this.navigateToEventDate(dateSelection);
@@ -1077,9 +1054,7 @@ class MeetingPage extends BasePage {
     await this.page.waitForLoadState("networkidle");
   }
 
-  // =====================================================
   //  Scroll Helpers
-  // =====================================================
 
   async scrollToMeetingDetails() {
     await this.meetingLink.scrollIntoViewIfNeeded();
@@ -1097,9 +1072,7 @@ class MeetingPage extends BasePage {
     await this.saveEventButton.scrollIntoViewIfNeeded();
   }
 
-  // =====================================================
   //  Verify Methods
-  // =====================================================
 
   async verifyMeetingsPageLoaded() {
     await expect(this.meetingHeading).toBeVisible({ timeout: 15000 });
@@ -1326,9 +1299,7 @@ class MeetingPage extends BasePage {
     await this.page.waitForTimeout(500);
   }
 
-  // =====================================================
   //  Edit Event Methods
-  // =====================================================
 
   async clickEditButton() {
     const modalClose = this.page.locator(
@@ -1529,7 +1500,10 @@ class MeetingPage extends BasePage {
     );
     if (
       (await recurringDialog.count()) > 0 &&
-      (await recurringDialog.first().isVisible().catch(() => false))
+      (await recurringDialog
+        .first()
+        .isVisible()
+        .catch(() => false))
     ) {
       const radios = this.page.locator(
         ".modal input[type='radio'], ngb-modal-window input[type='radio'], .modal-body input[type='radio']",
@@ -1564,7 +1538,10 @@ class MeetingPage extends BasePage {
     });
     if (
       (await confirmBtn.count()) > 0 &&
-      (await confirmBtn.first().isVisible().catch(() => false))
+      (await confirmBtn
+        .first()
+        .isVisible()
+        .catch(() => false))
     ) {
       await confirmBtn.first().click();
     }
@@ -1681,9 +1658,7 @@ class MeetingPage extends BasePage {
     }
   }
 
-  // =====================================================
   //  Delete Duplicate Events
-  // =====================================================
 
   async getAllEventTitles() {
     const events = this.page.locator(".cal-event-title");
@@ -1768,9 +1743,7 @@ class MeetingPage extends BasePage {
     return deletedCount;
   }
 
-  // =====================================================
   //  Verify Repetition Type
-  // =====================================================
 
   async verifyEventRepetitionType(dateSelection, subjectTask, repetitionType) {
     await this.navigateToEventDate(dateSelection);

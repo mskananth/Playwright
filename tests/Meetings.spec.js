@@ -4389,7 +4389,7 @@ test.describe("Edit Meeting - Repetition Change Yearly to Others", () => {
     expect(repetitionVerified).toBeTruthy();
   });
 
-  test.only("TC-MTG-EDIT-REP-020. Change repetition from Yearly to Monthly", async ({
+  test("TC-MTG-EDIT-REP-020. Change repetition from Yearly to Monthly", async ({
     browser,
   }) => {
     await ensureLoggedIn(browser);
